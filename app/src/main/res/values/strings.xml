@@ -1,3 +1,5 @@
 <resources>
     <string name="app_name">Conta Gomme</string>
+    <string name="front_tire">Anteriore</string>
+    <string name="rear_tire">Posteriore</string>
 </resources>

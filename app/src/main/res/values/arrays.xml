@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string-array name="tire_brands">
+        <item>Metzeler</item>
+        <item>Maxis</item>
+        <item>Michelin</item>
+        <item>Riga</item>
+        <item>Mitas</item>
+        <item>GoldenTyre</item>
+        <item>Gibson</item>
+        <item>Dunlop</item>
+        <item>Bridgestone</item>
+    </string-array>
+
+    <string-array name="coffee_arrays_spoken">
+        <item></item>
+        <item>@string/front_tire</item>
+        <item>@string/rear_tire</item>
+    </string-array>
+
+
+</resources>
