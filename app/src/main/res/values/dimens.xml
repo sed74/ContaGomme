@@ -1,5 +1,8 @@
 <resources>
     <!-- Default screen margins, per the Android Design guidelines. -->
     <dimen name="activity_horizontal_margin">16dp</dimen>
-    <dimen name="activity_vertical_margin">16dp</dimen>
+    <dimen name="activity_vertical_margin">8dp</dimen>
+    <dimen name="tire_button_margin">8dp</dimen>
+    <dimen name="tire_button_bottom_margin">4dp</dimen>
+    <dimen name="tire_button_padding">12dp</dimen>
 </resources>

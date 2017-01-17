@@ -2,4 +2,6 @@
     <string name="app_name">Conta Gomme</string>
     <string name="front_tire">Anteriore</string>
     <string name="rear_tire">Posteriore</string>
+    <string name="reset_button">Cancella</string>
+    <string name="next_button">Prossima moto</string>
 </resources>
