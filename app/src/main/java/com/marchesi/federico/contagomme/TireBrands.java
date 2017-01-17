@@ -7,8 +7,8 @@ package com.marchesi.federico.contagomme;
 public class TireBrands {
     private String mName;
     private int mRelatedId = 0;
-    private int mTotFrontTyre = 0;
-    private int mTotRearTyre = 0;
+    private boolean mFrontTyreSelected = false;
+    private boolean mRearTyreSelected = false;
 
 
     public TireBrands(String name) {
@@ -24,20 +24,19 @@ public class TireBrands {
         return mName;
     }
 
-    public int getTotFrontTyre() {
-        return mTotFrontTyre;
+    public boolean isFrontTyreSelected() {
+        return mFrontTyreSelected;
     }
 
-    public int getTotRearTyre() {
-        return mTotRearTyre;
+    public void setFrontTyreSelected(boolean isSelected) {
+        mFrontTyreSelected = isSelected;
     }
 
-    public void incrementFrontTyre() {
-        mTotFrontTyre += 1;
+    public boolean isRearTyreSelected() {
+        return mRearTyreSelected;
     }
 
-    public void decrementFrontTyre() {
-        mTotFrontTyre -= 1;
+    public void setRearTyreSelected(boolean isSelected) {
+        mRearTyreSelected = isSelected;
     }
-
 }

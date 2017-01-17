@@ -39,24 +39,6 @@ public class MainActivity extends AppCompatActivity {
         ListView obj = (ListView) findViewById(R.id.list);
         obj.setAdapter(tireAdapter);
 
-/*        view[0] = (ButtonTire) findViewById(R.id.tire1);
-        view[1] = (ButtonTire) findViewById(R.id.tire2);
-        view[2] = (ButtonTire) findViewById(R.id.tire3);
-        view[3] = (ButtonTire) findViewById(R.id.tire4);
-        view[4] = (ButtonTire) findViewById(R.id.tire5);
-        view[5] = (ButtonTire) findViewById(R.id.tire6);
-        view[6] = (ButtonTire) findViewById(R.id.tire7);
-        view[7] = (ButtonTire) findViewById(R.id.tire8);
-
-
-
-        int i = 0;
-        for (String tire : tyreBrands) {
-            view[i].setName(tire);
-            i++;
-        }*/
-
-
     }
 
     private TextView setTextViewStandardProperties(TextView textView) {

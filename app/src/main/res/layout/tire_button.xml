@@ -8,17 +8,7 @@
     android:orientation="horizontal"
     tools:context="com.marchesi.federico.contagomme.MainActivity">
 
-    <TextView
-        android:id="@+id/tire_name"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_centerHorizontal="true"
-        android:layout_centerVertical="true"
-        android:gravity="center_horizontal"
-        android:textColor="@android:color/black"
-        android:textSize="20sp"
-        android:textStyle="bold"
-        tools:text="Michelin" />
+
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -47,5 +37,16 @@
 
     </LinearLayout>
 
+    <TextView
+        android:id="@+id/tire_name"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:layout_centerVertical="true"
+        android:gravity="center_horizontal"
+        android:textColor="@android:color/black"
+        android:textSize="20sp"
+        android:textStyle="bold"
+        tools:text="Michelin" />
 
 </RelativeLayout>
