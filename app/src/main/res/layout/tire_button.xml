@@ -1,4 +1,4 @@
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/activity_main"
     android:layout_width="match_parent"
@@ -6,36 +6,19 @@
     android:layout_marginBottom="@dimen/tire_button_bottom_margin"
     android:background="@drawable/tire_rectangle"
     android:orientation="horizontal"
+    android:padding="@dimen/tire_button_padding"
     tools:context="com.marchesi.federico.contagomme.MainActivity">
 
 
-
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="40dp">
-
-        <TextView
-            android:id="@+id/rear_tire"
-            android:layout_width="0dp"
-            android:layout_height="match_parent"
-            android:layout_weight="1"
-            android:gravity="center_vertical"
-            android:paddingLeft="@dimen/tire_button_padding"
-            android:text="@string/rear_tire"
-            android:textColor="@android:color/black" />
-
-        <TextView
-            android:id="@+id/front_tire"
-            android:layout_width="0dp"
-            android:layout_height="match_parent"
-            android:layout_weight="1"
-            android:gravity="center_vertical"
-            android:paddingRight="@dimen/tire_button_padding"
-            android:text="@string/front_tire"
-            android:textAlignment="textEnd"
-            android:textColor="@android:color/black" />
-
-    </LinearLayout>
+    <TextView
+        android:id="@+id/rear_tire"
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:gravity="center_vertical"
+        android:paddingLeft="@dimen/tire_button_padding"
+        android:paddingRight="@dimen/tire_button_padding"
+        android:text="@string/rear_tire"
+        android:textColor="@android:color/black" />
 
     <TextView
         android:id="@+id/tire_name"
@@ -43,10 +26,23 @@
         android:layout_height="wrap_content"
         android:layout_centerHorizontal="true"
         android:layout_centerVertical="true"
+        android:layout_weight="1"
         android:gravity="center_horizontal"
         android:textColor="@android:color/black"
         android:textSize="20sp"
         android:textStyle="bold"
         tools:text="Michelin" />
 
-</RelativeLayout>
+    <TextView
+        android:id="@+id/front_tire"
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:layout_gravity="end"
+        android:gravity="center_vertical"
+        android:paddingLeft="@dimen/tire_button_padding"
+        android:paddingRight="@dimen/tire_button_padding"
+        android:text="@string/front_tire"
+        android:textColor="@android:color/black" />
+
+
+</LinearLayout>

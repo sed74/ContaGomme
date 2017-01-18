@@ -9,6 +9,9 @@ public class TireBrands {
     private int mRelatedId = 0;
     private boolean mFrontTyreSelected = false;
     private boolean mRearTyreSelected = false;
+    private int mTotFrontSelected = 0;
+    private int mTotRearSelected = 0;
+
 
 
     public TireBrands(String name) {
@@ -24,19 +27,66 @@ public class TireBrands {
         return mName;
     }
 
-    public boolean isFrontTyreSelected() {
+    public boolean getFrontTyreSelected() {
         return mFrontTyreSelected;
     }
 
     public void setFrontTyreSelected(boolean isSelected) {
+
         mFrontTyreSelected = isSelected;
+        if (isSelected) {
+            incrementFront();
+        } else {
+            decrementFront();
+        }
     }
 
-    public boolean isRearTyreSelected() {
+    public boolean getRearTyreSelected() {
         return mRearTyreSelected;
     }
 
     public void setRearTyreSelected(boolean isSelected) {
         mRearTyreSelected = isSelected;
+        if (isSelected) {
+            incrementRear();
+        } else {
+            decrementRear();
+        }
     }
+
+    public int getTotFrontSelected() {
+        return mTotFrontSelected;
+    }
+
+    public void setTotFrontSelected(int totFrontSelected) {
+        this.mTotFrontSelected = totFrontSelected;
+    }
+
+    public int getTotRearSelected() {
+        return mTotRearSelected;
+    }
+
+    public void setmTotRearSelected(int totRearSelected) {
+        this.mTotRearSelected = totRearSelected;
+    }
+
+    public void incrementFront() {
+        mTotFrontSelected++;
+    }
+
+    public void incrementRear() {
+        mTotRearSelected++;
+    }
+
+    public void decrementFront() {
+        mTotFrontSelected--;
+        if (mTotFrontSelected < 0) mTotFrontSelected = 0;
+    }
+
+    public void decrementRear() {
+        mTotRearSelected++;
+        if (mTotRearSelected < 0) mTotRearSelected = 0;
+    }
+
 }
+

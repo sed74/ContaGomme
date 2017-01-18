@@ -1,12 +1,11 @@
 package com.marchesi.federico.contagomme;
 
-import android.content.Context;
-import android.content.res.Resources;
 import android.graphics.Color;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
 import android.view.Gravity;
 import android.view.View;
+import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
@@ -31,13 +30,47 @@ public class MainActivity extends AppCompatActivity {
 
         for (String tire : tyreBrands) {
             arrayTireBrands.add(new TireBrands(tire));
+
         }
 
+        final Button nextButton = (Button) findViewById(R.id.button_next);
 
         tireAdapter = new TireAdapter(this, arrayTireBrands);
 
+        tireAdapter.setOnValueChangeListener(new TireAdapter.OnValueChangeListener() {
+            @Override
+            public void onValueChange(boolean frontSelected, boolean rearSelected) {
+                nextButton.setEnabled(frontSelected && rearSelected);
+            }
+        });
+
+
         ListView obj = (ListView) findViewById(R.id.list);
         obj.setAdapter(tireAdapter);
+
+
+        nextButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                ListView list = (ListView) findViewById(R.id.list);
+
+//                for (int i = 0; i < list.getChildCount(); i++) {
+//                    list.setSelection(i);
+//                    TextView text = (TextView) list.findViewById(R.id.tire_name);
+//                    text.setText("fede");
+//                }
+                if (tireAdapter.canProceed()) {
+                    Toast.makeText(MainActivity.this, "Procedo!", Toast.LENGTH_SHORT).show();
+                } else {
+                    Toast.makeText(MainActivity.this, "Non procedo!", Toast.LENGTH_SHORT).show();
+                }
+
+            }
+        });
+
+    }
+
+    private void init() {
 
     }
 
@@ -54,4 +87,5 @@ public class MainActivity extends AppCompatActivity {
         textView.setBackgroundColor(Color.LTGRAY);
         return textView;
     }
+
 }
