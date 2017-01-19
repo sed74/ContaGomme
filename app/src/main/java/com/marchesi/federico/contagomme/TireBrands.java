@@ -13,7 +13,6 @@ public class TireBrands {
     private int mTotRearSelected = 0;
 
 
-
     public TireBrands(String name) {
         mName = name;
     }
@@ -39,6 +38,11 @@ public class TireBrands {
         } else {
             decrementFront();
         }
+    }
+
+    public void resetSelection() {
+        mFrontTyreSelected = false;
+        mRearTyreSelected = false;
     }
 
     public boolean getRearTyreSelected() {
@@ -84,7 +88,7 @@ public class TireBrands {
     }
 
     public void decrementRear() {
-        mTotRearSelected++;
+        mTotRearSelected--;
         if (mTotRearSelected < 0) mTotRearSelected = 0;
     }
 

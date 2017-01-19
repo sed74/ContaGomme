@@ -1,9 +1,18 @@
 package com.marchesi.federico.contagomme;
 
+import android.content.Context;
+import android.content.Intent;
+import android.content.SharedPreferences;
 import android.graphics.Color;
+import android.net.Uri;
 import android.os.Bundle;
+import android.os.Handler;
+import android.preference.PreferenceManager;
 import android.support.v7.app.AppCompatActivity;
+import android.text.Html;
 import android.view.Gravity;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.LinearLayout;
@@ -11,11 +20,44 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import java.text.DateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 
 public class MainActivity extends AppCompatActivity {
-    ArrayList<TireBrands> arrayTireBrands = new ArrayList<>();
-    TireAdapter tireAdapter;
+    private static final String RACE_NAME = "race_name";
+    private static final String RACE_DESCR = "race_descr";
+    private static final String USE_HTML = "use_html";
+    private static final String AUTO_NEXT = "auto_next";
+    private static String mRaceName;
+    private static String mRaceDescr;
+    private static boolean mUseHTML = false;
+    private static boolean mAutoNext = false;
+    private ArrayList<TireBrands> arrayTireBrands = new ArrayList<>();
+    private TireAdapter tireAdapter;
+    private int bikeCounter = 0;
+    private TextView headerTextView;
+
+    private static void savePrefs(Context mContext) {
+        SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(mContext);
+        SharedPreferences.Editor mEdit1 = sp.edit();
+
+        mEdit1.putString(RACE_NAME, mRaceName);
+        mEdit1.putString(RACE_DESCR, mRaceDescr);
+        mEdit1.putBoolean(USE_HTML, mUseHTML);
+        mEdit1.putBoolean(AUTO_NEXT, mAutoNext);
+
+        mEdit1.commit();
+    }
+
+    public static void loadPrefs(Context mContext) {
+        SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(mContext);
+
+        mRaceName = sp.getString(RACE_NAME, "");
+        mRaceDescr = sp.getString(RACE_DESCR, "");
+        mAutoNext = sp.getBoolean(AUTO_NEXT, false);
+        mUseHTML = sp.getBoolean(USE_HTML, false);
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -26,21 +68,28 @@ public class MainActivity extends AppCompatActivity {
 //        setContentView(linearLayout);
 //        linearLayout.setOrientation(LinearLayout.VERTICAL);
 //
-        String[] tyreBrands = getResources().getStringArray(R.array.tire_brands);
-
-        for (String tire : tyreBrands) {
-            arrayTireBrands.add(new TireBrands(tire));
-
-        }
+        init();
 
         final Button nextButton = (Button) findViewById(R.id.button_next);
 
-        tireAdapter = new TireAdapter(this, arrayTireBrands);
+        headerTextView = (TextView) findViewById(R.id.moto_inserite);
+
+        updateHeader();
 
         tireAdapter.setOnValueChangeListener(new TireAdapter.OnValueChangeListener() {
             @Override
             public void onValueChange(boolean frontSelected, boolean rearSelected) {
-                nextButton.setEnabled(frontSelected && rearSelected);
+                if (mAutoNext && (frontSelected && rearSelected)) {
+                    final Handler handler = new Handler();
+                    handler.postDelayed(new Runnable() {
+                        @Override
+                        public void run() {
+                            nextButton.callOnClick();
+                        }
+                    }, 500);
+                } else {
+                    nextButton.setEnabled(frontSelected && rearSelected);
+                }
             }
         });
 
@@ -54,24 +103,67 @@ public class MainActivity extends AppCompatActivity {
             public void onClick(View v) {
                 ListView list = (ListView) findViewById(R.id.list);
 
-//                for (int i = 0; i < list.getChildCount(); i++) {
-//                    list.setSelection(i);
-//                    TextView text = (TextView) list.findViewById(R.id.tire_name);
-//                    text.setText("fede");
-//                }
-                if (tireAdapter.canProceed()) {
-                    Toast.makeText(MainActivity.this, "Procedo!", Toast.LENGTH_SHORT).show();
-                } else {
-                    Toast.makeText(MainActivity.this, "Non procedo!", Toast.LENGTH_SHORT).show();
+                for (TireBrands t :
+                        arrayTireBrands) {
+                    t.resetSelection();
                 }
 
+                tireAdapter.notifyDataSetChanged();
+                bikeCounter++;
+                updateHeader();
+
+            }
+        });
+        Button resetButton = (Button) findViewById(R.id.button_reset);
+        resetButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                resetList();
             }
         });
 
     }
 
-    private void init() {
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        // Inflate the menu; this adds items to the action bar if it is present.
+        getMenuInflater().inflate(R.menu.main, menu);
+        return true;
+    }
 
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        // Handle action bar item clicks here. The action bar will
+        // automatically handle clicks on the Home/Up button, so long
+        // as you specify a parent activity in AndroidManifest.xml.
+        int id = item.getItemId();
+
+        //noinspection SimplifiableIfStatement
+        if (id == R.id.send_email) {
+            sendEmail();
+        } else if (id == R.id.give_race_name) {
+            addRaceName();
+        } else if (id == R.id.use_html) {
+            mUseHTML = !item.isChecked();
+            item.setChecked(!item.isChecked());
+        } else if (id == R.id.auto_save_bike) {
+            mAutoNext = !item.isChecked();
+            item.setChecked(!item.isChecked());
+        }
+
+        return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+        savePrefs(this);
+    }
+
+    private void init() {
+        loadPrefs(this);
+        loadList();
+        tireAdapter = new TireAdapter(this, arrayTireBrands);
     }
 
     private TextView setTextViewStandardProperties(TextView textView) {
@@ -86,6 +178,114 @@ public class MainActivity extends AppCompatActivity {
         textView.setLayoutParams(params);
         textView.setBackgroundColor(Color.LTGRAY);
         return textView;
+    }
+
+    void loadList() {
+        String[] tyreBrands = getResources().getStringArray(R.array.tire_brands);
+
+        for (String tire : tyreBrands) {
+            arrayTireBrands.add(new TireBrands(tire));
+        }
+
+    }
+
+    private void resetList() {
+        arrayTireBrands.clear();
+        loadList();
+        tireAdapter.notifyDataSetChanged();
+        bikeCounter = 0;
+    }
+
+    private void updateHeader() {
+        headerTextView.setText(String.format(getResources().getString(R.string.moto_inserite), String.valueOf(bikeCounter)));
+    }
+
+    public void sendEmail() {
+
+        //String currentDateTimeString = DateFormat.getDateTimeInstance().format(new Date());
+        String currentDateTimeString = DateFormat.getDateInstance().format(new Date());
+        Intent intent = new Intent(Intent.ACTION_SENDTO);
+        intent.setType("text/html");
+        intent.setData(Uri.parse("mailto:")); // only email apps should handle this
+        intent.putExtra(Intent.EXTRA_SUBJECT, "Conteggio gomme gara di " + mRaceName + " del " + String.format(currentDateTimeString));
+
+        if (mUseHTML) {
+            intent.putExtra(Intent.EXTRA_TEXT, Html.fromHtml(getEmailBodyHTML()));
+        } else {
+            intent.putExtra(Intent.EXTRA_TEXT, getEmailBody());
+        }
+
+        if (intent.resolveActivity(getPackageManager()) != null) {
+            startActivity(intent);
+        }
+        Toast toastMessage = Toast.makeText(this, "Order submitted.\nThanks", Toast.LENGTH_SHORT);
+        toastMessage.show();
+    }
+
+    private String getEmailBodyHTML() {
+
+        String emailContent = "";//"<html><body><br>";
+
+        emailContent += "Gara di <b>" + mRaceName + "</b><br><br>";
+
+        if (!mRaceDescr.isEmpty()) {
+            emailContent += "\n\n" + mRaceDescr + "<br>";
+        }
+        for (TireBrands t :
+                arrayTireBrands) {
+            emailContent += "<p>";
+            emailContent += "<b>" + t.getName() + "</b><br>";
+            emailContent += "Anteriori: " + t.getTotFrontSelected() + "<br>";
+            emailContent += "Posteriori: " + t.getTotRearSelected() + "<br>";
+            emailContent += "</p>";
+        }
+        //emailContent += "</body></meta></html>";
+//        Toast.makeText(this, emailContent, Toast.LENGTH_LONG).show();
+        return emailContent;
+    }
+
+    private String getEmailBody() {
+
+        String emailContent = "";
+
+        emailContent += "Gara di " + mRaceName;
+        emailContent += "\n\n";
+
+        if (!mRaceDescr.isEmpty()) {
+            emailContent += "\n\n" + mRaceDescr;
+        }
+        for (TireBrands t :
+                arrayTireBrands) {
+            emailContent += "\n\n" + t.getName();
+            emailContent += "\n" + "Anteriori: " + t.getTotFrontSelected();
+            emailContent += "\n" + "Posteriori: " + t.getTotRearSelected();
+        }
+
+        return emailContent;
+    }
+
+    private void addRaceName() {
+
+        InputDialog inputDialog = new InputDialog(this, R.string.race_name_title, R.string.add_race_name, mRaceName, mRaceDescr);
+        inputDialog.setInputListener(new InputDialog.InputListener() {
+            @Override
+            public InputDialog.ValidationResult isInputValid(String newCoffeeType) {
+                if (newCoffeeType.isEmpty()) {
+//                    return new InputDialog.ValidationResult(false, R.string.error_empty_name);
+                }
+                return new InputDialog.ValidationResult(true, 0);
+            }
+
+            @Override
+            public void onConfirm(String raceName, String raceDescr) {
+//                DBHelper db = new DBHelper(MainActivity.this);
+//                db.insertCoffeeType(newCoffeeType, newCoffeeDescr);
+                mRaceName = raceName;
+                mRaceDescr = raceDescr;
+                Toast.makeText(MainActivity.this, raceName + "\n" + raceDescr, Toast.LENGTH_SHORT).show();
+            }
+        });
+        inputDialog.show();
     }
 
 }

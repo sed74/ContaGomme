@@ -2,6 +2,14 @@
     <string name="app_name">Conta Gomme</string>
     <string name="front_tire">Anteriore</string>
     <string name="rear_tire">Posteriore</string>
-    <string name="reset_button">Cancella</string>
+    <string name="reset_button">Azzera</string>
     <string name="next_button">Prossima moto</string>
+    <string name="moto_inserite">Moto inserite: %1$s</string>
+    <string name="send_email">Invia per e-mail</string>
+    <string name="add_race_name">Inserisci luogo gara</string>
+    <string name="input_race_name">Inserisci nome gara</string>
+    <string name="input_race_notes">Note</string>
+    <string name="race_name_title">Nome Gara</string>
+    <string name="use_html">Usa HTML in email</string>
+    <string name="auto_go_on">Continua automaticamente</string>
 </resources>

@@ -37,13 +37,26 @@ public class TireAdapter extends ArrayAdapter<TireBrands> {
                     R.layout.tire_button, parent, false);
         }
 
+
         final TireBrands currentTire = getItem(position);
+
+        FrontSelected = currentTire.getFrontTyreSelected();
+        RearSelected = currentTire.getRearTyreSelected();
 
         TextView textView = (TextView) listItemView.findViewById(R.id.tire_name);
         textView.setText(currentTire.getName());
 
         TextView viewFrontWheel = (TextView) listItemView.findViewById(R.id.front_tire);
         TextView viewRearWheel = (TextView) listItemView.findViewById(R.id.rear_tire);
+
+        setSelected(viewFrontWheel, FrontSelected);
+        setSelected(viewRearWheel, FrontSelected);
+
+        TextView frontCount = (TextView) listItemView.findViewById(R.id.front_tire_count);
+        frontCount.setText(String.valueOf(currentTire.getTotFrontSelected()));
+
+        TextView rearCount = (TextView) listItemView.findViewById(R.id.rear_tire_count);
+        rearCount.setText(String.valueOf(currentTire.getTotRearSelected()));
 
         TextView.OnClickListener mOnClickListener = (new View.OnClickListener() {
             @Override
@@ -106,7 +119,10 @@ public class TireAdapter extends ArrayAdapter<TireBrands> {
 
     public void setOnValueChangeListener(OnValueChangeListener lister) {
         changeListener = lister;
+    }
 
+    public void removeOnValueChangeListener() {
+        changeListener = null;
     }
 
     public interface OnValueChangeListener {
