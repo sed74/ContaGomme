@@ -1,7 +1,9 @@
 package com.marchesi.federico.contagomme;
 
 import android.content.Context;
+import android.content.res.Resources;
 import android.graphics.Color;
+import android.graphics.drawable.GradientDrawable;
 import android.support.annotation.NonNull;
 import android.support.v4.content.ContextCompat;
 import android.view.LayoutInflater;
@@ -19,6 +21,8 @@ import java.util.ArrayList;
 public class TireAdapter extends ArrayAdapter<TireBrands> {
     private boolean FrontSelected = false;
     private boolean RearSelected = false;
+    private TextView frontCount;
+    private TextView rearCount;
 
     private OnValueChangeListener changeListener;
 
@@ -49,13 +53,13 @@ public class TireAdapter extends ArrayAdapter<TireBrands> {
         TextView viewFrontWheel = (TextView) listItemView.findViewById(R.id.front_tire);
         TextView viewRearWheel = (TextView) listItemView.findViewById(R.id.rear_tire);
 
-        setSelected(viewFrontWheel, FrontSelected);
-        setSelected(viewRearWheel, FrontSelected);
+        setSelected(viewFrontWheel, FrontSelected, true);
+        setSelected(viewRearWheel, FrontSelected, false);
 
-        TextView frontCount = (TextView) listItemView.findViewById(R.id.front_tire_count);
+        frontCount = (TextView) listItemView.findViewById(R.id.front_tire_count);
         frontCount.setText(String.valueOf(currentTire.getTotFrontSelected()));
 
-        TextView rearCount = (TextView) listItemView.findViewById(R.id.rear_tire_count);
+        rearCount = (TextView) listItemView.findViewById(R.id.rear_tire_count);
         rearCount.setText(String.valueOf(currentTire.getTotRearSelected()));
 
         TextView.OnClickListener mOnClickListener = (new View.OnClickListener() {
@@ -68,24 +72,24 @@ public class TireAdapter extends ArrayAdapter<TireBrands> {
                 if (v.getId() == R.id.front_tire) {
                     if (isFrontSelected) {
                         currentTire.setFrontTyreSelected(false);
-                        setSelected(((TextView) v), false);
+                        setSelected(((TextView) v), false, true);
                         FrontSelected = false;
                     } else {
                         if (FrontSelected) return;
                         currentTire.setFrontTyreSelected(true);
-                        setSelected(((TextView) v), true);
+                        setSelected(((TextView) v), true, true);
                         FrontSelected = true;
                     }
 
                 } else if (v.getId() == R.id.rear_tire) {
                     if (isRearSelected) {
                         currentTire.setRearTyreSelected(false);
-                        setSelected(((TextView) v), false);
+                        setSelected(((TextView) v), false, false);
                         RearSelected = false;
                     } else {
                         if (RearSelected) return;
                         currentTire.setRearTyreSelected(true);
-                        setSelected(((TextView) v), true);
+                        setSelected(((TextView) v), true, false);
                         RearSelected = true;
                     }
 
@@ -104,15 +108,25 @@ public class TireAdapter extends ArrayAdapter<TireBrands> {
         return FrontSelected && RearSelected;
     }
 
-    private void setSelected(TextView view, boolean isSelected) {
+    private void setSelected(TextView view, boolean isSelected, boolean isFront) {
         if (!isSelected) {
 //        view.setTypeface(null, Typeface.NORMAL);
 //        view.setAllCaps(false);
             view.setBackgroundColor(Color.TRANSPARENT);
+
         } else {
 //        view.setTypeface(null, Typeface.BOLD);
 //        view.setAllCaps(true);
-            view.setBackgroundColor(ContextCompat.getColor(getContext(), R.color.wheel_selected));
+
+            GradientDrawable gd = new GradientDrawable(
+                    isFront ? GradientDrawable.Orientation.RIGHT_LEFT :
+                            GradientDrawable.Orientation.LEFT_RIGHT,
+                    new int[]{getContext().getResources().getColor(R.color.wheel_selected),
+                            getContext().getResources().getColor(R.color.rectangle_solid)});
+//            gd.setCornerRadius(0f);
+
+            view.setBackground(gd);
+//            view.setBackgroundColor(ContextCompat.getColor(getContext(), R.color.wheel_selected));
         }
 
     }

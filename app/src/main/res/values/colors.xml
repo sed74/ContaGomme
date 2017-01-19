@@ -2,6 +2,9 @@
 <resources>
     <color name="colorPrimary">#3F51B5</color>
     <color name="colorPrimaryDark">#303F9F</color>
-    <color name="colorAccent">#FF4081</color>
-    <color name="wheel_selected">#f7bb53</color>
+    <color name="colorAccent">#F48FB1</color>
+    <color name="wheel_selected">#FF3F80</color>
+    <color name="rectangle_solid">#7986CB</color>
+    <color name="rectangle_stroke">#1A237E</color>
+    <color name="counter_color">#eaff00</color>
 </resources>

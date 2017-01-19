@@ -12,4 +12,5 @@
     <string name="race_name_title">Nome Gara</string>
     <string name="use_html">Usa HTML in email</string>
     <string name="auto_go_on">Continua automaticamente</string>
+    <string name="subject">Conteggio gomme gara %1$s del %2$s.</string>
 </resources>

@@ -3,17 +3,22 @@ package com.marchesi.federico.contagomme;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.res.Resources;
 import android.graphics.Color;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.preference.PreferenceManager;
+import android.support.annotation.ColorInt;
+import android.support.annotation.RequiresApi;
 import android.support.v7.app.AppCompatActivity;
 import android.text.Html;
 import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.Window;
 import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.ListView;
@@ -93,10 +98,8 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-
         ListView obj = (ListView) findViewById(R.id.list);
         obj.setAdapter(tireAdapter);
-
 
         nextButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -128,8 +131,12 @@ public class MainActivity extends AppCompatActivity {
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.main, menu);
+
+        MenuItem item = menu.getItem(2);
+        item.setChecked(mAutoNext);
         return true;
     }
+
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
@@ -139,16 +146,21 @@ public class MainActivity extends AppCompatActivity {
         int id = item.getItemId();
 
         //noinspection SimplifiableIfStatement
-        if (id == R.id.send_email) {
-            sendEmail();
-        } else if (id == R.id.give_race_name) {
-            addRaceName();
-        } else if (id == R.id.use_html) {
-            mUseHTML = !item.isChecked();
-            item.setChecked(!item.isChecked());
-        } else if (id == R.id.auto_save_bike) {
-            mAutoNext = !item.isChecked();
-            item.setChecked(!item.isChecked());
+        switch (id) {
+            case R.id.send_email:
+                sendEmail();
+                break;
+            case R.id.give_race_name:
+                addRaceName();
+                break;
+            case R.id.use_html:
+                mUseHTML = !item.isChecked();
+                item.setChecked(mUseHTML);
+                break;
+            case R.id.auto_save_bike:
+                mAutoNext = !item.isChecked();
+                item.setChecked(mAutoNext);
+                break;
         }
 
         return super.onOptionsItemSelected(item);
@@ -161,6 +173,10 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void init() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            Window window = getWindow();
+            window.setNavigationBarColor(getResources().getColor(R.color.colorPrimary));
+        }
         loadPrefs(this);
         loadList();
         tireAdapter = new TireAdapter(this, arrayTireBrands);
@@ -190,10 +206,12 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void resetList() {
+
         arrayTireBrands.clear();
         loadList();
         tireAdapter.notifyDataSetChanged();
         bikeCounter = 0;
+        updateHeader();
     }
 
     private void updateHeader() {
@@ -207,8 +225,12 @@ public class MainActivity extends AppCompatActivity {
         Intent intent = new Intent(Intent.ACTION_SENDTO);
         intent.setType("text/html");
         intent.setData(Uri.parse("mailto:")); // only email apps should handle this
-        intent.putExtra(Intent.EXTRA_SUBJECT, "Conteggio gomme gara di " + mRaceName + " del " + String.format(currentDateTimeString));
 
+        Resources res = getResources();
+        String subject = String.format(res.getString(R.string.subject), mRaceName, String.format(currentDateTimeString));
+        intent.putExtra(Intent.EXTRA_SUBJECT, subject);
+
+        Toast.makeText(this, subject, Toast.LENGTH_SHORT).show();
         if (mUseHTML) {
             intent.putExtra(Intent.EXTRA_TEXT, Html.fromHtml(getEmailBodyHTML()));
         } else {
@@ -218,8 +240,6 @@ public class MainActivity extends AppCompatActivity {
         if (intent.resolveActivity(getPackageManager()) != null) {
             startActivity(intent);
         }
-        Toast toastMessage = Toast.makeText(this, "Order submitted.\nThanks", Toast.LENGTH_SHORT);
-        toastMessage.show();
     }
 
     private String getEmailBodyHTML() {

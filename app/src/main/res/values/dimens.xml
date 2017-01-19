@@ -5,8 +5,9 @@
     <dimen name="tire_button_margin">8dp</dimen>
     <dimen name="tire_button_bottom_margin">8dp</dimen>
     <dimen name="tire_button_padding">12dp</dimen>
-    <dimen name="tire_button_internal_padding">12dp</dimen>
+    <dimen name="tire_button_internal_padding">50dp</dimen>
     <dimen name="tire_button_external_padding">4dp</dimen>
     <dimen name="margin_default_half">8dp</dimen>
     <dimen name="margin_default">16dp</dimen>
+    <dimen name="margin_small">2dp</dimen>
 </resources>
