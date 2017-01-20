@@ -34,6 +34,12 @@ public class MainActivity extends AppCompatActivity {
     private static final String RACE_DESCR = "race_descr";
     private static final String USE_HTML = "use_html";
     private static final String AUTO_NEXT = "auto_next";
+
+    private static final String ARRAY_NAME = "array_name";
+    private static final String ARRAY_SIZE = "array_size";
+    private static final String ARRAY_FRONT_SELECTED = "array_front_selected";
+    private static final String ARRAY_REAR_SELECTED = "array_rear_selected";
+
     private static String mRaceName;
     private static String mRaceDescr;
     private static boolean mUseHTML = false;
@@ -43,7 +49,7 @@ public class MainActivity extends AppCompatActivity {
     private int bikeCounter = 0;
     private TextView headerTextView;
 
-    private static void savePrefs(Context mContext) {
+    private void savePrefs(Context mContext) {
         SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(mContext);
         SharedPreferences.Editor mEdit1 = sp.edit();
 
@@ -55,7 +61,18 @@ public class MainActivity extends AppCompatActivity {
         mEdit1.commit();
     }
 
-    public static void loadPrefs(Context mContext) {
+    private void saveArrayPrefs(SharedPreferences.Editor mEdit1) {
+
+        for (TireBrands tire : arrayTireBrands) {
+            tire.getTotRearSelected();
+            tire.getTotFrontSelected();
+            tire.getName();
+
+        }
+
+    }
+
+    public void loadPrefs(Context mContext) {
         SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(mContext);
 
         mRaceName = sp.getString(RACE_NAME, "");
