@@ -127,6 +127,9 @@ public class MainActivity extends AppCompatActivity {
 
         MenuItem item = menu.getItem(2);
         item.setChecked(mAutoNext);
+
+        Button nextButton = (Button) findViewById(R.id.button_next);
+        nextButton.setVisibility(mAutoNext ? View.GONE : View.VISIBLE);
         return true;
     }
 
@@ -145,13 +148,18 @@ public class MainActivity extends AppCompatActivity {
             case R.id.give_race_name:
                 addRaceName();
                 break;
-            case R.id.use_html:
-                mUseHTML = !item.isChecked();
-                item.setChecked(mUseHTML);
+            case R.id.reset:
+                resetList();
                 break;
+//            case R.id.use_html:
+//                mUseHTML = !item.isChecked();
+//                item.setChecked(mUseHTML);
+//                break;
             case R.id.auto_save_bike:
                 mAutoNext = !item.isChecked();
                 item.setChecked(mAutoNext);
+                Button nextButton = (Button) findViewById(R.id.button_next);
+                nextButton.setVisibility(mAutoNext ? View.GONE : View.VISIBLE);
                 break;
         }
 
@@ -242,7 +250,11 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void updateHeader() {
-        headerTextView.setText(String.format(getResources().getString(R.string.moto_inserite), String.valueOf(bikeCounter)));
+        if (bikeCounter > 0) {
+            headerTextView.setText(String.format(getResources().getString(R.string.moto_inserite), String.valueOf(bikeCounter)));
+        } else {
+            headerTextView.setText("");
+        }
     }
 
     public void sendEmail() {

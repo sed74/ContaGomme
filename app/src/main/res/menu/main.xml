@@ -18,10 +18,8 @@
         android:title="@string/auto_go_on"
         app:showAsAction="never" />
     <item
-        android:id="@+id/use_html"
-        android:checkable="true"
+        android:id="@+id/reset"
         android:orderInCategory="100"
-        android:title="@string/use_html"
-        android:visible="false"
+        android:title="@string/reset_button"
         app:showAsAction="never" />
 </menu>

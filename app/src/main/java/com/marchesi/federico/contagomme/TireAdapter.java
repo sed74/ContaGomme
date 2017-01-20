@@ -1,11 +1,10 @@
 package com.marchesi.federico.contagomme;
 
 import android.content.Context;
-import android.content.res.Resources;
 import android.graphics.Color;
+import android.graphics.Typeface;
 import android.graphics.drawable.GradientDrawable;
 import android.support.annotation.NonNull;
-import android.support.v4.content.ContextCompat;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -23,13 +22,13 @@ public class TireAdapter extends ArrayAdapter<TireBrands> {
     private boolean RearSelected = false;
     private TextView frontCount;
     private TextView rearCount;
-
     private OnValueChangeListener changeListener;
+    private ArrayList<TireBrands> mArrayTire;
 
     public TireAdapter(Context context, ArrayList<TireBrands> tireBrands) {
         super(context, 0, tireBrands);
         changeListener = null;
-
+        mArrayTire = tireBrands;
     }
 
     @NonNull
@@ -104,18 +103,34 @@ public class TireAdapter extends ArrayAdapter<TireBrands> {
         return listItemView;
     }
 
+    private void deselectAll(boolean isFront) {
+
+        if (isFront) {
+            FrontSelected = false;
+            for (TireBrands t : mArrayTire) {
+                t.setFrontTyreSelected(false);
+            }
+        } else {
+            RearSelected = false;
+            for (TireBrands t : mArrayTire) {
+                t.setRearTyreSelected(false);
+            }
+        }
+        notifyDataSetChanged();
+    }
+
     public boolean canProceed() {
         return FrontSelected && RearSelected;
     }
 
     private void setSelected(TextView view, boolean isSelected, boolean isFront) {
         if (!isSelected) {
-//        view.setTypeface(null, Typeface.NORMAL);
+            view.setTypeface(null, Typeface.NORMAL);
 //        view.setAllCaps(false);
             view.setBackgroundColor(Color.TRANSPARENT);
 
         } else {
-//        view.setTypeface(null, Typeface.BOLD);
+            view.setTypeface(null, Typeface.BOLD);
 //        view.setAllCaps(true);
 
             GradientDrawable gd = new GradientDrawable(
