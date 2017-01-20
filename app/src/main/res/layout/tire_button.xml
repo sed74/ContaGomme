@@ -2,9 +2,8 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/activity_main"
     android:layout_width="match_parent"
-    android:layout_height="50dp"
-    android:layout_marginBottom="@dimen/margin_default_half"
-    android:background="@drawable/tire_rectangle"
+    android:layout_height="45dp"
+    android:background="@drawable/tire_rectangle_shadow"
     tools:context="com.marchesi.federico.contagomme.MainActivity">
 
     <View

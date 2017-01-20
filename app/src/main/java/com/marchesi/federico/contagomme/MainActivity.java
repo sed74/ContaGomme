@@ -10,8 +10,7 @@ import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.preference.PreferenceManager;
-import android.support.annotation.ColorInt;
-import android.support.annotation.RequiresApi;
+import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.text.Html;
 import android.view.Gravity;
@@ -27,6 +26,7 @@ import android.widget.Toast;
 
 import java.text.DateFormat;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Date;
 
 public class MainActivity extends AppCompatActivity {
@@ -69,14 +69,9 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-//        LinearLayout linearLayout = new LinearLayout(this);
-//        setContentView(linearLayout);
-//        linearLayout.setOrientation(LinearLayout.VERTICAL);
-//
         init();
 
         final Button nextButton = (Button) findViewById(R.id.button_next);
-
         headerTextView = (TextView) findViewById(R.id.moto_inserite);
 
         updateHeader();
@@ -114,7 +109,6 @@ public class MainActivity extends AppCompatActivity {
                 tireAdapter.notifyDataSetChanged();
                 bikeCounter++;
                 updateHeader();
-
             }
         });
         Button resetButton = (Button) findViewById(R.id.button_reset);
@@ -124,7 +118,6 @@ public class MainActivity extends AppCompatActivity {
                 resetList();
             }
         });
-
     }
 
     @Override
@@ -136,7 +129,6 @@ public class MainActivity extends AppCompatActivity {
         item.setChecked(mAutoNext);
         return true;
     }
-
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
@@ -197,21 +189,56 @@ public class MainActivity extends AppCompatActivity {
     }
 
     void loadList() {
+        loadList(arrayTireBrands);
+/*
         String[] tyreBrands = getResources().getStringArray(R.array.tire_brands);
 
         for (String tire : tyreBrands) {
             arrayTireBrands.add(new TireBrands(tire));
+        }
+*/
+
+    }
+
+    void loadList(ArrayList<TireBrands> arrayList) {
+        String[] tyreBrands = getResources().getStringArray(R.array.tire_brands);
+
+        for (String tire : tyreBrands) {
+            arrayList.add(new TireBrands(tire));
         }
 
     }
 
     private void resetList() {
 
+        final ArrayList<TireBrands> arrayTemp = new ArrayList<>();
+        final int bikeCounterTemp = bikeCounter;
+
+        loadList(arrayTemp);
+        Collections.copy(arrayTemp, arrayTireBrands);
+
+        View view = findViewById(R.id.activity_main);
         arrayTireBrands.clear();
         loadList();
         tireAdapter.notifyDataSetChanged();
         bikeCounter = 0;
         updateHeader();
+
+        Snackbar snackbar = Snackbar
+                .make(view, getResources().getString(R.string.race_reset), Snackbar.LENGTH_LONG)
+                .setAction(getResources().getString(R.string.reset_undo), new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        Collections.copy(arrayTireBrands, arrayTemp);
+                        bikeCounter = bikeCounterTemp;
+                        tireAdapter.notifyDataSetChanged();
+                        updateHeader();
+                        Snackbar snackbar1 = Snackbar.make(view, getResources().getString(R.string.done_undo), Snackbar.LENGTH_SHORT);
+                        snackbar1.show();
+                    }
+                });
+
+        snackbar.show();
     }
 
     private void updateHeader() {
@@ -302,7 +329,7 @@ public class MainActivity extends AppCompatActivity {
 //                db.insertCoffeeType(newCoffeeType, newCoffeeDescr);
                 mRaceName = raceName;
                 mRaceDescr = raceDescr;
-                Toast.makeText(MainActivity.this, raceName + "\n" + raceDescr, Toast.LENGTH_SHORT).show();
+                Toast.makeText(MainActivity.this, getResources().getString(R.string.data_saved), Toast.LENGTH_SHORT).show();
             }
         });
         inputDialog.show();
