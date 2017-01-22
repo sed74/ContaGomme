@@ -17,9 +17,10 @@ public class TireBrands {
         mName = name;
     }
 
-    public TireBrands(int id, String name) {
+    public TireBrands(String name, int frontSelected, int rearSelected) {
         mName = name;
-        mRelatedId = id;
+        mTotFrontSelected = frontSelected;
+        mTotRearSelected = rearSelected;
     }
 
     public String getName() {

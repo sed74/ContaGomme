@@ -52,24 +52,31 @@ public class MainActivity extends AppCompatActivity {
     private void savePrefs(Context mContext) {
         SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(mContext);
         SharedPreferences.Editor mEdit1 = sp.edit();
+        mEdit1.clear();
+        mEdit1.apply();
 
         mEdit1.putString(RACE_NAME, mRaceName);
         mEdit1.putString(RACE_DESCR, mRaceDescr);
         mEdit1.putBoolean(USE_HTML, mUseHTML);
         mEdit1.putBoolean(AUTO_NEXT, mAutoNext);
+        saveArrayPrefs(mEdit1);
 
-        mEdit1.commit();
+        mEdit1.apply();
     }
 
     private void saveArrayPrefs(SharedPreferences.Editor mEdit1) {
 
+        int arraySize = arrayTireBrands.size();
+        int i = 0;
+        mEdit1.putInt(ARRAY_SIZE, arraySize);
         for (TireBrands tire : arrayTireBrands) {
-            tire.getTotRearSelected();
-            tire.getTotFrontSelected();
-            tire.getName();
-
+            mEdit1
+                    .putString(ARRAY_NAME + String.valueOf(i), tire.getName())
+                    .putInt(ARRAY_FRONT_SELECTED + String.valueOf(i), tire.getTotFrontSelected())
+                    .putInt(ARRAY_REAR_SELECTED + String.valueOf(i), tire.getTotRearSelected());
+            i++;
         }
-
+        mEdit1.apply();
     }
 
     public void loadPrefs(Context mContext) {
@@ -79,6 +86,23 @@ public class MainActivity extends AppCompatActivity {
         mRaceDescr = sp.getString(RACE_DESCR, "");
         mAutoNext = sp.getBoolean(AUTO_NEXT, false);
         mUseHTML = sp.getBoolean(USE_HTML, false);
+        loadArrayPref(sp);
+    }
+
+    private void loadArrayPref(SharedPreferences sp) {
+        int arraySize = sp.getInt(ARRAY_SIZE, 0);
+        if (arraySize == 0) {
+            loadList();
+            return;
+        }
+        for (int i = 0; i < arraySize; i++) {
+            arrayTireBrands.add(new TireBrands(
+                    sp.getString(ARRAY_NAME + String.valueOf(i), ""),
+                    sp.getInt(ARRAY_FRONT_SELECTED + String.valueOf(i), 0),
+                    sp.getInt(ARRAY_REAR_SELECTED + String.valueOf(i), 0)
+            ));
+        }
+        tireAdapter.notifyDataSetChanged();
     }
 
     @Override
@@ -195,7 +219,7 @@ public class MainActivity extends AppCompatActivity {
             window.setNavigationBarColor(getResources().getColor(R.color.colorPrimary));
         }
         loadPrefs(this);
-        loadList();
+        //loadList();
         tireAdapter = new TireAdapter(this, arrayTireBrands);
     }
 
