@@ -3,6 +3,8 @@ package com.marchesi.federico.contagomme;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.pm.PackageInfo;
+import android.content.pm.PackageManager;
 import android.content.res.Resources;
 import android.graphics.Color;
 import android.net.Uri;
@@ -30,10 +32,13 @@ import java.util.Collections;
 import java.util.Date;
 
 public class MainActivity extends AppCompatActivity {
+
+    private static final String APP_VERSION = "app_version";
     private static final String RACE_NAME = "race_name";
     private static final String RACE_DESCR = "race_descr";
     private static final String USE_HTML = "use_html";
     private static final String AUTO_NEXT = "auto_next";
+    private static final String BIKE_COUNTER = "bike_counter";
 
     private static final String ARRAY_NAME = "array_name";
     private static final String ARRAY_SIZE = "array_size";
@@ -46,7 +51,7 @@ public class MainActivity extends AppCompatActivity {
     private static boolean mAutoNext = false;
     private ArrayList<TireBrands> arrayTireBrands = new ArrayList<>();
     private TireAdapter tireAdapter;
-    private int bikeCounter = 0;
+    private int mBikeCounter = 0;
     private TextView headerTextView;
 
     private void savePrefs(Context mContext) {
@@ -55,10 +60,23 @@ public class MainActivity extends AppCompatActivity {
         mEdit1.clear();
         mEdit1.apply();
 
+        PackageInfo packageInfo = null;
+        String packageVersion = "";
+        try {
+            packageInfo = getPackageManager().getPackageInfo(getPackageName(), 0);
+            packageVersion = packageInfo.versionName;
+        } catch (PackageManager.NameNotFoundException e) {
+            e.printStackTrace();
+        }
+
+        mEdit1.putString(APP_VERSION, packageVersion);
+
         mEdit1.putString(RACE_NAME, mRaceName);
         mEdit1.putString(RACE_DESCR, mRaceDescr);
         mEdit1.putBoolean(USE_HTML, mUseHTML);
         mEdit1.putBoolean(AUTO_NEXT, mAutoNext);
+        mEdit1.putInt(BIKE_COUNTER, mBikeCounter);
+
         saveArrayPrefs(mEdit1);
 
         mEdit1.apply();
@@ -67,14 +85,15 @@ public class MainActivity extends AppCompatActivity {
     private void saveArrayPrefs(SharedPreferences.Editor mEdit1) {
 
         int arraySize = arrayTireBrands.size();
-        int i = 0;
         mEdit1.putInt(ARRAY_SIZE, arraySize);
-        for (TireBrands tire : arrayTireBrands) {
-            mEdit1
-                    .putString(ARRAY_NAME + String.valueOf(i), tire.getName())
-                    .putInt(ARRAY_FRONT_SELECTED + String.valueOf(i), tire.getTotFrontSelected())
-                    .putInt(ARRAY_REAR_SELECTED + String.valueOf(i), tire.getTotRearSelected());
-            i++;
+
+        for (int i = 0; i < arraySize; i++) {
+
+            mEdit1.putString(ARRAY_NAME + String.valueOf(i), arrayTireBrands.get(i).getName());
+            mEdit1.putInt(ARRAY_FRONT_SELECTED + String.valueOf(i),
+                    arrayTireBrands.get(i).getTotFrontSelected());
+            mEdit1.putInt(ARRAY_REAR_SELECTED + String.valueOf(i),
+                    arrayTireBrands.get(i).getTotRearSelected());
         }
         mEdit1.apply();
     }
@@ -82,14 +101,39 @@ public class MainActivity extends AppCompatActivity {
     public void loadPrefs(Context mContext) {
         SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(mContext);
 
+
+        PackageInfo packageInfo = null;
+        String packageVersion = "";
+        try {
+            packageInfo = getPackageManager().getPackageInfo(getPackageName(), 0);
+            packageVersion = packageInfo.versionName;
+        } catch (PackageManager.NameNotFoundException e) {
+            e.printStackTrace();
+        }
+
+
+        String appVersion = sp.getString(APP_VERSION, "0");
+
+        if (!appVersion.equalsIgnoreCase(packageVersion)) {
+            // a new version is running, have to clear the saved data
+            SharedPreferences.Editor mEdit1 = sp.edit();
+            mEdit1.clear();
+            mEdit1.apply();
+            loadList();
+            Toast.makeText(this, getResources().getString(R.string.new_version_detected), Toast.LENGTH_LONG).show();
+            return;
+        }
+
         mRaceName = sp.getString(RACE_NAME, "");
         mRaceDescr = sp.getString(RACE_DESCR, "");
         mAutoNext = sp.getBoolean(AUTO_NEXT, false);
         mUseHTML = sp.getBoolean(USE_HTML, false);
+        mBikeCounter = sp.getInt(BIKE_COUNTER, 0);
         loadArrayPref(sp);
     }
 
     private void loadArrayPref(SharedPreferences sp) {
+        arrayTireBrands.clear();
         int arraySize = sp.getInt(ARRAY_SIZE, 0);
         if (arraySize == 0) {
             loadList();
@@ -102,7 +146,7 @@ public class MainActivity extends AppCompatActivity {
                     sp.getInt(ARRAY_REAR_SELECTED + String.valueOf(i), 0)
             ));
         }
-        tireAdapter.notifyDataSetChanged();
+//        tireAdapter.notifyDataSetChanged();
     }
 
     @Override
@@ -148,7 +192,7 @@ public class MainActivity extends AppCompatActivity {
                 }
 
                 tireAdapter.notifyDataSetChanged();
-                bikeCounter++;
+                mBikeCounter++;
                 updateHeader();
             }
         });
@@ -219,7 +263,6 @@ public class MainActivity extends AppCompatActivity {
             window.setNavigationBarColor(getResources().getColor(R.color.colorPrimary));
         }
         loadPrefs(this);
-        //loadList();
         tireAdapter = new TireAdapter(this, arrayTireBrands);
     }
 
@@ -261,7 +304,7 @@ public class MainActivity extends AppCompatActivity {
     private void resetList() {
 
         final ArrayList<TireBrands> arrayTemp = new ArrayList<>();
-        final int bikeCounterTemp = bikeCounter;
+        final int bikeCounterTemp = mBikeCounter;
 
         loadList(arrayTemp);
         Collections.copy(arrayTemp, arrayTireBrands);
@@ -270,7 +313,7 @@ public class MainActivity extends AppCompatActivity {
         arrayTireBrands.clear();
         loadList();
         tireAdapter.notifyDataSetChanged();
-        bikeCounter = 0;
+        mBikeCounter = 0;
         updateHeader();
 
         Snackbar snackbar = Snackbar
@@ -279,11 +322,11 @@ public class MainActivity extends AppCompatActivity {
                     @Override
                     public void onClick(View view) {
                         Collections.copy(arrayTireBrands, arrayTemp);
-                        bikeCounter = bikeCounterTemp;
+                        mBikeCounter = bikeCounterTemp;
                         tireAdapter.notifyDataSetChanged();
                         updateHeader();
-                        Snackbar snackbar1 = Snackbar.make(view, getResources().getString(R.string.done_undo), Snackbar.LENGTH_SHORT);
-                        snackbar1.show();
+                        Snackbar.make(view, getResources().getString(R.string.done_undo), Snackbar.LENGTH_SHORT).show();
+
                     }
                 });
 
@@ -291,8 +334,8 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void updateHeader() {
-        if (bikeCounter > 0) {
-            headerTextView.setText(String.format(getResources().getString(R.string.moto_inserite), String.valueOf(bikeCounter)));
+        if (mBikeCounter > 0) {
+            headerTextView.setText(String.format(getResources().getString(R.string.moto_inserite), String.valueOf(mBikeCounter)));
         } else {
             headerTextView.setText("");
         }

@@ -14,7 +14,8 @@
     <string name="auto_go_on">Continua automaticamente</string>
     <string name="subject">Conteggio gomme gara %1$s del %2$s.</string>
     <string name="data_saved">Salvataggio effettuato</string>
-    <string name="race_reset">Dati azzerati</string>
+    <string name="race_reset">Azzeramento effettuato con successo.</string>
     <string name="reset_undo">Annulla</string>
-    <string name="done_undo">Operazione annullata</string>
+    <string name="done_undo">Azzeramento annullato.</string>
+    <string name="new_version_detected">È in esecuzione una nuova versione dell\'app. I dati salvati precedentemente non sono più validi, per tanto saranno cancellati.</string>
 </resources>
