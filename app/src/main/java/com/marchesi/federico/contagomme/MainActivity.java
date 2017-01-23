@@ -150,7 +150,6 @@ public class MainActivity extends AppCompatActivity {
                     sp.getInt(ARRAY_REAR_SELECTED + String.valueOf(i), 0)
             ));
         }
-//        tireAdapter.notifyDataSetChanged();
     }
 
     @Override
