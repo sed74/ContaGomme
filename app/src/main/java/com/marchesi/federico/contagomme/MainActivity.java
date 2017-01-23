@@ -10,6 +10,7 @@ import android.graphics.Color;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.Environment;
 import android.os.Handler;
 import android.preference.PreferenceManager;
 import android.support.design.widget.Snackbar;
@@ -26,6 +27,9 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
 import java.text.DateFormat;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -349,15 +353,20 @@ public class MainActivity extends AppCompatActivity {
         intent.setType("text/html");
         intent.setData(Uri.parse("mailto:")); // only email apps should handle this
 
+        String emailContent = getEmailBody();
         Resources res = getResources();
         String subject = String.format(res.getString(R.string.subject), mRaceName, String.format(currentDateTimeString));
         intent.putExtra(Intent.EXTRA_SUBJECT, subject);
 
-        Toast.makeText(this, subject, Toast.LENGTH_SHORT).show();
+        String fileName = createFile(subject, emailContent);
+
+        intent.putExtra(Intent.EXTRA_STREAM, Uri.parse("file://" + fileName));
+
+//        Toast.makeText(this, subject, Toast.LENGTH_SHORT).show();
         if (mUseHTML) {
             intent.putExtra(Intent.EXTRA_TEXT, Html.fromHtml(getEmailBodyHTML()));
         } else {
-            intent.putExtra(Intent.EXTRA_TEXT, getEmailBody());
+            intent.putExtra(Intent.EXTRA_TEXT, emailContent);
         }
 
         if (intent.resolveActivity(getPackageManager()) != null) {
@@ -431,4 +440,30 @@ public class MainActivity extends AppCompatActivity {
         inputDialog.show();
     }
 
+    private String createFile(String fileName, String fileContent) {
+
+        try {
+
+            // this will create a new name everytime and unique
+            File root = new File(Environment.getExternalStorageDirectory(), "ContaGomme");
+            // if external memory exists and folder with name Notes
+            if (!root.exists()) {
+                root.mkdirs(); // this will create folder.
+            }
+            if (!fileName.endsWith(".")) fileName += ".";
+            fileName += "txt";
+
+            File filepath = new File(root, fileName);  // file path to save
+            FileWriter writer = new FileWriter(filepath);
+            writer.append(fileContent);
+            writer.flush();
+            writer.close();
+
+            return filepath.getAbsolutePath();
+        } catch (IOException e) {
+            e.printStackTrace();
+
+        }
+        return "";
+    }
 }
