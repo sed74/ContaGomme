@@ -41,6 +41,8 @@ import java.util.Date;
 
 public class MainActivity extends AppCompatActivity implements ActivityCompat.OnRequestPermissionsResultCallback {
 
+    private static final String TAG = PackageInfo.class.getName();
+
     private static final String APP_VERSION = "app_version";
     private static final String RACE_NAME = "race_name";
     private static final String RACE_DESCR = "race_descr";
@@ -255,7 +257,7 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
                 nextButton.setVisibility(mAutoNext ? View.GONE : View.VISIBLE);
                 break;
             case R.id.settings:
-
+//                SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(this);
                 Intent intent = new Intent(this, SettingsActivity.class);
                 startActivity(intent);
                 return true;
