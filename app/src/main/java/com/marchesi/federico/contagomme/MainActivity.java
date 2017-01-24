@@ -1,5 +1,6 @@
 package com.marchesi.federico.contagomme;
 
+import android.Manifest;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -13,7 +14,10 @@ import android.os.Bundle;
 import android.os.Environment;
 import android.os.Handler;
 import android.preference.PreferenceManager;
+import android.support.annotation.NonNull;
 import android.support.design.widget.Snackbar;
+import android.support.v4.app.ActivityCompat;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.text.Html;
 import android.view.Gravity;
@@ -35,7 +39,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Date;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity implements ActivityCompat.OnRequestPermissionsResultCallback {
 
     private static final String APP_VERSION = "app_version";
     private static final String RACE_NAME = "race_name";
@@ -43,6 +47,7 @@ public class MainActivity extends AppCompatActivity {
     private static final String USE_HTML = "use_html";
     private static final String AUTO_NEXT = "auto_next";
     private static final String BIKE_COUNTER = "bike_counter";
+    private static final int REQUEST_WRITE_EXTERNAL_STORAGE = 1;
 
     private static final String ARRAY_NAME = "array_name";
     private static final String ARRAY_SIZE = "array_size";
@@ -362,7 +367,10 @@ public class MainActivity extends AppCompatActivity {
         String subject = String.format(res.getString(R.string.subject), mRaceName, String.format(currentDateTimeString));
         intent.putExtra(Intent.EXTRA_SUBJECT, subject);
 
+        checkForArchiveAccess();
+
         String fileName = createFile(subject, emailContent);
+        if (fileName.isEmpty()) return;
 
         intent.putExtra(Intent.EXTRA_STREAM, Uri.parse("file://" + fileName));
 
@@ -469,5 +477,66 @@ public class MainActivity extends AppCompatActivity {
 
         }
         return "";
+    }
+
+    private void checkForArchiveAccess() {
+        int permissionCheck = ContextCompat.checkSelfPermission(this,
+                Manifest.permission.WRITE_EXTERNAL_STORAGE);
+
+        if (permissionCheck != PackageManager.PERMISSION_GRANTED) {
+            // Should we show an explanation?
+            if (ActivityCompat.shouldShowRequestPermissionRationale(this,
+                    Manifest.permission.WRITE_EXTERNAL_STORAGE)) {
+
+                Toast.makeText(this, getResources().getString(R.string.explain_why_write_storage), Toast.LENGTH_LONG).show();
+                // Show an explanation to the user *asynchronously* -- don't block
+                // this thread waiting for the user's response! After the user
+                // sees the explanation, try again to request the permission.
+
+                ActivityCompat.requestPermissions(this,
+                        new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE},
+                        REQUEST_WRITE_EXTERNAL_STORAGE);
+            } else {
+
+                // No explanation needed, we can request the permission.
+
+                ActivityCompat.requestPermissions(this,
+                        new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE},
+                        REQUEST_WRITE_EXTERNAL_STORAGE);
+
+                // REQUEST_WRITE_EXTERNAL_STORAGE is an
+                // app-defined int constant. The callback method gets the
+                // result of the request.
+            }
+        }
+    }
+
+    /**
+     * Callback received when a permissions request has been completed.
+     */
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions,
+                                           @NonNull int[] grantResults) {
+
+        View view = findViewById(R.id.activity_main);
+        if (requestCode == REQUEST_WRITE_EXTERNAL_STORAGE) {
+            // BEGIN_INCLUDE(permission_result)
+            // Received permission result for camera permission.
+
+            // Check if the only required permission has been granted
+            if (grantResults.length == 1 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                // Camera permission has been granted, preview can be displayed
+//                Log.i(TAG, "CAMERA permission has now been granted. Showing preview.");
+                Snackbar.make(view, R.string.permision_available_write_storage,
+                        Snackbar.LENGTH_SHORT).show();
+            } else {
+//                Log.i(TAG, "CAMERA permission was NOT granted.");
+                Snackbar.make(view, R.string.permision_not_available_write_storage,
+                        Snackbar.LENGTH_SHORT).show();
+
+            }
+            // END_INCLUDE(permission_result)
+
+        }
     }
 }
