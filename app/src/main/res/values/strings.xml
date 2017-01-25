@@ -50,15 +50,6 @@
 
     <string name="pref_title_sync_frequency">Sync frequency</string>
 
-    <string-array name="pref_file_type">
-        <item>TXT</item>
-        <item>CSV</item>
-    </string-array>
-    <string-array name="pref_file_type_values">
-        <item>0</item>
-        <item>1</item>
-    </string-array>
-
     <string-array name="pref_sync_frequency_titles">
         <item>15 minutes</item>
         <item>30 minutes</item>
@@ -111,4 +102,7 @@
     <string name="explain_why_write_storage">L\'accesso alla scrittura è necessario per poter salvare il file con la lista delle gomme.</string>
     <string name="permision_available_write_storage">Accesso all\'archivio concesso</string>
     <string name="permision_not_available_write_storage">Accesso all\'archivio negato.</string>
+    <string name="race_name">Gara di</string>
+    <string name="brand">Marca</string>
+    <string name="separate_with_colon">Inserisci indirizzi separati da virgola</string>
 </resources>

@@ -19,7 +19,6 @@ import android.support.design.widget.Snackbar;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
-import android.text.Html;
 import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -42,7 +41,6 @@ import java.util.Date;
 public class MainActivity extends AppCompatActivity implements ActivityCompat.OnRequestPermissionsResultCallback {
 
     private static final String TAG = PackageInfo.class.getName();
-
     private static final String APP_VERSION = "app_version";
     private static final String RACE_NAME = "race_name";
     private static final String RACE_DESCR = "race_descr";
@@ -50,16 +48,18 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
     private static final String AUTO_NEXT = "auto_next";
     private static final String BIKE_COUNTER = "bike_counter";
     private static final int REQUEST_WRITE_EXTERNAL_STORAGE = 1;
-
     private static final String ARRAY_NAME = "array_name";
     private static final String ARRAY_SIZE = "array_size";
     private static final String ARRAY_FRONT_SELECTED = "array_front_selected";
     private static final String ARRAY_REAR_SELECTED = "array_rear_selected";
-
     private static String mRaceName;
     private static String mRaceDescr;
-    private static boolean mUseHTML = false;
-    private static boolean mAutoNext = false;
+    private final String TEXT_SEPARATOR = ",";
+    private int mAttachType = 0;
+    private boolean mUseHTML = false;
+    private boolean mAttachFile = false;
+    private boolean mAutoNext = false;
+    private String mEmailRecipient = "";
     private ArrayList<TireBrands> arrayTireBrands = new ArrayList<>();
     private TireAdapter tireAdapter;
     private int mBikeCounter = 0;
@@ -68,7 +68,7 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
     private void savePrefs(Context mContext) {
         SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(mContext);
         SharedPreferences.Editor mEdit1 = sp.edit();
-        mEdit1.clear();
+        clearArrayPref(sp);
         mEdit1.apply();
 
         PackageInfo packageInfo = null;
@@ -157,6 +157,22 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
                     sp.getInt(ARRAY_REAR_SELECTED + String.valueOf(i), 0)
             ));
         }
+    }
+
+    private void clearArrayPref(SharedPreferences sp) {
+
+        SharedPreferences.Editor editor = sp.edit();
+        int arraySize = sp.getInt(ARRAY_SIZE, 0);
+
+        if (arraySize == 0) return;
+
+        for (int i = 0; i < arraySize; i++) {
+            editor.remove(ARRAY_NAME + String.valueOf(i));
+            editor.remove(ARRAY_FRONT_SELECTED + String.valueOf(i));
+            editor.remove(ARRAY_REAR_SELECTED + String.valueOf(i));
+        }
+        editor.remove(ARRAY_SIZE);
+
     }
 
     @Override
@@ -272,6 +288,25 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
         savePrefs(this);
     }
 
+    @Override
+    protected void onResume() {
+        super.onResume();
+        loadSettings();
+
+    }
+
+    private void loadSettings() {
+        SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(this);
+
+        mAutoNext = sharedPref.getBoolean(SettingsActivity.KEY_PREF_AUTO_CONTINUE, false);
+        mEmailRecipient = sharedPref.getString(SettingsActivity.KEY_PREF_EMAIL_RECIPIENT, "");
+        mAttachFile = sharedPref.getBoolean(SettingsActivity.KEY_PREF_ATTACH_FILE, false);
+        mAttachType = Integer.parseInt(sharedPref.getString(
+                SettingsActivity.KEY_PREF_ATTACHMENT_TYPE, "TXT"));
+
+//        Toast.makeText(this, mAttachType, Toast.LENGTH_SHORT).show();
+    }
+
     private void init() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
             Window window = getWindow();
@@ -333,10 +368,12 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
 
         Snackbar snackbar = Snackbar
                 .make(view, getResources().getString(R.string.race_reset), Snackbar.LENGTH_LONG)
+                .setDuration(5000)
                 .setAction(getResources().getString(R.string.reset_undo), new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
                         Collections.copy(arrayTireBrands, arrayTemp);
+
                         mBikeCounter = bikeCounterTemp;
                         tireAdapter.notifyDataSetChanged();
                         updateHeader();
@@ -358,31 +395,47 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
 
     public void sendEmail() {
 
-        //String currentDateTimeString = DateFormat.getDateTimeInstance().format(new Date());
         String currentDateTimeString = DateFormat.getDateInstance().format(new Date());
         Intent intent = new Intent(Intent.ACTION_SENDTO);
         intent.setType("text/html");
         intent.setData(Uri.parse("mailto:")); // only email apps should handle this
 
         String emailContent = getEmailBody();
+
         Resources res = getResources();
         String subject = String.format(res.getString(R.string.subject), mRaceName, String.format(currentDateTimeString));
         intent.putExtra(Intent.EXTRA_SUBJECT, subject);
 
-        checkForArchiveAccess();
+        if (!mEmailRecipient.isEmpty()) {
 
-        String fileName = createFile(subject, emailContent);
-        if (fileName.isEmpty()) return;
-
-        intent.putExtra(Intent.EXTRA_STREAM, Uri.parse("file://" + fileName));
-
-//        Toast.makeText(this, subject, Toast.LENGTH_SHORT).show();
-        if (mUseHTML) {
-            intent.putExtra(Intent.EXTRA_TEXT, Html.fromHtml(getEmailBodyHTML()));
-        } else {
-            intent.putExtra(Intent.EXTRA_TEXT, emailContent);
+            String[] to = mEmailRecipient.split(",");
+            intent.putExtra(Intent.EXTRA_EMAIL, to);
         }
 
+        if (mAttachFile) {
+            String emailAttach = "";
+            checkForArchiveAccess();
+
+            switch (mAttachType) {
+                case 0: // TXT
+                    emailAttach = emailContent;
+                    break;
+                case 1: // CSV
+                    emailAttach = getEmailBodyCSV();
+                    break;
+                case 2: // HTML
+                    emailAttach = getEmailBodyHTML();
+                    break;
+            }
+
+            String[] mTestArray = getResources().getStringArray(R.array.pref_file_type);
+            String fileName = createFile(subject, emailAttach, mTestArray[mAttachType]);
+            if (fileName.isEmpty()) return;
+            intent.putExtra(Intent.EXTRA_STREAM, Uri.parse("file://" + fileName));
+        }
+
+//        Toast.makeText(this, subject, Toast.LENGTH_SHORT).show();
+        intent.putExtra(Intent.EXTRA_TEXT, emailContent);
         if (intent.resolveActivity(getPackageManager()) != null) {
             startActivity(intent);
         }
@@ -430,6 +483,25 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
         return emailContent;
     }
 
+    private String getEmailBodyCSV() {
+
+        String emailContent = "";
+
+        emailContent += getResources().getString(R.string.race_name) + mRaceName;
+        emailContent += "\n";
+        emailContent += getResources().getString(R.string.brand) + TEXT_SEPARATOR;
+        emailContent += getResources().getString(R.string.front_tire) + TEXT_SEPARATOR;
+        emailContent += getResources().getString(R.string.rear_tire) + TEXT_SEPARATOR;
+
+        for (TireBrands t : arrayTireBrands) {
+            emailContent += "\n" + t.getName() + TEXT_SEPARATOR;
+            emailContent += t.getTotFrontSelected() + TEXT_SEPARATOR;
+            emailContent += t.getTotRearSelected() + TEXT_SEPARATOR;
+        }
+
+        return emailContent;
+    }
+
     private void addRaceName() {
 
         InputDialog inputDialog = new InputDialog(this, R.string.race_name_title, R.string.add_race_name, mRaceName, mRaceDescr);
@@ -454,7 +526,7 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
         inputDialog.show();
     }
 
-    private String createFile(String fileName, String fileContent) {
+    private String createFile(String fileName, String fileContent, String extension) {
 
         try {
 
@@ -465,7 +537,7 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
                 root.mkdirs(); // this will create folder.
             }
             if (!fileName.endsWith(".")) fileName += ".";
-            fileName += "txt";
+            fileName += extension;
 
             File filepath = new File(root, fileName);  // file path to save
             FileWriter writer = new FileWriter(filepath);

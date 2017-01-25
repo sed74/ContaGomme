@@ -16,6 +16,7 @@
         android:checkable="true"
         android:orderInCategory="30"
         android:title="@string/auto_go_on"
+        android:visible="false"
         app:showAsAction="never" />
     <item
         android:id="@+id/reset"
