@@ -30,6 +30,9 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.marchesi.federico.contagomme.DBHelper.DatabaseHelper;
+import com.marchesi.federico.contagomme.DBModel.Brand;
+
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
@@ -38,7 +41,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Date;
 
-public class MainActivity extends AppCompatActivity implements ActivityCompat.OnRequestPermissionsResultCallback {
+public class MainActivity extends AppCompatActivity {
 
     private static final String TAG = PackageInfo.class.getName();
     private static final String APP_VERSION = "app_version";
@@ -229,6 +232,14 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
                 resetList();
             }
         });
+
+        DatabaseHelper dbHelper = new DatabaseHelper(getBaseContext());
+        Brand brand = new Brand("Michelin");
+        dbHelper.createBrand(brand);
+        brand = new Brand("Dunlop");
+        dbHelper.createBrand(brand);
+        brand = new Brand("GoldenTyre");
+        dbHelper.createBrand(brand);
     }
 
     @Override
@@ -262,10 +273,10 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
             case R.id.reset:
                 resetList();
                 break;
-//            case R.id.use_html:
-//                mUseHTML = !item.isChecked();
-//                item.setChecked(mUseHTML);
-//                break;
+            case R.id.brands:
+                Intent intent = new Intent(this, BrandListActivity.class);
+                startActivity(intent);
+                break;
             case R.id.auto_save_bike:
                 mAutoNext = !item.isChecked();
                 item.setChecked(mAutoNext);
@@ -274,8 +285,8 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
                 break;
             case R.id.settings:
 //                SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(this);
-                Intent intent = new Intent(this, SettingsActivity.class);
-                startActivity(intent);
+                Intent i = new Intent(this, SettingsActivity.class);
+                startActivity(i);
                 return true;
         }
 
@@ -332,14 +343,6 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
 
     void loadList() {
         loadList(arrayTireBrands);
-/*
-        String[] tyreBrands = getResources().getStringArray(R.array.tire_brands);
-
-        for (String tire : tyreBrands) {
-            arrayTireBrands.add(new TireBrands(tire));
-        }
-*/
-
     }
 
     void loadList(ArrayList<TireBrands> arrayList) {

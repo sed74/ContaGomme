@@ -49,7 +49,6 @@
         android:layout_height="match_parent"
         android:layout_alignLeft="@id/fakeView"
         android:layout_alignParentRight="true"
-        android:layout_gravity="end"
         android:layout_margin="@dimen/margin_small"
         android:gravity="center_vertical"
         android:paddingLeft="@dimen/tire_button_internal_padding"

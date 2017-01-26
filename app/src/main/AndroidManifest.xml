@@ -22,6 +22,9 @@
             android:label="@string/title_activity_settings">
 
         </activity>
+        <activity android:name=".BrandListActivity">
+
+        </activity>
     </application>
 
 </manifest>
