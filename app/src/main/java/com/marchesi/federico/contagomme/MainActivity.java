@@ -30,9 +30,6 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.marchesi.federico.contagomme.DBHelper.DatabaseHelper;
-import com.marchesi.federico.contagomme.DBModel.Brand;
-
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
@@ -233,13 +230,13 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-        DatabaseHelper dbHelper = new DatabaseHelper(getBaseContext());
-        Brand brand = new Brand("Michelin");
-        dbHelper.createBrand(brand);
-        brand = new Brand("Dunlop");
-        dbHelper.createBrand(brand);
-        brand = new Brand("GoldenTyre");
-        dbHelper.createBrand(brand);
+//        DatabaseHelper dbHelper = new DatabaseHelper(getBaseContext());
+//        Brand brand = new Brand("Michelin");
+//        dbHelper.createBrand(brand);
+//        brand = new Brand("Dunlop");
+//        dbHelper.createBrand(brand);
+//        brand = new Brand("GoldenTyre");
+//        dbHelper.createBrand(brand);
     }
 
     @Override

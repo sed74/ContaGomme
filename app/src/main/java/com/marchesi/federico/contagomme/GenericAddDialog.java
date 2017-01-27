@@ -7,45 +7,46 @@ import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
+import android.widget.Button;
 import android.widget.EditText;
 
-public class AddBrandDialog {
+public class GenericAddDialog {
 
     private final Context context;
     private final View dialogView;
-    private final View okBtn, cancelBtn;
+    private final Button okBtn, cancelBtn;
     private final EditText editName;
     private final EditText editDescr;
     private final int title;
 
     private InputListener inputListener = null;
 
-    public AddBrandDialog(Context context, int title, int hint) {
+    public GenericAddDialog(Context context, int title, int hint) {
         this.context = context;
-        this.dialogView = LayoutInflater.from(context).inflate(R.layout.input_dialog, null);
+        this.dialogView = LayoutInflater.from(context).inflate(R.layout.general_input_dialog, null);
         this.title = title;
         this.editName = (EditText) dialogView.findViewById(R.id.input);
         this.editDescr = (EditText) dialogView.findViewById(R.id.coffe_type_descr);
         editName.setHint(hint);
-        this.okBtn = dialogView.findViewById(R.id.btn_ok);
-        this.cancelBtn = dialogView.findViewById(R.id.btn_cancel);
+        this.okBtn = (Button) dialogView.findViewById(R.id.btn_ok);
+        this.cancelBtn = (Button) dialogView.findViewById(R.id.btn_cancel);
     }
 
-    public AddBrandDialog(Context context, int title, int hint, String defaultName, String defaultDescr) {
+    public GenericAddDialog(Context context, int title, int hint, String okBtnTitle, String cancelBtnTitle) {
         this.context = context;
         this.dialogView = LayoutInflater.from(context).inflate(R.layout.input_dialog, null);
         this.title = title;
         this.editName = (EditText) dialogView.findViewById(R.id.input);
         this.editDescr = (EditText) dialogView.findViewById(R.id.coffe_type_descr);
         editName.setHint(hint);
-        this.okBtn = dialogView.findViewById(R.id.btn_ok);
-        this.cancelBtn = dialogView.findViewById(R.id.btn_cancel);
+        this.okBtn = (Button) dialogView.findViewById(R.id.btn_ok);
+        this.cancelBtn = (Button) dialogView.findViewById(R.id.btn_cancel);
 
-        if (!defaultName.isEmpty()) {
-            editName.setText(defaultName);
+        if (!okBtnTitle.isEmpty()) {
+            okBtn.setText(okBtnTitle);
         }
-        if (!defaultDescr.isEmpty()) {
-            editDescr.setText(defaultDescr);
+        if (!cancelBtnTitle.isEmpty()) {
+            cancelBtn.setText(cancelBtnTitle);
         }
     }
 

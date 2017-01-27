@@ -52,9 +52,13 @@
     <string name="add_button">Aggiungi</string>
     <string name="brands_menu">Marche</string>
     <string name="dialog_delete_title">Cancella</string>
-    <string name="dialog_delete_message">Vuoi cancellare la marca selezionata?</string>
+    <string name="dialog_delete_message">Vuoi cancellare %1$s dall\'elenco?</string>
     <string name="dialog_delete_button">Cancella</string>
     <string name="dialog_cancel_button">Annulla</string>
-    <string name="add_brand_dialog_title">Aggiungi</string>
+    <string name="add_brand_dialog_title">Aggiungi una marca</string>
     <string name="add_brand_dialog_hint">Nome Marca</string>
+    <string name="dialog_new_brand_title">Aggiungi nuova marca</string>
+    <string name="dialog_new_brand_message">Inserisci la nuova marca</string>
+    <string name="dialog_add_button">Aggiungi</string>
+    <string name="brand_list_activity_name">Marche</string>
 </resources>

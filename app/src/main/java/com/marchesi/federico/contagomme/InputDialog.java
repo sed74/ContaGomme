@@ -46,6 +46,8 @@ public class InputDialog {
         }
         if (!defaultDescr.isEmpty()) {
             editDescr.setText(defaultDescr);
+        } else {
+            editDescr.setVisibility(View.GONE);
         }
     }
 

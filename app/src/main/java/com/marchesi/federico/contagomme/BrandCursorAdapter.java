@@ -1,11 +1,14 @@
 package com.marchesi.federico.contagomme;
 
 import android.content.Context;
+import android.content.DialogInterface;
 import android.database.Cursor;
+import android.support.v7.app.AlertDialog;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.CursorAdapter;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.marchesi.federico.contagomme.DBHelper.DatabaseHelper;
@@ -41,12 +44,48 @@ public class BrandCursorAdapter extends CursorAdapter {
         TextView brandTV = (TextView) view.findViewById(R.id.brand_name);
         //TextView tvPriority = (TextView) view.findViewById(R.id.tvPriority);
         // Extract properties from cursor
-        String brand = cursor.getString(cursor.getColumnIndex(DatabaseHelper.COLUMN_BRAND_NAME));
+        final String brand = cursor.getString(cursor.getColumnIndex(DatabaseHelper.COLUMN_BRAND_NAME));
         int id = cursor.getInt(cursor.getColumnIndex(DatabaseHelper._ID));
 
         // Populate fields with extracted properties
-        brandTV.setText(brand + "(" + String.valueOf(id) + ")");
+        brandTV.setText(brand);
         //tvPriority.setText(String.valueOf(priority));
+        ImageView deleteImage = (ImageView) view.findViewById(R.id.delete_button);
+
+        deleteImage.setTag(id);
+
+        deleteImage.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                AlertDialog myQuittingDialogBox = new AlertDialog.Builder(context)
+                        //set message, title, and icon
+                        .setTitle(context.getResources().getString(R.string.dialog_delete_title))
+                        .setMessage(String.format(context.getResources().getString(R.string.dialog_delete_message), brand))
+                        .setIcon(R.drawable.delete)
+
+                        .setPositiveButton(context.getResources().getString(R.string.dialog_delete_button), new DialogInterface.OnClickListener() {
+
+                            public void onClick(DialogInterface dialog, int whichButton) {
+                                Cursor cur = cursor;
+                                DatabaseHelper dbHelper = new DatabaseHelper(context);
+
+                                ImageView delete = (ImageView) view.findViewById(R.id.delete_button);
+                                dbHelper.deleteBrand((int) delete.getTag());
+                                Cursor d = dbHelper.getBrandsCursor();
+                                swapCursor(d);
+                                dialog.dismiss();
+                            }
+                        })
+                        .setNegativeButton(context.getResources().getString(R.string.dialog_cancel_button), new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int which) {
+                                dialog.dismiss();
+                            }
+                        })
+                        .show();
+
+            }
+        });
 
     }
 }
