@@ -22,6 +22,7 @@
 
     <!-- Strings related to Settings -->
 
+
     <!-- Example General settings -->
     <string name="pref_header_general">General</string>
 
@@ -61,4 +62,8 @@
     <string name="dialog_new_brand_message">Inserisci la nuova marca</string>
     <string name="dialog_add_button">Aggiungi</string>
     <string name="brand_list_activity_name">Marche</string>
+
+    <string name="navigation_drawer_open">Open navigation drawer</string>
+    <string name="navigation_drawer_close">Close navigation drawer</string>
+
 </resources>
