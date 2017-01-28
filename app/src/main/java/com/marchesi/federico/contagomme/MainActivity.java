@@ -15,15 +15,10 @@ import android.os.Environment;
 import android.os.Handler;
 import android.preference.PreferenceManager;
 import android.support.annotation.NonNull;
-import android.support.design.widget.NavigationView;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
-import android.support.v4.view.GravityCompat;
-import android.support.v4.widget.DrawerLayout;
-import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.Toolbar;
 import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -43,8 +38,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Date;
 
-public class MainActivity extends AppCompatActivity
-        implements NavigationView.OnNavigationItemSelectedListener {
+public class MainActivity extends AppCompatActivity {
 
     private static final String TAG = PackageInfo.class.getName();
     private static final String APP_VERSION = "app_version";
@@ -185,8 +179,7 @@ public class MainActivity extends AppCompatActivity
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-        setSupportActionBar(toolbar);
+
         init();
 
         final Button nextButton = (Button) findViewById(R.id.button_next);
@@ -236,15 +229,6 @@ public class MainActivity extends AppCompatActivity
                 resetList();
             }
         });
-
-        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
-        ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
-                this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
-        drawer.setDrawerListener(toggle);
-        toggle.syncState();
-
-        NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
-        navigationView.setNavigationItemSelectedListener(this);
 
 //        DatabaseHelper dbHelper = new DatabaseHelper(getBaseContext());
 //        Brand brand = new Brand("Michelin");
@@ -326,7 +310,7 @@ public class MainActivity extends AppCompatActivity
         mEmailRecipient = sharedPref.getString(SettingsActivity.KEY_PREF_EMAIL_RECIPIENT, "");
         mAttachFile = sharedPref.getBoolean(SettingsActivity.KEY_PREF_ATTACH_FILE, false);
         mAttachType = Integer.parseInt(sharedPref.getString(
-                SettingsActivity.KEY_PREF_ATTACHMENT_TYPE, "TXT"));
+                SettingsActivity.KEY_PREF_ATTACHMENT_TYPE, "1"));
 
 //        Toast.makeText(this, mAttachType, Toast.LENGTH_SHORT).show();
     }
@@ -628,30 +612,5 @@ public class MainActivity extends AppCompatActivity
             // END_INCLUDE(permission_result)
 
         }
-    }
-
-    @Override
-    public boolean onNavigationItemSelected(@NonNull MenuItem item) {
-        int id = item.getItemId();
-
-//        if (id == R.id.nav_coffee_type) {
-//            Intent intent = new Intent(MainActivity.this, CoffeTypesActivity.class);
-//
-//            startActivity(intent);
-//        } else if (id == R.id.nav_gallery) {
-//
-//        } else if (id == R.id.nav_slideshow) {
-//
-//        } else if (id == R.id.nav_manage) {
-//
-//        } else if (id == R.id.nav_share) {
-//
-//        } else if (id == R.id.nav_send) {
-//
-//        }
-
-        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
-        drawer.closeDrawer(GravityCompat.START);
-        return true;
     }
 }

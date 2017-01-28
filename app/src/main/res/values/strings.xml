@@ -51,7 +51,7 @@
     <string name="brand">Marca</string>
     <string name="separate_with_colon">Inserisci indirizzi separati da virgola</string>
     <string name="add_button">Aggiungi</string>
-    <string name="brands_menu">Marche</string>
+    <string name="brands_menu">Anagrafica Marche</string>
     <string name="dialog_delete_title">Cancella</string>
     <string name="dialog_delete_message">Vuoi cancellare %1$s dall\'elenco?</string>
     <string name="dialog_delete_button">Cancella</string>
@@ -65,5 +65,6 @@
 
     <string name="navigation_drawer_open">Open navigation drawer</string>
     <string name="navigation_drawer_close">Close navigation drawer</string>
+    <string name="races">Anagrafica Gare</string>
 
 </resources>
