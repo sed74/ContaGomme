@@ -124,7 +124,7 @@ public class DatabaseHelper extends SQLiteOpenHelper implements BaseColumns {
     public Cursor getBrandsCursor() {
         SQLiteDatabase db = this.getReadableDatabase();
 
-        String selectQuery = "SELECT  * FROM " + TABLE_BRANDS;
+        String selectQuery = "SELECT * FROM " + TABLE_BRANDS + " ORDER BY " + COLUMN_BRAND_ORDER;
 
         Log.e(LOG, selectQuery);
 

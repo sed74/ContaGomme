@@ -230,13 +230,6 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-//        DatabaseHelper dbHelper = new DatabaseHelper(getBaseContext());
-//        Brand brand = new Brand("Michelin");
-//        dbHelper.createBrand(brand);
-//        brand = new Brand("Dunlop");
-//        dbHelper.createBrand(brand);
-//        brand = new Brand("GoldenTyre");
-//        dbHelper.createBrand(brand);
     }
 
     @Override

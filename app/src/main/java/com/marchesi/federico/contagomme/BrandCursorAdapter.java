@@ -10,8 +10,10 @@ import android.view.ViewGroup;
 import android.widget.CursorAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.marchesi.federico.contagomme.DBHelper.DatabaseHelper;
+import com.marchesi.federico.contagomme.DBModel.Brand;
 
 /**
  * Created by federico.marchesi on 26/01/2017.
@@ -44,11 +46,21 @@ public class BrandCursorAdapter extends CursorAdapter {
         TextView brandTV = (TextView) view.findViewById(R.id.brand_name);
         //TextView tvPriority = (TextView) view.findViewById(R.id.tvPriority);
         // Extract properties from cursor
-        final String brand = cursor.getString(cursor.getColumnIndex(DatabaseHelper.COLUMN_BRAND_NAME));
+        final String brand = cursor.getString(
+                cursor.getColumnIndex(DatabaseHelper.COLUMN_BRAND_NAME));
         int id = cursor.getInt(cursor.getColumnIndex(DatabaseHelper._ID));
 
+        brandTV.setTag(id);
         // Populate fields with extracted properties
         brandTV.setText(brand);
+
+        brandTV.setOnLongClickListener(new View.OnLongClickListener() {
+            @Override
+            public boolean onLongClick(View v) {
+                editBrand(context, v);
+                return false;
+            }
+        });
         //tvPriority.setText(String.valueOf(priority));
         ImageView deleteImage = (ImageView) view.findViewById(R.id.delete_button);
 
@@ -83,9 +95,40 @@ public class BrandCursorAdapter extends CursorAdapter {
                             }
                         })
                         .show();
-
             }
         });
 
     }
+
+    private void editBrand(Context context, View v) {
+        final DatabaseHelper dbHelper = new DatabaseHelper(context);
+
+        int id = (int) v.getTag();
+        Brand brand = dbHelper.getBrand(id);
+        InputDialogBrand inputDialog = new InputDialogBrand(context,
+                R.string.add_brand_dialog_title, R.string.add_brand_dialog_hint);
+
+
+        inputDialog.setInitialInput(brand.getName());
+        inputDialog.setInitialOrder(brand.getOrder());
+        inputDialog.setInputListener(new InputDialogBrand.InputListener() {
+            @Override
+            public InputDialogBrand.ValidationResult isInputValid(String newCoffeeType) {
+                if (newCoffeeType.isEmpty()) {
+//                    return new InputDialog.ValidationResult(false, R.string.error_empty_name);
+                }
+                return new InputDialogBrand.ValidationResult(true, 0);
+            }
+
+            @Override
+            public void onConfirm(String brandName, int order) {
+                Brand brand = new Brand(brandName, order);
+                dbHelper.updateBrand(brand);
+                //Toast.makeText(MainActivity.this, getResources().getString(R.string.data_saved), Toast.LENGTH_SHORT).show();
+            }
+        });
+        inputDialog.show();
+    }
+
+
 }

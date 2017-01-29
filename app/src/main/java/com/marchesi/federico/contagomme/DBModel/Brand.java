@@ -17,6 +17,11 @@ public class Brand {
         brandName = name;
     }
 
+    public Brand(String name, int brandOrder) {
+        brandName = name;
+        order = brandOrder;
+    }
+
     // setters
 
     public int getId() {

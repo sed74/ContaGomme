@@ -66,5 +66,7 @@
     <string name="navigation_drawer_open">Open navigation drawer</string>
     <string name="navigation_drawer_close">Close navigation drawer</string>
     <string name="races">Anagrafica Gare</string>
+    <string name="label_order">Ordine</string>
+    <string name="order_hint">Ordine di visualizzazione</string>
 
 </resources>

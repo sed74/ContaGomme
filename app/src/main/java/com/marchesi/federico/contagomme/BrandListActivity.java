@@ -39,6 +39,7 @@ public class BrandListActivity extends AppCompatActivity {
 
         });
 
+
         Button addButton = (Button) findViewById(R.id.button_add);
         addButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -64,19 +65,19 @@ public class BrandListActivity extends AppCompatActivity {
 
     private void addBrand() {
 
-        InputDialog inputDialog = new InputDialog(this, R.string.add_brand_dialog_title, R.string.add_brand_dialog_hint, "", "");
-        inputDialog.setInputListener(new InputDialog.InputListener() {
+        InputDialogBrand inputDialog = new InputDialogBrand(this, R.string.add_brand_dialog_title, R.string.add_brand_dialog_hint);
+        inputDialog.setInputListener(new InputDialogBrand.InputListener() {
             @Override
-            public InputDialog.ValidationResult isInputValid(String newCoffeeType) {
+            public InputDialogBrand.ValidationResult isInputValid(String newCoffeeType) {
                 if (newCoffeeType.isEmpty()) {
 //                    return new InputDialog.ValidationResult(false, R.string.error_empty_name);
                 }
-                return new InputDialog.ValidationResult(true, 0);
+                return new InputDialogBrand.ValidationResult(true, 0);
             }
 
             @Override
-            public void onConfirm(String brandName, String brandDescr) {
-                Brand brand = new Brand(brandName);
+            public void onConfirm(String brandName, int order) {
+                Brand brand = new Brand(brandName, order);
                 Cursor cur = brandAdapter.getCursor();
                 dbHelper.createBrand(brand);
                 Cursor d = dbHelper.getBrandsCursor();
