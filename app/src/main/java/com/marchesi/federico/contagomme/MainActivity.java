@@ -267,6 +267,10 @@ public class MainActivity extends AppCompatActivity {
                 Intent intent = new Intent(this, BrandListActivity.class);
                 startActivity(intent);
                 break;
+            case R.id.races:
+                Intent racesIntent = new Intent(this, RaceListActivity.class);
+                startActivity(racesIntent);
+                break;
             case R.id.auto_save_bike:
                 mAutoNext = !item.isChecked();
                 item.setChecked(mAutoNext);

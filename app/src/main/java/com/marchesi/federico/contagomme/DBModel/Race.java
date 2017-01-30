@@ -24,44 +24,44 @@ public class Race {
     }
 
     // getters
-    public int getRaceId() {
+    public int getId() {
         return raceId;
     }
 
     // Setters
-    public void setRaceId(int raceId) {
+    public void setId(int raceId) {
         this.raceId = raceId;
     }
 
-    public String getRaceName() {
+    public String getName() {
         return raceName;
     }
 
-    public void setRaceName(String name) {
+    public void setName(String name) {
         raceName = name;
     }
 
-    public String getRaceDesc() {
+    public String getDesc() {
         return raceDesc;
     }
 
-    public void setRaceDesc(String raceDesc) {
+    public void setDesc(String raceDesc) {
         this.raceDesc = raceDesc;
     }
 
-    public String getRacePlace() {
+    public String getPlace() {
         return racePlace;
     }
 
-    public void setRacePlace(String place) {
+    public void setPlace(String place) {
         racePlace = place;
     }
 
-    public String getRaceDate() {
+    public String getDate() {
         return raceDate;
     }
 
-    public void setRaceDate(String raceDate) {
+    public void setDate(String raceDate) {
         this.raceDate = raceDate;
     }
 }

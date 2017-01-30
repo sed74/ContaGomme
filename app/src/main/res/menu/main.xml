@@ -5,7 +5,7 @@
         android:id="@+id/send_email"
         android:orderInCategory="10"
         android:title="@string/send_email"
-        app:showAsAction="never" />
+        app:showAsAction="always" />
     <item
         android:id="@+id/give_race_name"
         android:orderInCategory="20"
@@ -22,15 +22,20 @@
         android:id="@+id/reset"
         android:orderInCategory="100"
         android:title="@string/reset_button"
+        app:showAsAction="collapseActionView" />
+    <item
+        android:id="@+id/brands"
+        android:orderInCategory="100"
+        android:title="@string/brands_menu"
+        app:showAsAction="never" />
+    <item
+        android:id="@+id/races"
+        android:orderInCategory="100"
+        android:title="@string/races"
         app:showAsAction="never" />
     <item
         android:id="@+id/settings"
         android:orderInCategory="100"
         android:title="@string/settings_menu"
-        app:showAsAction="never" />
-    <item
-        android:id="@+id/brands"
-        android:orderInCategory="100"
-        android:title="@string/brands_menu"
         app:showAsAction="never" />
 </menu>

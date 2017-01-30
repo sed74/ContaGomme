@@ -21,6 +21,11 @@ import java.util.List;
 
 public class DatabaseHelper extends SQLiteOpenHelper implements BaseColumns {
 
+    // Table Names
+    public static final String TABLE_BRANDS = "brands";
+    public static final String TABLE_RACES = "races";
+    public static final String TABLE_WHEEL_LIST = "wheel_list";
+
     // BRANDS Table - column names
     public static final String COLUMN_BRAND_NAME = "brand_name";
     public static final String COLUMN_BRAND_ORDER = "brand_order";
@@ -40,16 +45,12 @@ public class DatabaseHelper extends SQLiteOpenHelper implements BaseColumns {
     public static final String COLUMN_TOT_REAR_WHEEL = "tot_rear_wheel";
 
     // Logcat tag
-    private static final String LOG = "DatabaseHelper";
+    private static final String TAG = DatabaseHelper.class.getName();
     // Database Version
     private static final int DATABASE_VERSION = 1;
     // Database Name
     private static final String DATABASE_NAME = "contaGomme";
 
-    // Table Names
-    private static final String TABLE_BRANDS = "brands";
-    private static final String TABLE_RACES = "races";
-    private static final String TABLE_WHEEL_LIST = "wheel_list";
 
     // Table Create Statements
     // BRANDS table create statement
@@ -126,7 +127,20 @@ public class DatabaseHelper extends SQLiteOpenHelper implements BaseColumns {
 
         String selectQuery = "SELECT * FROM " + TABLE_BRANDS + " ORDER BY " + COLUMN_BRAND_ORDER;
 
-        Log.e(LOG, selectQuery);
+        Log.e(TAG, selectQuery);
+
+        Cursor c = db.rawQuery(selectQuery, null);
+
+        return c;
+
+    }
+
+    public Cursor getCursor(String tableName, String columnOrderBy) {
+        SQLiteDatabase db = this.getReadableDatabase();
+
+        String selectQuery = "SELECT * FROM " + tableName + " ORDER BY " + columnOrderBy;
+
+        Log.e(TAG, selectQuery);
 
         Cursor c = db.rawQuery(selectQuery, null);
 
@@ -143,7 +157,7 @@ public class DatabaseHelper extends SQLiteOpenHelper implements BaseColumns {
         String selectQuery = "SELECT  * FROM " + TABLE_BRANDS + " WHERE "
                 + _ID + " = " + todo_id;
 
-        Log.e(LOG, selectQuery);
+        Log.e(TAG, selectQuery);
 
         Cursor c = db.rawQuery(selectQuery, null);
 
@@ -163,9 +177,9 @@ public class DatabaseHelper extends SQLiteOpenHelper implements BaseColumns {
      * */
     public List<Brand> getAllBrandss() {
         List<Brand> brands = new ArrayList<>();
-        String selectQuery = "SELECT  * FROM " + TABLE_BRANDS;
+        String selectQuery = "SELECT * FROM " + TABLE_BRANDS;
 
-        Log.e(LOG, selectQuery);
+        Log.e(TAG, selectQuery);
 
         SQLiteDatabase db = this.getReadableDatabase();
         Cursor c = db.rawQuery(selectQuery, null);
@@ -217,16 +231,51 @@ public class DatabaseHelper extends SQLiteOpenHelper implements BaseColumns {
         SQLiteDatabase db = this.getWritableDatabase();
 
         ContentValues values = new ContentValues();
-        values.put(COLUMN_RACE_NAME, race.getRaceName());
-        values.put(COLUMN_RACE_PLACE, race.getRacePlace());
-        values.put(COLUMN_RACE_DESCRIPTION, race.getRaceDesc());
-        values.put(COLUMN_RACE_DATE, race.getRaceDate());
+        values.put(COLUMN_RACE_NAME, race.getName());
+        values.put(COLUMN_RACE_PLACE, race.getPlace());
+        values.put(COLUMN_RACE_DESCRIPTION, race.getDesc());
+        values.put(COLUMN_RACE_DATE, race.getDate());
 
         // insert row
         long tag_id = db.insert(TABLE_RACES, null, values);
 
         return tag_id;
     }
+
+    /*
+     * get single Race
+     */
+    public Race getRace(long todo_id) {
+        SQLiteDatabase db = this.getReadableDatabase();
+
+        String selectQuery = "SELECT  * FROM " + TABLE_RACES + " WHERE "
+                + _ID + " = " + todo_id;
+
+        Log.e(TAG, selectQuery);
+
+        Cursor c = db.rawQuery(selectQuery, null);
+
+        if (c != null)
+            c.moveToFirst();
+
+        Race race = new Race();
+        race.setId(c.getInt(c.getColumnIndex(_ID)));
+        race.setName((c.getString(c.getColumnIndex(COLUMN_RACE_NAME))));
+        race.setDate((c.getString(c.getColumnIndex(COLUMN_RACE_DATE))));
+        race.setDesc((c.getString(c.getColumnIndex(COLUMN_RACE_DESCRIPTION))));
+
+        return race;
+    }
+
+    /*
+     * Deleting a race
+     */
+    public void deleteRace(long raceId) {
+        SQLiteDatabase db = this.getWritableDatabase();
+        db.delete(TABLE_RACES, _ID + " = ?",
+                new String[]{String.valueOf(raceId)});
+    }
+
 
     /**
      * getting all races
@@ -235,7 +284,7 @@ public class DatabaseHelper extends SQLiteOpenHelper implements BaseColumns {
         List<Race> tags = new ArrayList<>();
         String selectQuery = "SELECT  * FROM " + TABLE_RACES;
 
-        Log.e(LOG, selectQuery);
+        Log.e(TAG, selectQuery);
 
         SQLiteDatabase db = this.getReadableDatabase();
         Cursor c = db.rawQuery(selectQuery, null);
@@ -244,11 +293,11 @@ public class DatabaseHelper extends SQLiteOpenHelper implements BaseColumns {
         if (c.moveToFirst()) {
             do {
                 Race r = new Race();
-                r.setRaceId(c.getInt((c.getColumnIndex(_ID))));
-                r.setRaceName(c.getString(c.getColumnIndex(COLUMN_RACE_NAME)));
-                r.setRaceDesc(c.getString(c.getColumnIndex(COLUMN_RACE_DESCRIPTION)));
-                r.setRacePlace(c.getString(c.getColumnIndex(COLUMN_RACE_PLACE)));
-                r.setRaceDate(c.getString(c.getColumnIndex(COLUMN_RACE_DATE)));
+                r.setId(c.getInt((c.getColumnIndex(_ID))));
+                r.setName(c.getString(c.getColumnIndex(COLUMN_RACE_NAME)));
+                r.setDesc(c.getString(c.getColumnIndex(COLUMN_RACE_DESCRIPTION)));
+                r.setPlace(c.getString(c.getColumnIndex(COLUMN_RACE_PLACE)));
+                r.setDate(c.getString(c.getColumnIndex(COLUMN_RACE_DATE)));
 
                 // adding to tags list
                 tags.add(r);
@@ -264,14 +313,14 @@ public class DatabaseHelper extends SQLiteOpenHelper implements BaseColumns {
         SQLiteDatabase db = this.getWritableDatabase();
 
         ContentValues values = new ContentValues();
-        values.put(COLUMN_RACE_NAME, race.getRaceName());
-        values.put(COLUMN_RACE_DESCRIPTION, race.getRaceDesc());
-        values.put(COLUMN_RACE_PLACE, race.getRacePlace());
-        values.put(COLUMN_RACE_DATE, race.getRaceDate());
+        values.put(COLUMN_RACE_NAME, race.getName());
+        values.put(COLUMN_RACE_DESCRIPTION, race.getDesc());
+        values.put(COLUMN_RACE_PLACE, race.getPlace());
+        values.put(COLUMN_RACE_DATE, race.getDate());
 
         // updating row
         return db.update(TABLE_RACES, values, _ID + " = ?",
-                new String[]{String.valueOf(race.getRaceId())});
+                new String[]{String.valueOf(race.getId())});
     }
 
     /*
@@ -284,7 +333,7 @@ public class DatabaseHelper extends SQLiteOpenHelper implements BaseColumns {
                 + TABLE_BRANDS + " b WHERE wl." + COLUMN_RACE_LIST_ID + " = " + raceId +
                 " AND wl." + COLUMN_WHEEL_BRAND_ID + " = " + "b." + _ID;
 
-        Log.e(LOG, selectQuery);
+        Log.e(TAG, selectQuery);
 
         SQLiteDatabase db = this.getReadableDatabase();
         Cursor c = db.rawQuery(selectQuery, null);

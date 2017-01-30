@@ -137,7 +137,7 @@ public class TireAdapter extends ArrayAdapter<TireBrands> {
                     isFront ? GradientDrawable.Orientation.RIGHT_LEFT :
                             GradientDrawable.Orientation.LEFT_RIGHT,
                     new int[]{getContext().getResources().getColor(R.color.wheel_selected),
-                            getContext().getResources().getColor(R.color.rectangle_solid)});
+                            getContext().getResources().getColor(R.color.rectangle_solid_brand)});
 //            gd.setCornerRadius(0f);
 
             view.setBackground(gd);

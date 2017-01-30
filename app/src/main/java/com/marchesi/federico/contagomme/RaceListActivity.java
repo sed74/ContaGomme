@@ -10,12 +10,12 @@ import android.widget.Button;
 import android.widget.ListView;
 
 import com.marchesi.federico.contagomme.DBHelper.DatabaseHelper;
-import com.marchesi.federico.contagomme.DBModel.Brand;
+import com.marchesi.federico.contagomme.DBModel.Race;
 
-public class BrandListActivity extends AppCompatActivity {
+public class RaceListActivity extends AppCompatActivity {
 
     private DatabaseHelper dbHelper;
-    private BrandCursorAdapter brandAdapter;
+    private RaceCursorAdapter raceAdapter;
     private ListView listView;
 
 
@@ -32,9 +32,9 @@ public class BrandListActivity extends AppCompatActivity {
             @Override
             public void run() {
                 dbHelper = new DatabaseHelper(getBaseContext());
-                Cursor c = dbHelper.getBrandsCursor();
-                brandAdapter = new BrandCursorAdapter(BrandListActivity.this, c);
-                listView.setAdapter(brandAdapter);
+                Cursor c = dbHelper.getCursor(DatabaseHelper.TABLE_RACES, DatabaseHelper.COLUMN_RACE_DATE);
+                raceAdapter = new RaceCursorAdapter(RaceListActivity.this, c);
+                listView.setAdapter(raceAdapter);
             }
 
         });
@@ -84,12 +84,12 @@ public class BrandListActivity extends AppCompatActivity {
             }
 
             @Override
-            public void onConfirm(String brandName, int order) {
-                Brand brand = new Brand(brandName, order);
-                Cursor cur = brandAdapter.getCursor();
-                dbHelper.createBrand(brand);
-                Cursor d = dbHelper.getBrandsCursor();
-                brandAdapter.swapCursor(d);
+            public void onConfirm(String raceName, int order) {
+                Race race = new Race(raceName);
+                //Cursor cur = raceAdapter.getCursor();
+                dbHelper.createRace(race);
+                Cursor d = dbHelper.getCursor(DatabaseHelper.TABLE_RACES, DatabaseHelper.COLUMN_RACE_DATE);
+                raceAdapter.swapCursor(d);
                 //Toast.makeText(MainActivity.this, getResources().getString(R.string.data_saved), Toast.LENGTH_SHORT).show();
             }
         });

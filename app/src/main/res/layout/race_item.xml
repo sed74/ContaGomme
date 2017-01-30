@@ -6,19 +6,32 @@
     android:orientation="horizontal">
 
     <TextView
-        android:id="@+id/brand_name"
+        android:id="@+id/race_name"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginBottom="@dimen/margin_small"
         android:layout_marginLeft="8dp"
         android:layout_marginRight="8dp"
-        android:background="@drawable/tire_rectangle_shadow"
+        android:background="@drawable/tire_rectangle_race"
         android:clickable="true"
         android:fontFamily="sans-serif"
         android:padding="@dimen/listview_padding"
         android:textColor="@android:color/black"
         android:textSize="20sp"
-        tools:text="Michelin" />
+        tools:text="Cairo Montenotte" />
+
+    <TextView
+        android:id="@+id/race_date"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="@dimen/margin_small"
+        android:layout_marginLeft="8dp"
+        android:layout_marginRight="8dp"
+        android:layout_toLeftOf="@id/delete_button"
+        android:padding="@dimen/listview_padding"
+        android:textColor="@android:color/black"
+        android:textSize="18sp"
+        tools:text="20/20/2016" />
 
     <ImageView
         android:id="@+id/delete_button"

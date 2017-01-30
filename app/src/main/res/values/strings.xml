@@ -5,7 +5,7 @@
     <string name="reset_button">Azzera</string>
     <string name="next_button">Prossima moto</string>
     <string name="moto_inserite">Moto inserite: %1$s</string>
-    <string name="send_email">Invia per e-mail</string>
+    <string name="send_email">E-mail</string>
     <string name="add_race_name">Inserisci luogo gara</string>
     <string name="input_race_name">Inserisci nome gara</string>
     <string name="input_race_notes">Note</string>
@@ -68,5 +68,8 @@
     <string name="races">Anagrafica Gare</string>
     <string name="label_order">Ordine</string>
     <string name="order_hint">Ordine di visualizzazione</string>
+    <string name="edit_brand_dialog_title">Modifica</string>
+    <string name="add_race_dialog_hint">Nome gara</string>
+    <string name="race_list_activity_name">Gare</string>
 
 </resources>
