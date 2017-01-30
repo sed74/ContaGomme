@@ -11,6 +11,7 @@ import android.widget.ListView;
 
 import com.marchesi.federico.contagomme.DBHelper.DatabaseHelper;
 import com.marchesi.federico.contagomme.DBModel.Brand;
+import com.marchesi.federico.contagomme.Dialog.InputDialogBrand;
 
 public class BrandListActivity extends AppCompatActivity {
 

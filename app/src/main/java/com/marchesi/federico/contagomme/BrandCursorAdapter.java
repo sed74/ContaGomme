@@ -13,6 +13,7 @@ import android.widget.TextView;
 
 import com.marchesi.federico.contagomme.DBHelper.DatabaseHelper;
 import com.marchesi.federico.contagomme.DBModel.Brand;
+import com.marchesi.federico.contagomme.Dialog.InputDialogBrand;
 
 /**
  * Created by federico.marchesi on 26/01/2017.

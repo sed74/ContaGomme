@@ -7,7 +7,6 @@ package com.marchesi.federico.contagomme.DBModel;
 public class Race {
     int raceId;
     String raceName;
-    String racePlace;
     String raceDesc;
     String raceDate;
 
@@ -18,9 +17,10 @@ public class Race {
         raceName = name;
     }
 
-    public Race(String name, String place) {
+    public Race(String name, String descr, String date) {
         raceName = name;
-        racePlace = place;
+        raceDate = date;
+        raceDesc = descr;
     }
 
     // getters
@@ -47,14 +47,6 @@ public class Race {
 
     public void setDesc(String raceDesc) {
         this.raceDesc = raceDesc;
-    }
-
-    public String getPlace() {
-        return racePlace;
-    }
-
-    public void setPlace(String place) {
-        racePlace = place;
     }
 
     public String getDate() {

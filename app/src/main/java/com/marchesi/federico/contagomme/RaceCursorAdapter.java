@@ -13,6 +13,8 @@ import android.widget.TextView;
 
 import com.marchesi.federico.contagomme.DBHelper.DatabaseHelper;
 import com.marchesi.federico.contagomme.DBModel.Race;
+import com.marchesi.federico.contagomme.Dialog.InputDialogBrand;
+import com.marchesi.federico.contagomme.Dialog.InputDialogRace;
 
 /**
  * Created by federico.marchesi on 26/01/2017.
@@ -49,6 +51,9 @@ public class RaceCursorAdapter extends CursorAdapter {
         final String race = cursor.getString(
                 cursor.getColumnIndex(DatabaseHelper.COLUMN_RACE_NAME));
         int id = cursor.getInt(cursor.getColumnIndex(DatabaseHelper._ID));
+
+        TextView raceDate = (TextView) view.findViewById(R.id.race_date);
+        raceDate.setText(cursor.getString(cursor.getColumnIndex(DatabaseHelper.COLUMN_RACE_DATE)));
 
         raceTV.setTag(id);
         // Populate fields with extracted properties
@@ -95,6 +100,7 @@ public class RaceCursorAdapter extends CursorAdapter {
                             }
                         })
                         .show();
+
             }
         });
 
@@ -105,34 +111,69 @@ public class RaceCursorAdapter extends CursorAdapter {
 
         int id = (int) v.getTag();
         final Race[] race = {dbHelper.getRace(id)};
-        InputDialogBrand inputDialog = new InputDialogBrand(context,
-                R.string.edit_brand_dialog_title, R.string.add_race_dialog_hint);
 
-        inputDialog.setInitialInput(race[0].getName());
-//        inputDialog.setInitialOrder(oldOrder);
-        inputDialog.setInputListener(new InputDialogBrand.InputListener() {
+
+        InputDialogRace inputDialog = new InputDialogRace(context, R.string.add_race_dialog_title,
+                R.string.add_race_dialog_hint);
+        inputDialog.setRaceName(race[0].getName());
+        inputDialog.setRaceDescr(race[0].getDesc());
+        inputDialog.setRaceDate(race[0].getDate());
+
+        inputDialog.setInputListener(new InputDialogRace.InputListener() {
             @Override
-            public InputDialogBrand.ValidationResult isInputValid(String newCoffeeType) {
+            public InputDialogRace.ValidationResult isInputValid(String newCoffeeType) {
                 if (newCoffeeType.isEmpty()) {
 //                    return new InputDialog.ValidationResult(false, R.string.error_empty_name);
                 }
-                return new InputDialogBrand.ValidationResult(true, 0);
+                return new InputDialogRace.ValidationResult(true, 0);
             }
 
             @Override
-            public void onConfirm(String brandName, int order) {
-
-                race[0].setName(brandName);
-//                race[0].setDate(order);
+            public void onConfirm(String raceName, String raceDescr, String raceDate) {
+                race[0].setName(raceName);
+                race[0].setDesc(raceDescr);
+                race[0].setDate(raceDate);
                 dbHelper.updateRace(race[0]);
                 Cursor c = dbHelper.getBrandsCursor();
                 Cursor old = swapCursor(c);
                 old.close();
-
                 //Toast.makeText(MainActivity.this, getResources().getString(R.string.data_saved), Toast.LENGTH_SHORT).show();
             }
+
+
         });
         inputDialog.show();
+
+
+//
+//        InputDialogBrand inputDialog = new InputDialogBrand(context,
+//                R.string.edit_brand_dialog_title, R.string.add_race_dialog_hint);
+//
+//        inputDialog.setInitialInput(race[0].getName());
+////        inputDialog.setInitialOrder(oldOrder);
+//        inputDialog.setInputListener(new InputDialogBrand.InputListener() {
+//            @Override
+//            public InputDialogBrand.ValidationResult isInputValid(String newCoffeeType) {
+//                if (newCoffeeType.isEmpty()) {
+////                    return new InputDialog.ValidationResult(false, R.string.error_empty_name);
+//                }
+//                return new InputDialogBrand.ValidationResult(true, 0);
+//            }
+//
+//            @Override
+//            public void onConfirm(String brandName, int order) {
+//
+//                race[0].setName(brandName);
+////                race[0].setDate(order);
+//                dbHelper.updateRace(race[0]);
+//                Cursor c = dbHelper.getBrandsCursor();
+//                Cursor old = swapCursor(c);
+//                old.close();
+//
+//                //Toast.makeText(MainActivity.this, getResources().getString(R.string.data_saved), Toast.LENGTH_SHORT).show();
+//            }
+//        });
+//        inputDialog.show();
     }
 
     @Override

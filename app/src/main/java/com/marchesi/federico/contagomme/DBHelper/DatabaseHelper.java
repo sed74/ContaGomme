@@ -35,6 +35,7 @@ public class DatabaseHelper extends SQLiteOpenHelper implements BaseColumns {
     public static final String COLUMN_RACE_PLACE = "race_place";
     public static final String COLUMN_RACE_DATE = "race_date";
     public static final String COLUMN_RACE_DESCRIPTION = "race_desc";
+
     // WHEEL_LIST Table - column names
     public static final String COLUMN_RACE_LIST_ID = "race_list_id";
     public static final String COLUMN_WHEEL_BRAND_ID = "wheel_brand";
@@ -232,7 +233,7 @@ public class DatabaseHelper extends SQLiteOpenHelper implements BaseColumns {
 
         ContentValues values = new ContentValues();
         values.put(COLUMN_RACE_NAME, race.getName());
-        values.put(COLUMN_RACE_PLACE, race.getPlace());
+//        values.put(COLUMN_RACE_PLACE, race.getPlace());
         values.put(COLUMN_RACE_DESCRIPTION, race.getDesc());
         values.put(COLUMN_RACE_DATE, race.getDate());
 
@@ -296,7 +297,7 @@ public class DatabaseHelper extends SQLiteOpenHelper implements BaseColumns {
                 r.setId(c.getInt((c.getColumnIndex(_ID))));
                 r.setName(c.getString(c.getColumnIndex(COLUMN_RACE_NAME)));
                 r.setDesc(c.getString(c.getColumnIndex(COLUMN_RACE_DESCRIPTION)));
-                r.setPlace(c.getString(c.getColumnIndex(COLUMN_RACE_PLACE)));
+//                r.setPlace(c.getString(c.getColumnIndex(COLUMN_RACE_PLACE)));
                 r.setDate(c.getString(c.getColumnIndex(COLUMN_RACE_DATE)));
 
                 // adding to tags list
@@ -315,7 +316,7 @@ public class DatabaseHelper extends SQLiteOpenHelper implements BaseColumns {
         ContentValues values = new ContentValues();
         values.put(COLUMN_RACE_NAME, race.getName());
         values.put(COLUMN_RACE_DESCRIPTION, race.getDesc());
-        values.put(COLUMN_RACE_PLACE, race.getPlace());
+//        values.put(COLUMN_RACE_PLACE, race.getPlace());
         values.put(COLUMN_RACE_DATE, race.getDate());
 
         // updating row

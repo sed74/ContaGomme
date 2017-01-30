@@ -1,4 +1,4 @@
-package com.marchesi.federico.contagomme;
+package com.marchesi.federico.contagomme.Dialog;
 
 import android.content.Context;
 import android.support.v7.app.AlertDialog;
@@ -9,6 +9,8 @@ import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
+
+import com.marchesi.federico.contagomme.R;
 
 public class GenericAddDialog {
 

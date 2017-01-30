@@ -7,7 +7,7 @@
     <string name="moto_inserite">Moto inserite: %1$s</string>
     <string name="send_email">E-mail</string>
     <string name="add_race_name">Inserisci luogo gara</string>
-    <string name="input_race_name">Inserisci nome gara</string>
+    <string name="input_race_name">Nome/luogo della gara</string>
     <string name="input_race_notes">Note</string>
     <string name="race_name_title">Nome Gara</string>
     <string name="use_html">Usa HTML in email</string>
@@ -71,5 +71,7 @@
     <string name="edit_brand_dialog_title">Modifica</string>
     <string name="add_race_dialog_hint">Nome gara</string>
     <string name="race_list_activity_name">Gare</string>
+    <string name="race_date">Data della gara</string>
+    <string name="add_race_dialog_title">Aggiungi gara</string>
 
 </resources>

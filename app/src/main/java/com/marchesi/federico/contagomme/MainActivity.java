@@ -8,6 +8,7 @@ import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.content.res.Resources;
 import android.graphics.Color;
+import android.graphics.Point;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
@@ -19,6 +20,8 @@ import android.support.design.widget.Snackbar;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
+import android.util.DisplayMetrics;
+import android.view.Display;
 import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -29,6 +32,8 @@ import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import com.marchesi.federico.contagomme.Dialog.InputDialog;
 
 import java.io.File;
 import java.io.FileWriter;
@@ -229,7 +234,19 @@ public class MainActivity extends AppCompatActivity {
                 resetList();
             }
         });
+//        Display display = getWindowManager().getDefaultDisplay();
+//        Point size = new Point();
+//        display.getSize(size);
+//        int width = size.x;
+//        int height = size.y;
 
+        DisplayMetrics metrics = new DisplayMetrics();
+        getWindowManager().getDefaultDisplay().getMetrics(metrics);
+
+        Toast
+                .makeText(this, "DensityDPI = " + String.valueOf(metrics.densityDpi) +
+                                "\n Height = " + String.valueOf(metrics.heightPixels),
+                        Toast.LENGTH_LONG).show();
     }
 
     @Override

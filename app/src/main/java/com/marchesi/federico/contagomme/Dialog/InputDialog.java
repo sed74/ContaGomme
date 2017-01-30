@@ -1,4 +1,4 @@
-package com.marchesi.federico.contagomme;
+package com.marchesi.federico.contagomme.Dialog;
 
 import android.content.Context;
 import android.support.v7.app.AlertDialog;
@@ -8,43 +8,48 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
-import android.widget.NumberPicker;
 
-public class InputDialogBrand {
+import com.marchesi.federico.contagomme.R;
+
+public class InputDialog {
 
     private final Context context;
     private final View dialogView;
     private final View okBtn, cancelBtn;
     private final EditText editName;
-    private final EditText numberPicker;
+    private final EditText editDescr;
     private final int title;
 
     private InputListener inputListener = null;
 
-    public InputDialogBrand(Context context, int title, int hint) {
-        this.context = context;
-        this.dialogView = LayoutInflater.from(context).inflate(R.layout.input_dialog_brand, null);
-        this.title = title;
-        this.editName = (EditText) dialogView.findViewById(R.id.input);
-        this.numberPicker = (EditText) dialogView.findViewById(R.id.brand_order);
-        editName.setHint(hint);
-        this.okBtn = dialogView.findViewById(R.id.btn_ok);
-        this.cancelBtn = dialogView.findViewById(R.id.btn_cancel);
-
-    }
-
-    public InputDialogBrand(Context context, int title, int hint, String defaultName, String defaultDescr) {
+    public InputDialog(Context context, int title, int hint) {
         this.context = context;
         this.dialogView = LayoutInflater.from(context).inflate(R.layout.input_dialog, null);
         this.title = title;
         this.editName = (EditText) dialogView.findViewById(R.id.input);
-        this.numberPicker = (EditText) dialogView.findViewById(R.id.brand_order);
+        this.editDescr = (EditText) dialogView.findViewById(R.id.coffe_type_descr);
+        editName.setHint(hint);
+        this.okBtn = dialogView.findViewById(R.id.btn_ok);
+        this.cancelBtn = dialogView.findViewById(R.id.btn_cancel);
+    }
+
+    public InputDialog(Context context, int title, int hint, String defaultName, String defaultDescr) {
+        this.context = context;
+        this.dialogView = LayoutInflater.from(context).inflate(R.layout.input_dialog, null);
+        this.title = title;
+        this.editName = (EditText) dialogView.findViewById(R.id.input);
+        this.editDescr = (EditText) dialogView.findViewById(R.id.coffe_type_descr);
         editName.setHint(hint);
         this.okBtn = dialogView.findViewById(R.id.btn_ok);
         this.cancelBtn = dialogView.findViewById(R.id.btn_cancel);
 
         if (!defaultName.isEmpty()) {
             editName.setText(defaultName);
+        }
+        if (!defaultDescr.isEmpty()) {
+            editDescr.setText(defaultDescr);
+        } else {
+            editDescr.setVisibility(View.GONE);
         }
     }
 
@@ -71,11 +76,6 @@ public class InputDialogBrand {
         this.editName.setText(initialInput);
     }
 
-    public void setInitialOrder(int order) {
-        this.numberPicker.setText(String.valueOf(order));
-    }
-
-
     public void show() {
         final AlertDialog dialog = new AlertDialog.Builder(context)
                 .setTitle(title)
@@ -90,8 +90,7 @@ public class InputDialogBrand {
             @Override
             public void onClick(View v) {
                 if (inputListener != null)
-                    inputListener.onConfirm(editName.getText().toString(),
-                            Integer.parseInt(numberPicker.getText().toString()));
+                    inputListener.onConfirm(editName.getText().toString(), editDescr.getText().toString());
                 inputMethodManager.hideSoftInputFromWindow(editName.getWindowToken(), 0);
                 dialog.dismiss();
             }
@@ -110,7 +109,7 @@ public class InputDialogBrand {
 
         ValidationResult isInputValid(String input);
 
-        void onConfirm(String input, int order);
+        void onConfirm(String input, String descr);
 
     }
 

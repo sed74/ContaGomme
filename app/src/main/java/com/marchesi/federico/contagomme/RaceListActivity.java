@@ -11,6 +11,8 @@ import android.widget.ListView;
 
 import com.marchesi.federico.contagomme.DBHelper.DatabaseHelper;
 import com.marchesi.federico.contagomme.DBModel.Race;
+import com.marchesi.federico.contagomme.Dialog.InputDialogBrand;
+import com.marchesi.federico.contagomme.Dialog.InputDialogRace;
 
 public class RaceListActivity extends AppCompatActivity {
 
@@ -44,7 +46,7 @@ public class RaceListActivity extends AppCompatActivity {
         addButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                addBrand();
+                addRace();
 
             }
         });
@@ -71,27 +73,30 @@ public class RaceListActivity extends AppCompatActivity {
         }
     }
 
-    private void addBrand() {
+    private void addRace() {
 
-        InputDialogBrand inputDialog = new InputDialogBrand(this, R.string.add_brand_dialog_title, R.string.add_brand_dialog_hint);
-        inputDialog.setInputListener(new InputDialogBrand.InputListener() {
+        InputDialogRace inputDialog = new InputDialogRace(this, R.string.add_race_dialog_title,
+                R.string.add_race_dialog_hint);
+        inputDialog.setInputListener(new InputDialogRace.InputListener() {
             @Override
-            public InputDialogBrand.ValidationResult isInputValid(String newCoffeeType) {
+            public InputDialogRace.ValidationResult isInputValid(String newCoffeeType) {
                 if (newCoffeeType.isEmpty()) {
 //                    return new InputDialog.ValidationResult(false, R.string.error_empty_name);
                 }
-                return new InputDialogBrand.ValidationResult(true, 0);
+                return new InputDialogRace.ValidationResult(true, 0);
             }
 
             @Override
-            public void onConfirm(String raceName, int order) {
-                Race race = new Race(raceName);
+            public void onConfirm(String raceName, String raceDescr, String raceDate) {
+                Race race = new Race(raceName, raceDescr, raceDate);
                 //Cursor cur = raceAdapter.getCursor();
                 dbHelper.createRace(race);
                 Cursor d = dbHelper.getCursor(DatabaseHelper.TABLE_RACES, DatabaseHelper.COLUMN_RACE_DATE);
                 raceAdapter.swapCursor(d);
                 //Toast.makeText(MainActivity.this, getResources().getString(R.string.data_saved), Toast.LENGTH_SHORT).show();
             }
+
+
         });
         inputDialog.show();
     }
