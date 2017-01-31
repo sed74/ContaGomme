@@ -123,19 +123,6 @@ public class DatabaseHelper extends SQLiteOpenHelper implements BaseColumns {
         return brandId;
     }
 
-    public Cursor getBrandsCursor() {
-        SQLiteDatabase db = this.getReadableDatabase();
-
-        String selectQuery = "SELECT * FROM " + TABLE_BRANDS + " ORDER BY " + COLUMN_BRAND_ORDER;
-
-        Log.e(TAG, selectQuery);
-
-        Cursor c = db.rawQuery(selectQuery, null);
-
-        return c;
-
-    }
-
     public Cursor getCursor(String tableName, String columnOrderBy) {
         SQLiteDatabase db = this.getReadableDatabase();
 

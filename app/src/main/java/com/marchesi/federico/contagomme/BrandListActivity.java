@@ -33,7 +33,7 @@ public class BrandListActivity extends AppCompatActivity {
             @Override
             public void run() {
                 dbHelper = new DatabaseHelper(getBaseContext());
-                Cursor c = dbHelper.getBrandsCursor();
+                Cursor c = dbHelper.getCursor(DatabaseHelper.TABLE_BRANDS, DatabaseHelper.COLUMN_BRAND_ORDER);
                 brandAdapter = new BrandCursorAdapter(BrandListActivity.this, c);
                 listView.setAdapter(brandAdapter);
             }
@@ -89,7 +89,7 @@ public class BrandListActivity extends AppCompatActivity {
                 Brand brand = new Brand(brandName, order);
                 Cursor cur = brandAdapter.getCursor();
                 dbHelper.createBrand(brand);
-                Cursor d = dbHelper.getBrandsCursor();
+                Cursor d = dbHelper.getCursor(DatabaseHelper.TABLE_BRANDS, DatabaseHelper.COLUMN_BRAND_ORDER);
                 brandAdapter.swapCursor(d);
                 //Toast.makeText(MainActivity.this, getResources().getString(R.string.data_saved), Toast.LENGTH_SHORT).show();
             }

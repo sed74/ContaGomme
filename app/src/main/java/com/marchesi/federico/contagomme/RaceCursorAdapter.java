@@ -13,7 +13,6 @@ import android.widget.TextView;
 
 import com.marchesi.federico.contagomme.DBHelper.DatabaseHelper;
 import com.marchesi.federico.contagomme.DBModel.Race;
-import com.marchesi.federico.contagomme.Dialog.InputDialogBrand;
 import com.marchesi.federico.contagomme.Dialog.InputDialogRace;
 
 /**
@@ -130,11 +129,17 @@ public class RaceCursorAdapter extends CursorAdapter {
 
             @Override
             public void onConfirm(String raceName, String raceDescr, String raceDate) {
+                if (!raceName.isEmpty())
                 race[0].setName(raceName);
+
+                if (!raceDescr.isEmpty())
                 race[0].setDesc(raceDescr);
+
+                if (!raceDate.isEmpty())
                 race[0].setDate(raceDate);
+
                 dbHelper.updateRace(race[0]);
-                Cursor c = dbHelper.getBrandsCursor();
+                Cursor c = dbHelper.getCursor(DatabaseHelper.TABLE_RACES, DatabaseHelper.COLUMN_RACE_DATE);
                 Cursor old = swapCursor(c);
                 old.close();
                 //Toast.makeText(MainActivity.this, getResources().getString(R.string.data_saved), Toast.LENGTH_SHORT).show();
@@ -176,12 +181,12 @@ public class RaceCursorAdapter extends CursorAdapter {
 //        inputDialog.show();
     }
 
-    @Override
-    public Cursor swapCursor(Cursor newCursor) {
-        Cursor oldCursor = super.swapCursor(newCursor);
-        if (oldCursor != null) {
-            oldCursor.close();
-        }
-        return oldCursor;
-    }
+//    @Override
+//    public Cursor swapCursor(Cursor newCursor) {
+//        Cursor oldCursor = super.swapCursor(newCursor);
+//        if (oldCursor != null) {
+//            oldCursor.close();
+//        }
+//        return oldCursor;
+//    }
 }

@@ -11,8 +11,10 @@ import android.widget.ListView;
 
 import com.marchesi.federico.contagomme.DBHelper.DatabaseHelper;
 import com.marchesi.federico.contagomme.DBModel.Race;
-import com.marchesi.federico.contagomme.Dialog.InputDialogBrand;
 import com.marchesi.federico.contagomme.Dialog.InputDialogRace;
+
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
 
 public class RaceListActivity extends AppCompatActivity {
 
@@ -34,7 +36,8 @@ public class RaceListActivity extends AppCompatActivity {
             @Override
             public void run() {
                 dbHelper = new DatabaseHelper(getBaseContext());
-                Cursor c = dbHelper.getCursor(DatabaseHelper.TABLE_RACES, DatabaseHelper.COLUMN_RACE_DATE);
+                Cursor c = dbHelper.getCursor(DatabaseHelper.TABLE_RACES,
+                        DatabaseHelper.COLUMN_RACE_DATE);
                 raceAdapter = new RaceCursorAdapter(RaceListActivity.this, c);
                 listView.setAdapter(raceAdapter);
             }
@@ -77,6 +80,15 @@ public class RaceListActivity extends AppCompatActivity {
 
         InputDialogRace inputDialog = new InputDialogRace(this, R.string.add_race_dialog_title,
                 R.string.add_race_dialog_hint);
+
+        Calendar c = Calendar.getInstance();
+
+        SimpleDateFormat df = new SimpleDateFormat("dd/MM/yyyy");
+        String formattedDate = df.format(c.getTime());
+        // formattedDate have current date/time
+
+
+        inputDialog.setRaceDate(formattedDate);
         inputDialog.setInputListener(new InputDialogRace.InputListener() {
             @Override
             public InputDialogRace.ValidationResult isInputValid(String newCoffeeType) {
@@ -91,7 +103,8 @@ public class RaceListActivity extends AppCompatActivity {
                 Race race = new Race(raceName, raceDescr, raceDate);
                 //Cursor cur = raceAdapter.getCursor();
                 dbHelper.createRace(race);
-                Cursor d = dbHelper.getCursor(DatabaseHelper.TABLE_RACES, DatabaseHelper.COLUMN_RACE_DATE);
+                Cursor d = dbHelper.getCursor(DatabaseHelper.TABLE_RACES,
+                        DatabaseHelper.COLUMN_RACE_DATE);
                 raceAdapter.swapCursor(d);
                 //Toast.makeText(MainActivity.this, getResources().getString(R.string.data_saved), Toast.LENGTH_SHORT).show();
             }

@@ -65,6 +65,10 @@ public class BrandCursorAdapter extends CursorAdapter {
         //tvPriority.setText(String.valueOf(priority));
         ImageView deleteImage = (ImageView) view.findViewById(R.id.delete_button);
 
+        TextView orderTV = (TextView) view.findViewById(R.id.brand_order);
+        orderTV.setText(cursor.getString(
+                cursor.getColumnIndex(DatabaseHelper.COLUMN_BRAND_ORDER)));
+
         deleteImage.setTag(id);
 
         deleteImage.setOnClickListener(new View.OnClickListener() {
@@ -85,7 +89,7 @@ public class BrandCursorAdapter extends CursorAdapter {
 
                                 ImageView delete = (ImageView) view.findViewById(R.id.delete_button);
                                 dbHelper.deleteBrand((int) delete.getTag());
-                                Cursor d = dbHelper.getBrandsCursor();
+                                Cursor d = dbHelper.getCursor(DatabaseHelper.TABLE_BRANDS, DatabaseHelper.COLUMN_BRAND_ORDER);
                                 swapCursor(d);
                                 dialog.dismiss();
                             }
@@ -132,7 +136,7 @@ public class BrandCursorAdapter extends CursorAdapter {
                 brand[0].setName(brandName);
                 brand[0].setOrder(order);
                 dbHelper.updateBrand(brand[0]);
-                Cursor c = dbHelper.getBrandsCursor();
+                Cursor c = dbHelper.getCursor(DatabaseHelper.TABLE_BRANDS, DatabaseHelper.COLUMN_BRAND_ORDER);
                 Cursor old = swapCursor(c);
                 old.close();
 

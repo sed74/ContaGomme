@@ -102,7 +102,8 @@ public class InputDialogRace {
                 .show();
         editName.requestFocus();
 
-        final InputMethodManager inputMethodManager = (InputMethodManager) dialogView.getContext().getSystemService(Context.INPUT_METHOD_SERVICE);
+        final InputMethodManager inputMethodManager = (InputMethodManager)
+                dialogView.getContext().getSystemService(Context.INPUT_METHOD_SERVICE);
         inputMethodManager.toggleSoftInput(InputMethodManager.SHOW_FORCED, 0);
 
         okBtn.setOnClickListener(new View.OnClickListener() {
