@@ -73,8 +73,10 @@
     <string name="race_list_activity_name">Gare</string>
     <string name="race_date">Data della gara</string>
     <string name="add_race_dialog_title">Aggiungi gara</string>
-    <string name="name">Nome:</string>
-    <string name="date">Data:</string>
+    <string name="name">Nome gara</string>
+    <string name="date">Data gara</string>
     <string name="note">Note</string>
+    <string name="dialog_ok_button">Ok</string>
+    <string name="race_name_mandatory">Il nome della gara è obbligatorio</string>
 
 </resources>

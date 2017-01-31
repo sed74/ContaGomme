@@ -1,4 +1,4 @@
-package com.marchesi.federico.contagomme;
+package com.marchesi.federico.contagomme.WheelCountPerRace;
 
 import android.database.Cursor;
 import android.os.Bundle;
@@ -12,11 +12,13 @@ import android.widget.ListView;
 import com.marchesi.federico.contagomme.DBHelper.DatabaseHelper;
 import com.marchesi.federico.contagomme.DBModel.Race;
 import com.marchesi.federico.contagomme.Dialog.InputDialogRace;
+import com.marchesi.federico.contagomme.R;
+import com.marchesi.federico.contagomme.RaceCursorAdapter;
 
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 
-public class RaceListActivity extends AppCompatActivity {
+public class WheelCountPerRaceActivity extends AppCompatActivity {
 
     private DatabaseHelper dbHelper;
     private RaceCursorAdapter raceAdapter;
@@ -26,9 +28,10 @@ public class RaceListActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_brand_list);
+        setContentView(R.layout.activity_main);
 
         listView = (ListView) findViewById(R.id.list);
+
 
         new Handler().post(new Runnable() {
 
@@ -37,7 +40,7 @@ public class RaceListActivity extends AppCompatActivity {
                 dbHelper = new DatabaseHelper(getBaseContext());
                 Cursor c = dbHelper.getCursor(DatabaseHelper.TABLE_RACES,
                         DatabaseHelper.COLUMN_RACE_DATE);
-                raceAdapter = new RaceCursorAdapter(RaceListActivity.this, c);
+                raceAdapter = new RaceCursorAdapter(WheelCountPerRaceActivity.this, c);
                 listView.setAdapter(raceAdapter);
             }
 
@@ -54,7 +57,6 @@ public class RaceListActivity extends AppCompatActivity {
         });
         setupActionBar();
     }
-
 
     /**
      * Set up the {@link android.app.ActionBar}, if the API is available.
@@ -90,14 +92,9 @@ public class RaceListActivity extends AppCompatActivity {
 
         inputDialog.setRaceDate(formattedDate);
         inputDialog.setInputListener(new InputDialogRace.InputListener() {
-
             @Override
             public InputDialogRace.ValidationResult isInputValid(String input) {
-                if (input.isEmpty()) {
-                    return new InputDialogRace.ValidationResult(false, R.string.race_name_mandatory);
-                }
-                return new InputDialogRace.ValidationResult(true, 0);
-
+                return null;
             }
 
             @Override
@@ -115,6 +112,7 @@ public class RaceListActivity extends AppCompatActivity {
         });
         inputDialog.show();
     }
+
 
 }
 

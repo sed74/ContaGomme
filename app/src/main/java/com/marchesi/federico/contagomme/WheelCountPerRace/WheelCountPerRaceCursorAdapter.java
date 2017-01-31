@@ -1,4 +1,4 @@
-package com.marchesi.federico.contagomme;
+package com.marchesi.federico.contagomme.WheelCountPerRace;
 
 import android.content.Context;
 import android.content.DialogInterface;
@@ -9,23 +9,23 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.CursorAdapter;
 import android.widget.ImageView;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.marchesi.federico.contagomme.DBHelper.DatabaseHelper;
 import com.marchesi.federico.contagomme.DBModel.Race;
 import com.marchesi.federico.contagomme.Dialog.InputDialogRace;
+import com.marchesi.federico.contagomme.R;
 
 /**
  * Created by federico.marchesi on 26/01/2017.
  */
 
-public class RaceCursorAdapter extends CursorAdapter {
-    private static final String TAG = RaceCursorAdapter.class.getName();
+public class WheelCountPerRaceCursorAdapter extends CursorAdapter {
+    private static final String TAG = WheelCountPerRaceCursorAdapter.class.getName();
     private LayoutInflater cursorInflater;
 
 
-    public RaceCursorAdapter(Context context, Cursor cursor) {
+    public WheelCountPerRaceCursorAdapter(Context context, Cursor cursor) {
         super(context, cursor, 0);
         cursorInflater = (LayoutInflater) context.getSystemService(
                 Context.LAYOUT_INFLATER_SERVICE);
@@ -36,7 +36,7 @@ public class RaceCursorAdapter extends CursorAdapter {
     @Override
     public View newView(Context context, Cursor cursor, ViewGroup parent) {
         //return LayoutInflater.from(context).inflate(R.layout.activity_brand_list, parent, false);
-        return cursorInflater.inflate(R.layout.race_item, parent, false);
+        return cursorInflater.inflate(R.layout.tire_button, parent, false);
     }
 
     // The bindView method is used to bind all data to a given view
@@ -55,27 +55,17 @@ public class RaceCursorAdapter extends CursorAdapter {
         TextView raceDate = (TextView) view.findViewById(R.id.race_date);
         raceDate.setText(cursor.getString(cursor.getColumnIndex(DatabaseHelper.COLUMN_RACE_DATE)));
 
-        RelativeLayout container = (RelativeLayout) view.findViewById(R.id.container);
-        container.setTag(id);
-
         raceTV.setTag(id);
         // Populate fields with extracted properties
         raceTV.setText(race);
 
-        view.setOnLongClickListener(new View.OnLongClickListener() {
+        raceTV.setOnLongClickListener(new View.OnLongClickListener() {
             @Override
             public boolean onLongClick(View v) {
                 editRace(context, v);
                 return false;
             }
         });
-//        raceTV.setOnLongClickListener(new View.OnLongClickListener() {
-//            @Override
-//            public boolean onLongClick(View v) {
-//                editRace(context, v);
-//                return false;
-//            }
-//        });
         //tvPriority.setText(String.valueOf(priority));
         ImageView deleteImage = (ImageView) view.findViewById(R.id.delete_button);
 
@@ -133,23 +123,19 @@ public class RaceCursorAdapter extends CursorAdapter {
 
             @Override
             public InputDialogRace.ValidationResult isInputValid(String input) {
-                if (!input.isEmpty()) {
-                    return new InputDialogRace.ValidationResult(true, 0);
-                }
-
-                return new InputDialogRace.ValidationResult(false, R.string.race_name_mandatory);
+                return null;
             }
 
             @Override
             public void onConfirm(String raceName, String raceDescr, String raceDate) {
                 if (!raceName.isEmpty())
-                race[0].setName(raceName);
+                    race[0].setName(raceName);
 
                 if (!raceDescr.isEmpty())
-                race[0].setDesc(raceDescr);
+                    race[0].setDesc(raceDescr);
 
                 if (!raceDate.isEmpty())
-                race[0].setDate(raceDate);
+                    race[0].setDate(raceDate);
 
                 dbHelper.updateRace(race[0]);
                 Cursor c = dbHelper.getCursor(DatabaseHelper.TABLE_RACES, DatabaseHelper.COLUMN_RACE_DATE);

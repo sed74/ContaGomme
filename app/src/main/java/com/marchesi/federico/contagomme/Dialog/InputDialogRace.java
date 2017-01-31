@@ -27,6 +27,7 @@ public class InputDialogRace {
     private final EditText editDescr;
     private final EditText editDate;
     private final int title;
+
     DatePickerDialog.OnDateSetListener onDateSetListener = new DatePickerDialog.OnDateSetListener() {
         @Override
         public void onDateSet(DatePicker view, int year, int month, int dayOfMonth) {
@@ -37,6 +38,7 @@ public class InputDialogRace {
 
         }
     };
+
     View.OnClickListener dateListener = new View.OnClickListener() {
         @Override
         public void onClick(View v) {
@@ -50,18 +52,22 @@ public class InputDialogRace {
     public InputDialogRace(final Context context, int title, int hint) {
         this.context = context;
         this.dialogView = LayoutInflater.from(context).inflate(R.layout.input_dialog_race, null);
+//        dialogView.setBackgroundColor(context.getResources().getColor(R.color.colorAccent));
         this.title = title;
         this.editName = (EditText) dialogView.findViewById(R.id.input);
-        this.editDescr = (EditText) dialogView.findViewById(R.id.coffe_type_descr);
+        this.editDescr = (EditText) dialogView.findViewById(R.id.race_descr);
         this.editDate = (EditText) dialogView.findViewById(R.id.race_date);
         editDate.setOnClickListener(dateListener);
-        editName.setHint(hint);
+//        editName.setHint(hint);
         this.okBtn = dialogView.findViewById(R.id.btn_ok);
         this.cancelBtn = dialogView.findViewById(R.id.btn_cancel);
+        okBtn.setEnabled(false);
     }
 
     public void setRaceName(String raceName) {
+
         editName.setText(raceName);
+        okBtn.setEnabled(!raceName.isEmpty());
     }
 
     public void setRaceDate(String raceDate) {
@@ -85,9 +91,14 @@ public class InputDialogRace {
 
             @Override
             public void afterTextChanged(Editable s) {
-                ValidationResult result = inputListener.isInputValid(editName.getText().toString());
-                okBtn.setEnabled(result.isValid);
+                if (s.length() > 0) {
+                    ValidationResult result = inputListener.isInputValid(s.toString());
+                    okBtn.setEnabled(result.isValid);
+                } else
+                    okBtn.setEnabled(false);
+
             }
+
         });
     }
 
@@ -131,13 +142,15 @@ public class InputDialogRace {
 
     private void updateLabel() {
 
-        String myFormat = "dd/MM/yy"; //In which you need put here
+        String myFormat = "dd/MM/yyyy"; //In which you need put here
         SimpleDateFormat sdf = new SimpleDateFormat(myFormat, Locale.ITALY);
 
         editDate.setText(sdf.format(myCalendar.getTime()));
     }
 
     public interface InputListener {
+
+//        ValidationResult isInputValid(String input);
 
         ValidationResult isInputValid(String input);
 
@@ -148,7 +161,6 @@ public class InputDialogRace {
     public static class ValidationResult {
 
         public final boolean isValid;
-
         public final int errorMsg;
 
         public ValidationResult(boolean isValid, int errorMsg) {

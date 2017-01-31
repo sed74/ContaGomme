@@ -1,5 +1,7 @@
 package com.marchesi.federico.contagomme.DBModel;
 
+import java.util.Date;
+
 /**
  * Created by federico.marchesi on 26/01/2017.
  */
@@ -9,6 +11,7 @@ public class Race {
     String raceName;
     String raceDesc;
     String raceDate;
+    Date raceDateTime;
 
     public Race() {
     }
@@ -55,5 +58,13 @@ public class Race {
 
     public void setDate(String raceDate) {
         this.raceDate = raceDate;
+    }
+
+    public Date getRaceDateTime() {
+        return raceDateTime;
+    }
+
+    public void setRaceDateTime(Date raceDateTime) {
+        this.raceDateTime = raceDateTime;
     }
 }

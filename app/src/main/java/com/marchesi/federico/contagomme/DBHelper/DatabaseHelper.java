@@ -16,6 +16,7 @@ import com.marchesi.federico.contagomme.DBModel.Brand;
 import com.marchesi.federico.contagomme.DBModel.Race;
 import com.marchesi.federico.contagomme.DBModel.WheelList;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -34,6 +35,7 @@ public class DatabaseHelper extends SQLiteOpenHelper implements BaseColumns {
     public static final String COLUMN_RACE_NAME = "race_name";
     public static final String COLUMN_RACE_PLACE = "race_place";
     public static final String COLUMN_RACE_DATE = "race_date";
+    public static final String COLUMN_RACE_DATETIME = "race_datetime";
     public static final String COLUMN_RACE_DESCRIPTION = "race_desc";
 
     // WHEEL_LIST Table - column names
@@ -52,7 +54,6 @@ public class DatabaseHelper extends SQLiteOpenHelper implements BaseColumns {
     // Database Name
     private static final String DATABASE_NAME = "contaGomme";
 
-
     // Table Create Statements
     // BRANDS table create statement
     private static final String CREATE_TABLE_BRANDS =
@@ -68,6 +69,7 @@ public class DatabaseHelper extends SQLiteOpenHelper implements BaseColumns {
                     COLUMN_RACE_NAME + " TEXT," +
                     COLUMN_RACE_PLACE + " TEXT," +
                     COLUMN_RACE_DATE + " TEXT," +
+                    COLUMN_RACE_DATETIME + " DATE," +
                     COLUMN_RACE_DESCRIPTION + " TEXT)";
 
     // WHEEL_LIST table create statement
@@ -76,6 +78,22 @@ public class DatabaseHelper extends SQLiteOpenHelper implements BaseColumns {
                     "(" + _ID + " INTEGER PRIMARY KEY," +
                     COLUMN_RACE_LIST_ID + " INTEGER," +
                     COLUMN_WHEEL_BRAND_ID + " INTEGER," +
+                    COLUMN_TOT_FRONT_WHEEL + " INTEGER," +
+                    COLUMN_TOT_REAR_WHEEL + " TEXT," +
+                    " FOREIGN KEY (" + COLUMN_RACE_LIST_ID + ") REFERENCES " +
+                    TABLE_RACES + "(" + _ID + "), " +
+                    " FOREIGN KEY (" + COLUMN_WHEEL_BRAND_ID + ") REFERENCES " +
+                    TABLE_BRANDS + "(" + _ID + "))";
+
+    // RACES_WHEEL_LIST VIEW
+    private static final String VIEW_RACES_WHEEL_LIST = "view_reces_wheel_list";
+
+
+    // RACES_WHEEL_LIST VIEW create statement
+    private static final String RACES_WHEEL_LIST_VIEW =
+            "CREATE VIEW " + VIEW_RACES_WHEEL_LIST +
+                    "(" + _ID + " INTEGER PRIMARY KEY," +
+                    TABLE_RACES + "." + _ID + " INTEGER," +
                     COLUMN_TOT_FRONT_WHEEL + " INTEGER," +
                     COLUMN_TOT_REAR_WHEEL + " TEXT," +
                     " FOREIGN KEY (" + COLUMN_RACE_LIST_ID + ") REFERENCES " +
@@ -224,6 +242,9 @@ public class DatabaseHelper extends SQLiteOpenHelper implements BaseColumns {
         values.put(COLUMN_RACE_DESCRIPTION, race.getDesc());
         values.put(COLUMN_RACE_DATE, race.getDate());
 
+        SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
+//        values.put(COLUMN_RACE_DATETIME, dateFormat.format(race.getRaceDateTime()));
+
         // insert row
         long tag_id = db.insert(TABLE_RACES, null, values);
 
@@ -251,6 +272,7 @@ public class DatabaseHelper extends SQLiteOpenHelper implements BaseColumns {
         race.setName((c.getString(c.getColumnIndex(COLUMN_RACE_NAME))));
         race.setDate((c.getString(c.getColumnIndex(COLUMN_RACE_DATE))));
         race.setDesc((c.getString(c.getColumnIndex(COLUMN_RACE_DESCRIPTION))));
+//        race.setRaceDateTime((c.getFloat(c.getColumnIndex(COLUMN_RACE_DATETIME))));
 
         return race;
     }

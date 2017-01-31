@@ -1,70 +1,81 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content"
+    android:layout_height="match_parent"
     android:orientation="vertical"
     android:padding="@dimen/margin_default_half">
 
-    <TableLayout
+    <TextView
+        style="@style/LabelText"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/name"
+        android:visibility="gone" />
+
+    <android.support.design.widget.TextInputLayout
+        android:id="@+id/fInput"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp">
 
-        <TableRow>
+        <EditText
+            android:id="@+id/input"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="@string/input_race_name"
+            android:inputType="textCapWords"
+            android:selectAllOnFocus="true" />
+    </android.support.design.widget.TextInputLayout>
 
-            <TextView
-                style="@style/LabelFont"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/name" />
 
-            <EditText
-                android:id="@+id/input"
-                style="@style/FieldFont"
-                android:hint="@string/input_race_name"
-                android:inputType="textCapWords"
-                android:selectAllOnFocus="true" />
+    <TextView
+        style="@style/LabelText"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/date"
+        android:visibility="gone" />
 
-        </TableRow>
+    <android.support.design.widget.TextInputLayout
+        android:id="@+id/frace_date"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp">
 
-        <TableRow>
+        <EditText
+            android:id="@+id/race_date"
+            style="@style/InputText"
+            android:focusable="false"
+            android:hint="@string/race_date" />
+    </android.support.design.widget.TextInputLayout>
 
-            <TextView
-                style="@style/LabelFont"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/date" />
+    <TextView
+        style="@style/LabelText"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/note"
+        android:visibility="gone" />
 
-            <EditText
-                android:id="@+id/race_date"
-                style="@style/FieldFont"
-                android:focusable="false"
-                android:hint="@string/race_date" />
-        </TableRow>
+    <android.support.design.widget.TextInputLayout
+        android:id="@+id/frace_descr"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        android:visibility="gone">
 
-        <TableRow>
-
-            <TextView
-                style="@style/LabelFont"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/note" />
-
-            <EditText
-                android:id="@+id/coffe_type_descr"
-                style="@style/FieldFont"
-                android:layout_width="fill_parent"
-                android:layout_height="wrap_content"
-                android:gravity="top|left"
-                android:hint="@string/input_race_notes"
-                android:inputType="textMultiLine|textCapSentences"
-                android:lines="6"
-                android:maxLines="10"
-                android:minLines="4"
-                android:scrollbars="vertical" />
-
-        </TableRow>
-    </TableLayout>
-
+        <EditText
+            android:id="@+id/race_descr"
+            style="@style/InputText"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:gravity="top|left"
+            android:hint="@string/input_race_notes"
+            android:inputType="textMultiLine|textCapSentences"
+            android:lines="6"
+            android:maxLines="10"
+            android:minLines="4"
+            android:scrollbars="vertical"
+            android:visibility="gone" />
+    </android.support.design.widget.TextInputLayout>
 
     <RelativeLayout
         android:layout_width="match_parent"
@@ -79,7 +90,7 @@
             android:layout_height="wrap_content"
             android:layout_alignParentRight="true"
             android:background="@null"
-            android:text="@android:string/ok"
+            android:text="@string/dialog_ok_button"
             android:textAllCaps="true" />
 
         <Button
@@ -89,7 +100,7 @@
             android:layout_height="wrap_content"
             android:layout_toLeftOf="@id/btn_ok"
             android:background="@null"
-            android:text="@android:string/cancel"
+            android:text="@string/dialog_cancel_button"
             android:textAllCaps="true" />
 
     </RelativeLayout>
