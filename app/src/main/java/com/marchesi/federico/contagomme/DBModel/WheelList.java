@@ -21,11 +21,11 @@ public class WheelList {
         totRearWheel = TotRear;
     }
 
-    public int getWheelListId() {
+    public int getId() {
         return wheelListId;
     }
 
-    public void setWheelListId(int wheelListId) {
+    public void setId(int wheelListId) {
         this.wheelListId = wheelListId;
     }
 

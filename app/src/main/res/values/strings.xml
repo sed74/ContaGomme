@@ -46,15 +46,15 @@
     <string name="pref_title_file_type">Tipo di file da allegare</string>
     <string name="explain_why_write_storage">L\'accesso alla scrittura è necessario per poter salvare il file con la lista delle gomme.</string>
     <string name="permision_available_write_storage">Accesso all\'archivio concesso</string>
-    <string name="permision_not_available_write_storage">Accesso all\'archivio negato.</string>
+    <string name="permision_not_available_write_storage">Accesso all\'archivio negato. Non sarà possibile allegare file alle email.\nLa relativa opzione è stata deselezionata automaticamente.</string>
     <string name="race_name">Gara di</string>
     <string name="brand">Marca</string>
     <string name="separate_with_colon">Inserisci indirizzi separati da virgola</string>
     <string name="add_button">Aggiungi</string>
     <string name="brands_menu">Anagrafica Marche</string>
-    <string name="dialog_delete_title">Cancella</string>
-    <string name="dialog_delete_message">Vuoi cancellare %1$s dall\'elenco?</string>
-    <string name="dialog_delete_button">Cancella</string>
+    <string name="dialog_delete_title">Elimina</string>
+    <string name="dialog_delete_message">Vuoi eliminare %1$s dall\'elenco?</string>
+    <string name="dialog_delete_button">Elimina</string>
     <string name="dialog_cancel_button">Annulla</string>
     <string name="add_brand_dialog_title">Aggiungi una marca</string>
     <string name="add_brand_dialog_hint">Nome Marca</string>
@@ -78,5 +78,6 @@
     <string name="note">Note</string>
     <string name="dialog_ok_button">Ok</string>
     <string name="race_name_mandatory">Il nome della gara è obbligatorio</string>
+    <string name="edit_race_dialog_title">Modifica gara</string>
 
 </resources>

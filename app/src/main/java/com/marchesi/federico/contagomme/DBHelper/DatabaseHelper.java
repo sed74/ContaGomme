@@ -37,23 +37,25 @@ public class DatabaseHelper extends SQLiteOpenHelper implements BaseColumns {
     public static final String COLUMN_RACE_DATE = "race_date";
     public static final String COLUMN_RACE_DATETIME = "race_datetime";
     public static final String COLUMN_RACE_DESCRIPTION = "race_desc";
+    public static final String COLUMN_RACE_ORDER_BY =
+            "SubStr(" + DatabaseHelper.COLUMN_RACE_DATE + ", 7, 4), " +
+                    "SubStr(" + DatabaseHelper.COLUMN_RACE_DATE + ", 4, 2), " +
+                    "SubStr(" + DatabaseHelper.COLUMN_RACE_DATE + ", 1, 2)";
+
 
     // WHEEL_LIST Table - column names
-    public static final String COLUMN_RACE_LIST_ID = "race_list_id";
+    public static final String COLUMN_WHEEL_RACE_LIST_ID = "race_list_id";
     public static final String COLUMN_WHEEL_BRAND_ID = "wheel_brand";
-
-    // Common column names
-    //private static final String KEY_ID = "_id";
-    public static final String COLUMN_TOT_FRONT_WHEEL = "tot_front_wheel";
-    public static final String COLUMN_TOT_REAR_WHEEL = "tot_rear_wheel";
-
+    public static final String COLUMN_WHEEL_TOT_FRONT_WHEEL = "tot_front_wheel";
+    public static final String COLUMN_WHEEL_TOT_REAR_WHEEL = "tot_rear_wheel";
+    // RACES_WHEEL_LIST VIEW
+    public static final String VIEW_RACES_WHEEL_LIST = "view_reces_wheel_list";
     // Logcat tag
     private static final String TAG = DatabaseHelper.class.getName();
     // Database Version
-    private static final int DATABASE_VERSION = 1;
+    private static final int DATABASE_VERSION = 3;
     // Database Name
     private static final String DATABASE_NAME = "contaGomme";
-
     // Table Create Statements
     // BRANDS table create statement
     private static final String CREATE_TABLE_BRANDS =
@@ -61,7 +63,6 @@ public class DatabaseHelper extends SQLiteOpenHelper implements BaseColumns {
                     "(" + _ID + " INTEGER PRIMARY KEY," +
                     COLUMN_BRAND_ORDER + " INTEGER," +
                     COLUMN_BRAND_NAME + " TEXT)";
-
     // RACES table create statement
     private static final String CREATE_TABLE_RACES =
             "CREATE TABLE " + TABLE_RACES +
@@ -71,35 +72,33 @@ public class DatabaseHelper extends SQLiteOpenHelper implements BaseColumns {
                     COLUMN_RACE_DATE + " TEXT," +
                     COLUMN_RACE_DATETIME + " DATE," +
                     COLUMN_RACE_DESCRIPTION + " TEXT)";
-
     // WHEEL_LIST table create statement
     private static final String CREATE_TABLE_WHEEL_LIST =
             "CREATE TABLE " + TABLE_WHEEL_LIST +
                     "(" + _ID + " INTEGER PRIMARY KEY," +
-                    COLUMN_RACE_LIST_ID + " INTEGER," +
+                    COLUMN_WHEEL_RACE_LIST_ID + " INTEGER," +
                     COLUMN_WHEEL_BRAND_ID + " INTEGER," +
-                    COLUMN_TOT_FRONT_WHEEL + " INTEGER," +
-                    COLUMN_TOT_REAR_WHEEL + " TEXT," +
-                    " FOREIGN KEY (" + COLUMN_RACE_LIST_ID + ") REFERENCES " +
+                    COLUMN_WHEEL_TOT_FRONT_WHEEL + " INTEGER," +
+                    COLUMN_WHEEL_TOT_REAR_WHEEL + " TEXT," +
+                    " FOREIGN KEY (" + COLUMN_WHEEL_RACE_LIST_ID + ") REFERENCES " +
                     TABLE_RACES + "(" + _ID + "), " +
                     " FOREIGN KEY (" + COLUMN_WHEEL_BRAND_ID + ") REFERENCES " +
                     TABLE_BRANDS + "(" + _ID + "))";
-
-    // RACES_WHEEL_LIST VIEW
-    private static final String VIEW_RACES_WHEEL_LIST = "view_reces_wheel_list";
-
-
     // RACES_WHEEL_LIST VIEW create statement
-    private static final String RACES_WHEEL_LIST_VIEW =
+    private static final String CREATE_RACES_WHEEL_LIST_VIEW =
             "CREATE VIEW " + VIEW_RACES_WHEEL_LIST +
-                    "(" + _ID + " INTEGER PRIMARY KEY," +
-                    TABLE_RACES + "." + _ID + " INTEGER," +
-                    COLUMN_TOT_FRONT_WHEEL + " INTEGER," +
-                    COLUMN_TOT_REAR_WHEEL + " TEXT," +
-                    " FOREIGN KEY (" + COLUMN_RACE_LIST_ID + ") REFERENCES " +
-                    TABLE_RACES + "(" + _ID + "), " +
-                    " FOREIGN KEY (" + COLUMN_WHEEL_BRAND_ID + ") REFERENCES " +
-                    TABLE_BRANDS + "(" + _ID + "))";
+                    " AS SELECT " + TABLE_WHEEL_LIST + "." + _ID + ", " +
+                    TABLE_RACES + "." + COLUMN_RACE_NAME + ", " +
+                    TABLE_BRANDS + "." + COLUMN_BRAND_NAME + ", " +
+                    COLUMN_WHEEL_TOT_FRONT_WHEEL + ", " +
+                    COLUMN_WHEEL_TOT_REAR_WHEEL +
+                    " FROM " + TABLE_WHEEL_LIST + ", " +
+                    TABLE_BRANDS + ", " + TABLE_RACES +
+                    " WHERE " + TABLE_WHEEL_LIST + "." + COLUMN_WHEEL_BRAND_ID + " = " +
+                    TABLE_BRANDS + "." + _ID +
+                    " AND " + TABLE_WHEEL_LIST + "." + COLUMN_WHEEL_RACE_LIST_ID + " = " +
+                    TABLE_RACES + "." + _ID +
+                    " ORDER BY " + COLUMN_BRAND_ORDER;
 
     public DatabaseHelper(Context context) {
         super(context, DATABASE_NAME, null, DATABASE_VERSION);
@@ -112,14 +111,16 @@ public class DatabaseHelper extends SQLiteOpenHelper implements BaseColumns {
         db.execSQL(CREATE_TABLE_BRANDS);
         db.execSQL(CREATE_TABLE_RACES);
         db.execSQL(CREATE_TABLE_WHEEL_LIST);
+        db.execSQL(CREATE_RACES_WHEEL_LIST_VIEW);
     }
 
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
         // on upgrade drop older tables
-        db.execSQL("DROP TABLE IF EXISTS " + CREATE_TABLE_BRANDS);
-        db.execSQL("DROP TABLE IF EXISTS " + CREATE_TABLE_RACES);
-        db.execSQL("DROP TABLE IF EXISTS " + CREATE_TABLE_WHEEL_LIST);
+        db.execSQL("DROP TABLE IF EXISTS " + TABLE_BRANDS);
+        db.execSQL("DROP TABLE IF EXISTS " + TABLE_RACES);
+        db.execSQL("DROP TABLE IF EXISTS " + TABLE_WHEEL_LIST);
+        db.execSQL("DROP VIEW IF EXISTS " + VIEW_RACES_WHEEL_LIST);
 
         // create new tables
         onCreate(db);
@@ -143,9 +144,12 @@ public class DatabaseHelper extends SQLiteOpenHelper implements BaseColumns {
 
     public Cursor getCursor(String tableName, String columnOrderBy) {
         SQLiteDatabase db = this.getReadableDatabase();
-
-        String selectQuery = "SELECT * FROM " + tableName + " ORDER BY " + columnOrderBy;
-
+        String selectQuery;
+        if (columnOrderBy == null || columnOrderBy.isEmpty()) {
+            selectQuery = "SELECT * FROM " + tableName;
+        } else {
+            selectQuery = "SELECT * FROM " + tableName + " ORDER BY " + columnOrderBy;
+        }
         Log.e(TAG, selectQuery);
 
         Cursor c = db.rawQuery(selectQuery, null);
@@ -251,7 +255,7 @@ public class DatabaseHelper extends SQLiteOpenHelper implements BaseColumns {
         return tag_id;
     }
 
-    /*
+    /**
      * get single Race
      */
     public Race getRace(long todo_id) {
@@ -292,7 +296,7 @@ public class DatabaseHelper extends SQLiteOpenHelper implements BaseColumns {
      */
     public List<Race> getAllRaces() {
         List<Race> tags = new ArrayList<>();
-        String selectQuery = "SELECT  * FROM " + TABLE_RACES;
+        String selectQuery = "SELECT * FROM " + TABLE_RACES;
 
         Log.e(TAG, selectQuery);
 
@@ -316,7 +320,7 @@ public class DatabaseHelper extends SQLiteOpenHelper implements BaseColumns {
         return tags;
     }
 
-    /*
+    /**
      * Updating a Race
      */
     public int updateRace(Race race) {
@@ -333,14 +337,14 @@ public class DatabaseHelper extends SQLiteOpenHelper implements BaseColumns {
                 new String[]{String.valueOf(race.getId())});
     }
 
-    /*
+    /**
      * getting all WHEEL_LIST under single race
-     * */
+     */
     public List<WheelList> getAllWheelListByRace(String raceId) {
         List<WheelList> wheelLists = new ArrayList<>();
 
         String selectQuery = "SELECT  * FROM " + TABLE_WHEEL_LIST + " wl, "
-                + TABLE_BRANDS + " b WHERE wl." + COLUMN_RACE_LIST_ID + " = " + raceId +
+                + TABLE_BRANDS + " b WHERE wl." + COLUMN_WHEEL_RACE_LIST_ID + " = " + raceId +
                 " AND wl." + COLUMN_WHEEL_BRAND_ID + " = " + "b." + _ID;
 
         Log.e(TAG, selectQuery);
@@ -352,7 +356,7 @@ public class DatabaseHelper extends SQLiteOpenHelper implements BaseColumns {
         if (c.moveToFirst()) {
             do {
                 WheelList wl = new WheelList();
-                wl.setWheelListId(c.getInt((c.getColumnIndex(_ID))));
+                wl.setId(c.getInt((c.getColumnIndex(_ID))));
 //                wl.setNote((c.getString(c.getColumnIndex(KEY_TODO))));
 //                wl.setCreatedAt(c.getString(c.getColumnIndex(KEY_CREATED_AT)));
 
@@ -364,7 +368,99 @@ public class DatabaseHelper extends SQLiteOpenHelper implements BaseColumns {
         return wheelLists;
     }
 
-    // closing database
+    /**
+     * Creating a WHEEL_LIST
+     */
+    public long createWheelList(WheelList wheelList) {
+        SQLiteDatabase db = this.getWritableDatabase();
+
+        ContentValues values = new ContentValues();
+        values.put(COLUMN_WHEEL_BRAND_ID, wheelList.getBrandId());
+        values.put(COLUMN_WHEEL_RACE_LIST_ID, wheelList.getRaceId());
+        values.put(COLUMN_WHEEL_TOT_FRONT_WHEEL, wheelList.getTotFrontWheel());
+        values.put(COLUMN_WHEEL_TOT_REAR_WHEEL, wheelList.getTotRearWheel());
+
+        // insert row
+        long wheelListId = db.insert(TABLE_WHEEL_LIST, null, values);
+
+        return wheelListId;
+    }
+
+    /**
+     * get single WheelList
+     */
+    public WheelList getWheelList(long todo_id) {
+        SQLiteDatabase db = this.getReadableDatabase();
+
+        String selectQuery = "SELECT  * FROM " + TABLE_WHEEL_LIST + " WHERE "
+                + _ID + " = " + todo_id;
+
+        Log.e(TAG, selectQuery);
+
+        Cursor c = db.rawQuery(selectQuery, null);
+
+        if (c != null)
+            c.moveToFirst();
+
+        WheelList wheelList = new WheelList();
+        wheelList.setId(c.getInt(c.getColumnIndex(_ID)));
+        wheelList.setBrandId((c.getInt(c.getColumnIndex(COLUMN_WHEEL_BRAND_ID))));
+        wheelList.setRaceId((c.getInt(c.getColumnIndex(COLUMN_WHEEL_RACE_LIST_ID))));
+        wheelList.setTotFrontWheel((c.getInt(c.getColumnIndex(COLUMN_WHEEL_TOT_FRONT_WHEEL))));
+        wheelList.setTotRearWheel((c.getInt(c.getColumnIndex(COLUMN_WHEEL_TOT_REAR_WHEEL))));
+//        race.setRaceDateTime((c.getFloat(c.getColumnIndex(COLUMN_RACE_DATETIME))));
+
+        return wheelList;
+    }
+
+    /**
+     * Updating a WHEEL_LIST
+     */
+    public long updateWheelList(WheelList wheelList) {
+        SQLiteDatabase db = this.getWritableDatabase();
+
+        ContentValues values = new ContentValues();
+        values.put(COLUMN_WHEEL_BRAND_ID, wheelList.getBrandId());
+        values.put(COLUMN_WHEEL_RACE_LIST_ID, wheelList.getRaceId());
+        values.put(COLUMN_WHEEL_TOT_FRONT_WHEEL, wheelList.getTotFrontWheel());
+        values.put(COLUMN_WHEEL_TOT_REAR_WHEEL, wheelList.getTotRearWheel());
+
+        // updating row
+        return db.update(TABLE_WHEEL_LIST, values, _ID + " = ?",
+                new String[]{String.valueOf(wheelList.getId())});
+    }
+
+    /**
+     * Deleting a wheel_list
+     */
+    public void deleteWheelList(long wheelListId) {
+        SQLiteDatabase db = this.getWritableDatabase();
+        db.delete(TABLE_WHEEL_LIST, _ID + " = ?",
+                new String[]{String.valueOf(wheelListId)});
+    }
+
+    /**
+     * get Table count
+     */
+    public int getRowCount(String tableName) {
+        String selectQuery = "SELECT COUNT(*) as count FROM " + tableName;
+
+        Log.e(TAG, selectQuery);
+
+        SQLiteDatabase db = this.getReadableDatabase();
+        Cursor c = db.rawQuery(selectQuery, null);
+
+        int rowCount = 0;
+        // looping through all rows and adding to list
+        if (c.moveToFirst()) {
+            rowCount = c.getInt((c.getColumnIndex("count")));
+        }
+        return rowCount;
+    }
+
+    /**
+     * closing database
+     */
     public void closeDB() {
         SQLiteDatabase db = this.getReadableDatabase();
         if (db != null && db.isOpen())

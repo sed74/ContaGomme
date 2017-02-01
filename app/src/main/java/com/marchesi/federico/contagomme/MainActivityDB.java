@@ -16,7 +16,7 @@ import com.marchesi.federico.contagomme.Dialog.InputDialogRace;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 
-public class RaceListActivity extends AppCompatActivity {
+public class MainActivityDB extends AppCompatActivity {
 
     private DatabaseHelper dbHelper;
     private RaceCursorAdapter raceAdapter;
@@ -26,7 +26,7 @@ public class RaceListActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_brand_list);
+        setContentView(R.layout.activity_main_db);
 
         listView = (ListView) findViewById(R.id.list);
 
@@ -35,9 +35,9 @@ public class RaceListActivity extends AppCompatActivity {
             @Override
             public void run() {
                 dbHelper = new DatabaseHelper(getBaseContext());
-                Cursor c = dbHelper.getCursor(DatabaseHelper.TABLE_RACES,
-                        DatabaseHelper.COLUMN_RACE_ORDER_BY);
-                raceAdapter = new RaceCursorAdapter(RaceListActivity.this, c);
+                Cursor c = dbHelper.getCursor(DatabaseHelper.VIEW_RACES_WHEEL_LIST,
+                        null);
+                raceAdapter = new RaceCursorAdapter(MainActivityDB.this, c);
                 listView.setAdapter(raceAdapter);
             }
 

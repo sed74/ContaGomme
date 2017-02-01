@@ -8,7 +8,6 @@ import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.content.res.Resources;
 import android.graphics.Color;
-import android.graphics.Point;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
@@ -21,7 +20,6 @@ import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.util.DisplayMetrics;
-import android.view.Display;
 import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -136,7 +134,8 @@ public class MainActivity extends AppCompatActivity {
             mEdit1.clear();
             mEdit1.apply();
             loadList();
-            Toast.makeText(this, getResources().getString(R.string.new_version_detected), Toast.LENGTH_LONG).show();
+            Toast.makeText(this, getResources().getString(R.string.new_version_detected),
+                    Toast.LENGTH_LONG).show();
             return;
         }
 
@@ -576,7 +575,8 @@ public class MainActivity extends AppCompatActivity {
             if (ActivityCompat.shouldShowRequestPermissionRationale(this,
                     Manifest.permission.WRITE_EXTERNAL_STORAGE)) {
 
-                Toast.makeText(this, getResources().getString(R.string.explain_why_write_storage), Toast.LENGTH_LONG).show();
+//                Toast.makeText(this, getResources().getString(R.string.explain_why_write_storage),
+//                        Toast.LENGTH_LONG).show();
                 // Show an explanation to the user *asynchronously* -- don't block
                 // this thread waiting for the user's response! After the user
                 // sees the explanation, try again to request the permission.
@@ -617,14 +617,29 @@ public class MainActivity extends AppCompatActivity {
 //                Log.i(TAG, "CAMERA permission has now been granted. Showing preview.");
                 Snackbar.make(view, R.string.permision_available_write_storage,
                         Snackbar.LENGTH_SHORT).show();
+                sendEmail();
             } else {
 //                Log.i(TAG, "CAMERA permission was NOT granted.");
-                Snackbar.make(view, R.string.permision_not_available_write_storage,
-                        Snackbar.LENGTH_SHORT).show();
-
+                Toast.makeText(this, R.string.permision_not_available_write_storage,
+                        Toast.LENGTH_LONG).show();
+                changeSharedPreference(SettingsActivity.KEY_PREF_ATTACH_FILE, false);
             }
             // END_INCLUDE(permission_result)
 
         }
     }
+
+    void changeSharedPreference(String prefName, Object value) {
+        SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(this);
+        SharedPreferences.Editor edit = sharedPref.edit();
+        if (value instanceof Boolean) {
+            edit.putBoolean(prefName, (Boolean) value);
+        } else if (value instanceof Integer) {
+            edit.putInt(prefName, (Integer) value);
+        } else if (value instanceof String) {
+            edit.putString(prefName, value.toString());
+        }
+        edit.apply();
+    }
+
 }

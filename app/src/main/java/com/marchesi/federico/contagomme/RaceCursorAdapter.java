@@ -123,7 +123,7 @@ public class RaceCursorAdapter extends CursorAdapter {
         final Race[] race = {dbHelper.getRace(id)};
 
 
-        InputDialogRace inputDialog = new InputDialogRace(context, R.string.add_race_dialog_title,
+        InputDialogRace inputDialog = new InputDialogRace(context, R.string.edit_race_dialog_title,
                 R.string.add_race_dialog_hint);
         inputDialog.setRaceName(race[0].getName());
         inputDialog.setRaceDescr(race[0].getDesc());
