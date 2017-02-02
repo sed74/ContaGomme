@@ -36,7 +36,8 @@ public class RaceListActivity extends AppCompatActivity {
             public void run() {
                 dbHelper = new DatabaseHelper(getBaseContext());
                 Cursor c = dbHelper.getCursor(DatabaseHelper.TABLE_RACES,
-                        DatabaseHelper.COLUMN_RACE_ORDER_BY);
+                        DatabaseHelper.COLUMN_RACE_DATETIME);
+//                        DatabaseHelper.COLUMN_RACE_ORDER_BY);
                 raceAdapter = new RaceCursorAdapter(RaceListActivity.this, c);
                 listView.setAdapter(raceAdapter);
             }
@@ -106,7 +107,7 @@ public class RaceListActivity extends AppCompatActivity {
                 //Cursor cur = raceAdapter.getCursor();
                 dbHelper.createRace(race);
                 Cursor d = dbHelper.getCursor(DatabaseHelper.TABLE_RACES,
-                        DatabaseHelper.COLUMN_RACE_ORDER_BY);
+                        DatabaseHelper.COLUMN_RACE_DATETIME);
                 raceAdapter.swapCursor(d);
                 //Toast.makeText(MainActivity.this, getResources().getString(R.string.data_saved), Toast.LENGTH_SHORT).show();
             }

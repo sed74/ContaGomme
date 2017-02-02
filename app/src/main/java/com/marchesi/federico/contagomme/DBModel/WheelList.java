@@ -5,62 +5,72 @@ package com.marchesi.federico.contagomme.DBModel;
  */
 
 public class WheelList {
-    int wheelListId;
-    int raceId;
-    int brandId;
-    int totFrontWheel;
-    int totRearWheel;
+    private int mWheelListId;
+    private int mRaceId;
+    private int mBrandId;
+    private int mTotFrontWheel;
+    private int mTotRearWheel;
 
     public WheelList() {
     }
 
-    public WheelList(int RaceId, int BrandId, int TotFront, int TotRear) {
-        raceId = RaceId;
-        brandId = BrandId;
-        totFrontWheel = TotFront;
-        totRearWheel = TotRear;
+    public WheelList(int wheelListId) {
+        mWheelListId = wheelListId;
     }
 
-    public int getId() {
-        return wheelListId;
+    public WheelList(int wheelListId, int raceId, int brandId) {
+        mWheelListId = wheelListId;
+        mRaceId = raceId;
+        mBrandId = brandId;
     }
 
-    public void setId(int wheelListId) {
-        this.wheelListId = wheelListId;
-    }
-
-    public int getRaceId() {
-        return raceId;
-    }
-
-    public void setRaceId(int raceId) {
-        this.raceId = raceId;
-    }
-
-    public int getBrandId() {
-        return brandId;
+    public WheelList(int wheelListId, int raceId, int brandId, int totFront, int totRear) {
+        mWheelListId = wheelListId;
+        mRaceId = raceId;
+        mBrandId = brandId;
+        mTotFrontWheel = totFront;
+        mTotRearWheel = totRear;
     }
 
     // getters
+    public int getId() {
+        return mWheelListId;
+    }
+
+    public void setId(int wheelListId) {
+        this.mWheelListId = wheelListId;
+    }
+
+    public int getRaceId() {
+        return mRaceId;
+    }
+
+    public void setRaceId(int raceId) {
+        this.mRaceId = raceId;
+    }
+
+    public int getBrandId() {
+        return mBrandId;
+    }
 
     // setters
     public void setBrandId(int brandId) {
-        this.brandId = brandId;
+        this.mBrandId = brandId;
     }
 
     public int getTotFrontWheel() {
-        return totFrontWheel;
+        return mTotFrontWheel;
     }
 
     public void setTotFrontWheel(int totFrontWheel) {
-        this.totFrontWheel = totFrontWheel;
+        this.mTotFrontWheel = totFrontWheel;
     }
 
     public int getTotRearWheel() {
-        return totRearWheel;
+        return mTotRearWheel;
     }
 
     public void setTotRearWheel(int totRearWheel) {
-        this.totRearWheel = totRearWheel;
+        this.mTotRearWheel = totRearWheel;
     }
 }

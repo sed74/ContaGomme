@@ -53,7 +53,10 @@ public class RaceCursorAdapter extends CursorAdapter {
         int id = cursor.getInt(cursor.getColumnIndex(DatabaseHelper._ID));
 
         TextView raceDate = (TextView) view.findViewById(R.id.race_date);
-        raceDate.setText(cursor.getString(cursor.getColumnIndex(DatabaseHelper.COLUMN_RACE_DATE)));
+        String stringDate = DateConverter.fromUnixToDate(
+                cursor.getInt(cursor.getColumnIndex(DatabaseHelper.COLUMN_RACE_DATETIME)),
+                DateConverter.FORMAT_DATE);
+        raceDate.setText(stringDate);
 
         RelativeLayout container = (RelativeLayout) view.findViewById(R.id.container);
         container.setTag(id);
@@ -99,7 +102,7 @@ public class RaceCursorAdapter extends CursorAdapter {
 
                                 ImageView delete = (ImageView) view.findViewById(R.id.delete_button);
                                 dbHelper.deleteRace((int) delete.getTag());
-                                Cursor d = dbHelper.getCursor(DatabaseHelper.TABLE_RACES, DatabaseHelper.COLUMN_RACE_DATE);
+                                Cursor d = dbHelper.getCursor(DatabaseHelper.TABLE_RACES, DatabaseHelper.COLUMN_RACE_DATETIME);
                                 swapCursor(d);
                                 dialog.dismiss();
                             }
@@ -143,16 +146,16 @@ public class RaceCursorAdapter extends CursorAdapter {
             @Override
             public void onConfirm(String raceName, String raceDescr, String raceDate) {
                 if (!raceName.isEmpty())
-                race[0].setName(raceName);
+                    race[0].setName(raceName);
 
                 if (!raceDescr.isEmpty())
-                race[0].setDesc(raceDescr);
+                    race[0].setDesc(raceDescr);
 
                 if (!raceDate.isEmpty())
-                race[0].setDate(raceDate);
+                    race[0].setDate(raceDate);
 
                 dbHelper.updateRace(race[0]);
-                Cursor c = dbHelper.getCursor(DatabaseHelper.TABLE_RACES, DatabaseHelper.COLUMN_RACE_DATE);
+                Cursor c = dbHelper.getCursor(DatabaseHelper.TABLE_RACES, DatabaseHelper.COLUMN_RACE_DATETIME);
                 Cursor old = swapCursor(c);
                 old.close();
                 //Toast.makeText(MainActivity.this, getResources().getString(R.string.data_saved), Toast.LENGTH_SHORT).show();

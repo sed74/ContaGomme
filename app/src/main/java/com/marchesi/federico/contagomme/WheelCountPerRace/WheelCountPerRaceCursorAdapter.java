@@ -53,7 +53,7 @@ public class WheelCountPerRaceCursorAdapter extends CursorAdapter {
         int id = cursor.getInt(cursor.getColumnIndex(DatabaseHelper._ID));
 
         TextView raceDate = (TextView) view.findViewById(R.id.race_date);
-        raceDate.setText(cursor.getString(cursor.getColumnIndex(DatabaseHelper.COLUMN_RACE_DATE)));
+        raceDate.setText(cursor.getString(cursor.getColumnIndex(DatabaseHelper.COLUMN_RACE_DATETIME)));
 
         raceTV.setTag(id);
         // Populate fields with extracted properties
@@ -89,7 +89,7 @@ public class WheelCountPerRaceCursorAdapter extends CursorAdapter {
 
                                 ImageView delete = (ImageView) view.findViewById(R.id.delete_button);
                                 dbHelper.deleteRace((int) delete.getTag());
-                                Cursor d = dbHelper.getCursor(DatabaseHelper.TABLE_RACES, DatabaseHelper.COLUMN_RACE_DATE);
+                                Cursor d = dbHelper.getCursor(DatabaseHelper.TABLE_RACES, DatabaseHelper.COLUMN_RACE_DATETIME);
                                 swapCursor(d);
                                 dialog.dismiss();
                             }
@@ -138,7 +138,7 @@ public class WheelCountPerRaceCursorAdapter extends CursorAdapter {
                     race[0].setDate(raceDate);
 
                 dbHelper.updateRace(race[0]);
-                Cursor c = dbHelper.getCursor(DatabaseHelper.TABLE_RACES, DatabaseHelper.COLUMN_RACE_DATE);
+                Cursor c = dbHelper.getCursor(DatabaseHelper.TABLE_RACES, DatabaseHelper.COLUMN_RACE_DATETIME);
                 Cursor old = swapCursor(c);
                 old.close();
                 //Toast.makeText(MainActivity.this, getResources().getString(R.string.data_saved), Toast.LENGTH_SHORT).show();

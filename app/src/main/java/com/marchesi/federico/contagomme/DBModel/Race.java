@@ -1,17 +1,17 @@
 package com.marchesi.federico.contagomme.DBModel;
 
-import java.util.Date;
+import com.marchesi.federico.contagomme.DateConverter;
 
 /**
  * Created by federico.marchesi on 26/01/2017.
  */
 
 public class Race {
-    int raceId;
-    String raceName;
-    String raceDesc;
-    String raceDate;
-    Date raceDateTime;
+    private int raceId;
+    private String raceName;
+    private String raceDesc;
+    //    private String raceDate;
+    private long raceDateTime;
 
     public Race() {
     }
@@ -22,7 +22,15 @@ public class Race {
 
     public Race(String name, String descr, String date) {
         raceName = name;
-        raceDate = date;
+//        raceDate = date;
+        raceDateTime = DateConverter.fromDateToUnix(date, DateConverter.FORMAT_DATE);
+        raceDesc = descr;
+    }
+
+    public Race(String name, String descr, long date) {
+        raceName = name;
+        raceDateTime = date;
+//        raceDate = DateConverter.fromUnixToDate(date, DateConverter.FORMAT_DATE);
         raceDesc = descr;
     }
 
@@ -53,18 +61,19 @@ public class Race {
     }
 
     public String getDate() {
-        return raceDate;
+        String stringDate = DateConverter.fromUnixToDate(raceDateTime, DateConverter.FORMAT_DATE);
+        return stringDate;
     }
 
     public void setDate(String raceDate) {
-        this.raceDate = raceDate;
+        this.raceDateTime = DateConverter.fromDateToUnix(raceDate, DateConverter.FORMAT_DATE);
     }
 
-    public Date getRaceDateTime() {
+    public long getDateTime() {
         return raceDateTime;
     }
 
-    public void setRaceDateTime(Date raceDateTime) {
+    public void setDateTime(long raceDateTime) {
         this.raceDateTime = raceDateTime;
     }
 }

@@ -106,7 +106,7 @@ public class MainActivityDB extends AppCompatActivity {
                 //Cursor cur = raceAdapter.getCursor();
                 dbHelper.createRace(race);
                 Cursor d = dbHelper.getCursor(DatabaseHelper.TABLE_RACES,
-                        DatabaseHelper.COLUMN_RACE_ORDER_BY);
+                        DatabaseHelper.COLUMN_RACE_DATETIME);
                 raceAdapter.swapCursor(d);
                 //Toast.makeText(MainActivity.this, getResources().getString(R.string.data_saved), Toast.LENGTH_SHORT).show();
             }

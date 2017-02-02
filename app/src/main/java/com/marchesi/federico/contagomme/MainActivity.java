@@ -2,6 +2,7 @@ package com.marchesi.federico.contagomme;
 
 import android.Manifest;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageInfo;
@@ -18,8 +19,9 @@ import android.support.annotation.NonNull;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
-import android.util.DisplayMetrics;
+import android.support.v7.widget.PopupMenu;
 import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -31,6 +33,7 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.marchesi.federico.contagomme.DBHelper.DatabaseHelper;
 import com.marchesi.federico.contagomme.Dialog.InputDialog;
 
 import java.io.File;
@@ -233,12 +236,8 @@ public class MainActivity extends AppCompatActivity {
                 resetList();
             }
         });
-//        Display display = getWindowManager().getDefaultDisplay();
-//        Point size = new Point();
-//        display.getSize(size);
-//        int width = size.x;
-//        int height = size.y;
 
+/*
         DisplayMetrics metrics = new DisplayMetrics();
         getWindowManager().getDefaultDisplay().getMetrics(metrics);
 
@@ -246,6 +245,7 @@ public class MainActivity extends AppCompatActivity {
                 .makeText(this, "DensityDPI = " + String.valueOf(metrics.densityDpi) +
                                 "\n Height = " + String.valueOf(metrics.heightPixels),
                         Toast.LENGTH_LONG).show();
+*/
     }
 
     @Override
@@ -297,11 +297,83 @@ public class MainActivity extends AppCompatActivity {
 //                SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(this);
                 Intent i = new Intent(this, SettingsActivity.class);
                 startActivity(i);
+            case R.id.race_menu:
+
+                View menuItemView = findViewById(R.id.race_menu); // SAME ID AS MENU ID
+                //Creating the instance of PopupMenu
+                PopupMenu popup = new PopupMenu(MainActivity.this, menuItemView);
+                //Inflating the Popup using xml file
+                popup.getMenuInflater().inflate(R.menu.race_menu, popup.getMenu());
+
+                //registering popup with OnMenuItemClickListener
+                popup.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
+                    public boolean onMenuItemClick(MenuItem item) {
+
+                        int id = item.getItemId();
+
+                        //noinspection SimplifiableIfStatement
+                        switch (id) {
+                            case R.id.send_email:
+                                sendEmail();
+                                break;
+                            case R.id.reset:
+                                resetList();
+                                break;
+                            case R.id.brands:
+                                Intent intent = new Intent(MainActivity.this, BrandListActivity.class);
+                                startActivity(intent);
+                                break;
+                            case R.id.races:
+                                Intent racesIntent = new Intent(MainActivity.this, RaceListActivity.class);
+                                startActivity(racesIntent);
+                                break;
+                            case R.id.open_race:
+                                AlertDialog.Builder b = new AlertDialog.Builder(MainActivity.this);
+                                b.setTitle(getResources().getString(R.string.select_race_dialog));
+                                DatabaseHelper dbHelper = new DatabaseHelper(getBaseContext());
+                                final String[] raceNames = (String[]) dbHelper.getRacesNameArray();
+                                final Integer[] raceIDs = (Integer[]) dbHelper.getRacesIdArray();
+                                dbHelper.close();
+                                b.setItems(raceNames, new DialogInterface.OnClickListener() {
+
+                                    @Override
+                                    public void onClick(DialogInterface dialog, int which) {
+
+                                        dialog.dismiss();
+
+                                        openRaceActivity(raceIDs[which]);
+//                                        Toast.makeText(MainActivity.this, "Gara selezionata:\n" +
+//                                                raceNames[which] + "\nID: " + raceIDs[which], Toast.LENGTH_SHORT).show();
+                                    }
+
+                                });
+                                b.show();
+//                                Intent openracesIntent = new Intent(MainActivity.this, RaceListActivity.class);
+//                                startActivity(openracesIntent);
+                                break;
+                        }
+                        return true;
+                    }
+                });
+                popup.show();//showing popup menu
                 return true;
         }
 
         return super.onOptionsItemSelected(item);
     }
+
+    private void openRaceActivity(Integer raceID) {
+        //  check if whell_list exists for the race
+        DatabaseHelper dbHelper = new DatabaseHelper(getBaseContext());
+        int brandCount = dbHelper.getRowCount(DatabaseHelper.TABLE_WHEEL_LIST);
+        int rowCount = dbHelper.getRowCount(DatabaseHelper.TABLE_WHEEL_LIST);
+
+        if (rowCount == 0 || rowCount != brandCount) {
+            // table wheel_list has to be build/rebuild
+            dbHelper.populateWheelList(raceID);
+        }
+    }
+
 
     @Override
     protected void onStop() {
