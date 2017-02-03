@@ -4,14 +4,20 @@
     <item
         android:id="@+id/send_email"
         android:icon="@drawable/ic_mail_outline_white_24dp"
-        android:orderInCategory="10"
+        android:orderInCategory="20"
         android:title="@string/send_email"
+        android:visible="false"
         app:showAsAction="never" />
     <item
         android:id="@+id/open_race"
-        android:orderInCategory="40"
+        android:orderInCategory="10"
         android:title="@string/open_race_menu"
         app:showAsAction="never" />
+    <item
+        android:id="@+id/reset"
+        android:orderInCategory="30"
+        android:title="@string/reset_button"
+        app:showAsAction="collapseActionView" />
     <item
         android:id="@+id/brands"
         android:orderInCategory="50"
@@ -22,9 +28,4 @@
         android:orderInCategory="60"
         android:title="@string/races"
         app:showAsAction="never" />
-    <item
-        android:id="@+id/reset"
-        android:orderInCategory="20"
-        android:title="@string/reset_button"
-        app:showAsAction="collapseActionView" />
 </menu>

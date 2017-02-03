@@ -47,7 +47,7 @@ public class DatabaseHelper extends SQLiteOpenHelper implements BaseColumns {
     // RACES_WHEEL_LIST VIEW
     public static final String VIEW_RACES_WHEEL_LIST = "view_reces_wheel_list";
     // Database Version
-    private static final int DATABASE_VERSION = 2;
+    private static final int DATABASE_VERSION = 3;
     // Logcat tag
     private static final String TAG = DatabaseHelper.class.getName();
     // Database Name
@@ -77,9 +77,9 @@ public class DatabaseHelper extends SQLiteOpenHelper implements BaseColumns {
                     COLUMN_WHEEL_TOT_FRONT_WHEEL + " INTEGER," +
                     COLUMN_WHEEL_TOT_REAR_WHEEL + " TEXT," +
                     " FOREIGN KEY (" + COLUMN_WHEEL_RACE_ID + ") REFERENCES " +
-                    TABLE_RACES + "(" + _ID + "), " +
+                    TABLE_RACES + "(" + _ID + ") ON DELETE CASCADE, " +
                     " FOREIGN KEY (" + COLUMN_WHEEL_BRAND_ID + ") REFERENCES " +
-                    TABLE_BRANDS + "(" + _ID + "))";
+                    TABLE_BRANDS + "(" + _ID + ") ON DELETE CASCADE)";
     // RACES_WHEEL_LIST VIEW create statement
     private static final String CREATE_RACES_WHEEL_LIST_VIEW =
             "CREATE VIEW " + VIEW_RACES_WHEEL_LIST +
@@ -112,6 +112,7 @@ public class DatabaseHelper extends SQLiteOpenHelper implements BaseColumns {
         db.execSQL(CREATE_RACES_WHEEL_LIST_VIEW);
         this.populateBrand(db);
     }
+
 
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
@@ -503,10 +504,18 @@ public class DatabaseHelper extends SQLiteOpenHelper implements BaseColumns {
     /**
      * Deleting a wheel_list
      */
-    public void deleteWheelListByRace(long raceId) {
+    public void deleteWheelListByRace(long raceId, boolean onlyMissingBrands) {
         SQLiteDatabase db = this.getWritableDatabase();
-        db.delete(TABLE_WHEEL_LIST, COLUMN_WHEEL_RACE_ID + " = ?",
-                new String[]{String.valueOf(raceId)});
+
+        if (onlyMissingBrands) {
+            db.delete(TABLE_WHEEL_LIST, COLUMN_WHEEL_RACE_ID + " = ?" + " AND " +
+                    COLUMN_WHEEL_BRAND_ID + " NOT IN (SELECT " + _ID + " FROM " +
+                    TABLE_BRANDS + ")", new String[]{String.valueOf(raceId)});
+        } else {
+            db.delete(TABLE_WHEEL_LIST, COLUMN_WHEEL_RACE_ID + " = ?",
+                    new String[]{String.valueOf(raceId)});
+        }
+        closeDB();
     }
 
     /**
@@ -525,22 +534,26 @@ public class DatabaseHelper extends SQLiteOpenHelper implements BaseColumns {
         if (c.moveToFirst()) {
             rowCount = c.getInt((c.getColumnIndex("count")));
         }
+
         closeDB();
         return rowCount;
     }
 
     public void populateWheelList(Integer raceID) {
-        deleteWheelListByRace(raceID);
+        deleteWheelListByRace(raceID, true);
 
-        String insertStatement = "INSERT INTO " + TABLE_WHEEL_LIST + "(" +
+        String insertStatement = "INSERT INTO " + TABLE_WHEEL_LIST + " (" +
                 COLUMN_WHEEL_BRAND_ID + "," + COLUMN_WHEEL_RACE_ID + ")" +
                 " SELECT " + TABLE_BRANDS + "." + _ID + ", " + String.valueOf(raceID) +
-                " FROM " + TABLE_BRANDS;
+                " FROM " + TABLE_BRANDS + " WHERE " + _ID + " NOT IN (SELECT " +
+                COLUMN_WHEEL_BRAND_ID + " FROM " + TABLE_WHEEL_LIST + ")";
+
         executeScript(insertStatement);
     }
 
     public void executeScript(String sqlScript) {
         SQLiteDatabase db = this.getWritableDatabase();
+        Log.e(TAG, sqlScript);
         db.execSQL(sqlScript);
         closeDB();
     }
