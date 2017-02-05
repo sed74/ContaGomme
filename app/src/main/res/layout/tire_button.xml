@@ -2,7 +2,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/activity_main"
     android:layout_width="match_parent"
-    android:layout_height="45dp"
+    android:layout_height="@dimen/tire_button_height"
     android:background="@drawable/tire_rectangle_shadow"
     tools:context="com.marchesi.federico.contagomme.MainActivity">
 

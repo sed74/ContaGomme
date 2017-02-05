@@ -1,20 +1,24 @@
 package com.marchesi.federico.contagomme.WheelCountPerRace;
 
 import android.content.Context;
-import android.content.DialogInterface;
 import android.database.Cursor;
-import android.support.v7.app.AlertDialog;
+import android.graphics.Color;
+import android.graphics.Typeface;
+import android.graphics.drawable.GradientDrawable;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.CursorAdapter;
-import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.marchesi.federico.contagomme.DBHelper.DatabaseHelper;
 import com.marchesi.federico.contagomme.DBModel.Race;
+import com.marchesi.federico.contagomme.DBModel.WheelList;
 import com.marchesi.federico.contagomme.Dialog.InputDialogRace;
 import com.marchesi.federico.contagomme.R;
+
+import java.util.ArrayList;
 
 /**
  * Created by federico.marchesi on 26/01/2017.
@@ -22,13 +26,44 @@ import com.marchesi.federico.contagomme.R;
 
 public class WheelCountPerRaceCursorAdapter extends CursorAdapter {
     private static final String TAG = WheelCountPerRaceCursorAdapter.class.getName();
+    Context mContext;
     private LayoutInflater cursorInflater;
+    private boolean FrontSelected = false;
+    private boolean RearSelected = false;
+    private TextView frontCount;
+    private TextView rearCount;
+    private ArrayList<WheelList> wheelLists = new ArrayList<>();
+    private View.OnClickListener clickListener;
+    private OnChange onChangeListener;
 
 
     public WheelCountPerRaceCursorAdapter(Context context, Cursor cursor) {
         super(context, cursor, 0);
+        mContext = context;
         cursorInflater = (LayoutInflater) context.getSystemService(
                 Context.LAYOUT_INFLATER_SERVICE);
+
+    }
+
+    public ArrayList<WheelList> populateArray(Cursor cursor) {
+
+        // looping through all rows and adding to list
+        if (cursor.moveToFirst()) {
+            do {
+                wheelLists.add(new WheelList(
+                        cursor.getInt(
+                                cursor.getColumnIndex(DatabaseHelper._ID)),
+                        cursor.getInt(
+                                cursor.getColumnIndex("raceId")),
+                        cursor.getInt(
+                                cursor.getColumnIndex("brandId")),
+                        cursor.getInt(
+                                cursor.getColumnIndex(DatabaseHelper.COLUMN_WHEEL_TOT_FRONT_WHEEL)),
+                        cursor.getInt(
+                                cursor.getColumnIndex(DatabaseHelper.COLUMN_WHEEL_TOT_REAR_WHEEL))));
+            } while (cursor.moveToNext());
+        }
+        return wheelLists;
     }
 
     // The newView method is used to inflate a new view and return it,
@@ -36,6 +71,7 @@ public class WheelCountPerRaceCursorAdapter extends CursorAdapter {
     @Override
     public View newView(Context context, Cursor cursor, ViewGroup parent) {
         //return LayoutInflater.from(context).inflate(R.layout.activity_brand_list, parent, false);
+//        populateArray(cursor);
         return cursorInflater.inflate(R.layout.tire_button, parent, false);
     }
 
@@ -49,61 +85,88 @@ public class WheelCountPerRaceCursorAdapter extends CursorAdapter {
         //TextView tvPriority = (TextView) view.findViewById(R.id.tvPriority);
         // Extract properties from cursor
         final String race = cursor.getString(
-                cursor.getColumnIndex(DatabaseHelper.COLUMN_RACE_NAME));
+                cursor.getColumnIndex(DatabaseHelper.COLUMN_BRAND_NAME));
         int id = cursor.getInt(cursor.getColumnIndex(DatabaseHelper._ID));
 
-        TextView raceDate = (TextView) view.findViewById(R.id.race_date);
-        raceDate.setText(cursor.getString(cursor.getColumnIndex(DatabaseHelper.COLUMN_RACE_DATETIME)));
+        final WheelList currentWheelList = getObjectFromId(id);
+        if (currentWheelList == null) {
+            Toast.makeText(context, "Errore!", Toast.LENGTH_SHORT).show();
+        }
 
-        raceTV.setTag(id);
-        // Populate fields with extracted properties
-        raceTV.setText(race);
+        TextView tireName = (TextView) view.findViewById(R.id.tire_name);
+        tireName.setText(race);
 
-        raceTV.setOnLongClickListener(new View.OnLongClickListener() {
-            @Override
-            public boolean onLongClick(View v) {
-                editRace(context, v);
-                return false;
-            }
-        });
-        //tvPriority.setText(String.valueOf(priority));
-        ImageView deleteImage = (ImageView) view.findViewById(R.id.delete_button);
+        FrontSelected = currentWheelList.getIsFrontTireSelected();
+        RearSelected = currentWheelList.getIsRearTireSelected();
 
-        deleteImage.setTag(id);
+        TextView viewFrontWheel = (TextView) view.findViewById(R.id.front_tire);
+        TextView viewRearWheel = (TextView) view.findViewById(R.id.rear_tire);
 
-        deleteImage.setOnClickListener(new View.OnClickListener() {
+        setSelected(viewFrontWheel, FrontSelected, true);
+        setSelected(viewRearWheel, FrontSelected, false);
+
+        frontCount = (TextView) view.findViewById(R.id.front_tire_count);
+        frontCount.setText(String.valueOf(cursor.getInt(
+                cursor.getColumnIndex(DatabaseHelper.COLUMN_WHEEL_TOT_FRONT_WHEEL))));
+
+        rearCount = (TextView) view.findViewById(R.id.rear_tire_count);
+        rearCount.setText(String.valueOf(cursor.getInt(
+                cursor.getColumnIndex(DatabaseHelper.COLUMN_WHEEL_TOT_REAR_WHEEL))));
+
+
+        TextView.OnClickListener mOnClickListener = (new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                boolean isFrontSelected, isRearSelected;
+                isFrontSelected = currentWheelList.getIsFrontTireSelected();
+                isRearSelected = currentWheelList.getIsRearTireSelected();
 
-                AlertDialog myQuittingDialogBox = new AlertDialog.Builder(context)
-                        //set message, title, and icon
-                        .setTitle(context.getResources().getString(R.string.dialog_delete_title))
-                        .setMessage(String.format(context.getResources().getString(R.string.dialog_delete_message), race))
-                        .setIcon(R.drawable.delete)
+                if (v.getId() == R.id.front_tire) {
+                    if (isFrontSelected) {
+                        currentWheelList.setFrontTireSelected(false);
+                        setSelected(((TextView) v), false, true);
+                        FrontSelected = false;
+                    } else {
+                        if (FrontSelected) return;
+                        currentWheelList.setFrontTireSelected(true);
+                        setSelected(((TextView) v), true, true);
+                        FrontSelected = true;
+                    }
 
-                        .setPositiveButton(context.getResources().getString(R.string.dialog_delete_button), new DialogInterface.OnClickListener() {
+                } else if (v.getId() == R.id.rear_tire) {
+                    if (isRearSelected) {
+                        currentWheelList.setRearTireSelected(false);
+                        setSelected(((TextView) v), false, false);
+                        RearSelected = false;
+                    } else {
+                        if (RearSelected) return;
+                        currentWheelList.setRearTireSelected(true);
+                        setSelected(((TextView) v), true, false);
+                        RearSelected = true;
+                    }
 
-                            public void onClick(DialogInterface dialog, int whichButton) {
-                                Cursor cur = cursor;
-                                DatabaseHelper dbHelper = new DatabaseHelper(context);
-
-                                ImageView delete = (ImageView) view.findViewById(R.id.delete_button);
-                                dbHelper.deleteRace((int) delete.getTag());
-                                Cursor d = dbHelper.getCursor(DatabaseHelper.TABLE_RACES, DatabaseHelper.COLUMN_RACE_DATETIME);
-                                swapCursor(d);
-                                dialog.dismiss();
-                            }
-                        })
-                        .setNegativeButton(context.getResources().getString(R.string.dialog_cancel_button), new DialogInterface.OnClickListener() {
-                            public void onClick(DialogInterface dialog, int which) {
-                                dialog.dismiss();
-                            }
-                        })
-                        .show();
-
+                }
+                onChangeListener.onSelectionChange(FrontSelected, RearSelected);
+                DatabaseHelper dbHelper = new DatabaseHelper(context);
+                dbHelper.updateWheelList(currentWheelList);
+                dbHelper.close();
+//                notifyDataSetChanged();
             }
         });
 
+        viewFrontWheel.setOnClickListener(mOnClickListener);
+        viewRearWheel.setOnClickListener(mOnClickListener);
+    }
+
+    public void setOnChangeListener(OnChange listener) {
+        onChangeListener = listener;
+    }
+
+    public WheelList getObjectFromId(int wheelListId) {
+        for (WheelList array : wheelLists) {
+            if (array.getId() == wheelListId) return array;
+        }
+        return null;
     }
 
     private void editRace(final Context context, View v) {
@@ -147,45 +210,34 @@ public class WheelCountPerRaceCursorAdapter extends CursorAdapter {
 
         });
         inputDialog.show();
-
-
-//
-//        InputDialogBrand inputDialog = new InputDialogBrand(context,
-//                R.string.edit_brand_dialog_title, R.string.add_race_dialog_hint);
-//
-//        inputDialog.setInitialInput(race[0].getName());
-////        inputDialog.setInitialOrder(oldOrder);
-//        inputDialog.setInputListener(new InputDialogBrand.InputListener() {
-//            @Override
-//            public InputDialogBrand.ValidationResult isInputValid(String newCoffeeType) {
-//                if (newCoffeeType.isEmpty()) {
-////                    return new InputDialog.ValidationResult(false, R.string.error_empty_name);
-//                }
-//                return new InputDialogBrand.ValidationResult(true, 0);
-//            }
-//
-//            @Override
-//            public void onConfirm(String brandName, int order) {
-//
-//                race[0].setName(brandName);
-////                race[0].setDate(order);
-//                dbHelper.updateRace(race[0]);
-//                Cursor c = dbHelper.getBrandsCursor();
-//                Cursor old = swapCursor(c);
-//                old.close();
-//
-//                //Toast.makeText(MainActivity.this, getResources().getString(R.string.data_saved), Toast.LENGTH_SHORT).show();
-//            }
-//        });
-//        inputDialog.show();
     }
 
-//    @Override
-//    public Cursor swapCursor(Cursor newCursor) {
-//        Cursor oldCursor = super.swapCursor(newCursor);
-//        if (oldCursor != null) {
-//            oldCursor.close();
-//        }
-//        return oldCursor;
-//    }
+    private void setSelected(TextView view, boolean isSelected, boolean isFront) {
+        if (!isSelected) {
+            view.setTypeface(null, Typeface.NORMAL);
+//        view.setAllCaps(false);
+            view.setBackgroundColor(Color.TRANSPARENT);
+
+        } else {
+            view.setTypeface(null, Typeface.BOLD);
+//        view.setAllCaps(true);
+
+            GradientDrawable gd = new GradientDrawable(
+                    isFront ? GradientDrawable.Orientation.RIGHT_LEFT :
+                            GradientDrawable.Orientation.LEFT_RIGHT,
+                    new int[]{mContext.getResources().getColor(R.color.wheel_selected),
+                            mContext.getResources().getColor(R.color.rectangle_solid_brand)});
+//            gd.setCornerRadius(0f);
+
+            view.setBackground(gd);
+//            view.setBackgroundColor(ContextCompat.getColor(getContext(), R.color.wheel_selected));
+        }
+
+    }
+
+    public interface OnChange {
+        void onSelectionChange(boolean frontSelected, boolean rearSelected);
+    }
+
+
 }

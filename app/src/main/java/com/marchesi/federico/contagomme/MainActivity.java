@@ -22,6 +22,7 @@ import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.PopupMenu;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -35,6 +36,7 @@ import android.widget.Toast;
 
 import com.marchesi.federico.contagomme.DBHelper.DatabaseHelper;
 import com.marchesi.federico.contagomme.Dialog.InputDialog;
+import com.marchesi.federico.contagomme.WheelCountPerRace.WheelCountPerRaceActivity;
 
 import java.io.File;
 import java.io.FileWriter;
@@ -46,6 +48,8 @@ import java.util.Date;
 
 public class MainActivity extends AppCompatActivity {
 
+    public static final String INTENT_NAME_RACE_ID = "race_id";
+    public static final String INTENT_NAME_RACE_NAME = "race_name";
     private static final String TAG = PackageInfo.class.getName();
     private static final String APP_VERSION = "app_version";
     private static final String RACE_NAME = "race_name";
@@ -341,7 +345,7 @@ public class MainActivity extends AppCompatActivity {
 
                                         dialog.dismiss();
 
-                                        openRaceActivity(raceIDs[which]);
+                                        openRaceActivity(raceIDs[which], raceNames[which]);
 //                                        Toast.makeText(MainActivity.this, "Gara selezionata:\n" +
 //                                                raceNames[which] + "\nID: " + raceIDs[which], Toast.LENGTH_SHORT).show();
                                     }
@@ -362,16 +366,24 @@ public class MainActivity extends AppCompatActivity {
         return super.onOptionsItemSelected(item);
     }
 
-    private void openRaceActivity(Integer raceID) {
-        //  check if whell_list exists for the race
+    private void openRaceActivity(Integer raceID, String raceName) {
+        //  check if wheel_list exists for the race
         DatabaseHelper dbHelper = new DatabaseHelper(getBaseContext());
-        int brandCount = dbHelper.getRowCount(DatabaseHelper.TABLE_WHEEL_LIST);
-        int rowCount = dbHelper.getRowCount(DatabaseHelper.TABLE_WHEEL_LIST);
+        int brandCount = dbHelper.getRowCount(DatabaseHelper.TABLE_BRANDS);
+        int rowCount = dbHelper.getRowCount(DatabaseHelper.TABLE_WHEEL_LIST,
+                DatabaseHelper.COLUMN_WHEEL_RACE_ID, raceID);
 
-        if (rowCount == 0 || rowCount != brandCount) {
+        if (rowCount == 0 || rowCount < brandCount) {
+            // table wheel_list has to be build/rebuild
+            dbHelper.populateWheelList(raceID);
+        } else if (rowCount == 0 || rowCount > brandCount) {
             // table wheel_list has to be build/rebuild
             dbHelper.populateWheelList(raceID);
         }
+        Intent wheelCountIntent = new Intent(this, WheelCountPerRaceActivity.class);
+        wheelCountIntent.putExtra(INTENT_NAME_RACE_ID, raceID);
+        wheelCountIntent.putExtra(INTENT_NAME_RACE_NAME, raceName);
+        startActivity(wheelCountIntent);
     }
 
 
@@ -615,14 +627,15 @@ public class MainActivity extends AppCompatActivity {
 
         try {
 
+            if (!fileName.endsWith(".")) fileName += ".";
+            fileName += extension;
             // this will create a new name everytime and unique
             File root = new File(Environment.getExternalStorageDirectory(), "ContaGomme");
+//            File root = new File(getExternalFilesDir(null), fileName);
             // if external memory exists and folder with name Notes
             if (!root.exists()) {
                 root.mkdirs(); // this will create folder.
             }
-            if (!fileName.endsWith(".")) fileName += ".";
-            fileName += extension;
 
             File filepath = new File(root, fileName);  // file path to save
             FileWriter writer = new FileWriter(filepath);
@@ -632,6 +645,7 @@ public class MainActivity extends AppCompatActivity {
 
             return filepath.getAbsolutePath();
         } catch (IOException e) {
+            Log.e(TAG, e.getMessage());
             e.printStackTrace();
 
         }

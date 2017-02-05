@@ -8,8 +8,11 @@ public class WheelList {
     private int mWheelListId;
     private int mRaceId;
     private int mBrandId;
-    private int mTotFrontWheel;
-    private int mTotRearWheel;
+    private int mTotFrontWheel = 0;
+    private int mTotRearWheel = 0;
+    private boolean mFrontTireSelected = false;
+    private boolean mRearTireSelected = false;
+
 
     public WheelList() {
     }
@@ -37,8 +40,25 @@ public class WheelList {
         return mWheelListId;
     }
 
+    // setters
     public void setId(int wheelListId) {
         this.mWheelListId = wheelListId;
+    }
+
+    public int getTotRearWheel() {
+        return mTotRearWheel;
+    }
+
+    public void setTotRearWheel(int totRearWheel) {
+        this.mTotRearWheel = totRearWheel;
+    }
+
+    public int getTotFrontWheel() {
+        return mTotFrontWheel;
+    }
+
+    public void setTotFrontWheel(int totFrontWheel) {
+        this.mTotFrontWheel = totFrontWheel;
     }
 
     public int getRaceId() {
@@ -53,24 +73,56 @@ public class WheelList {
         return mBrandId;
     }
 
-    // setters
     public void setBrandId(int brandId) {
         this.mBrandId = brandId;
     }
 
-    public int getTotFrontWheel() {
-        return mTotFrontWheel;
+    public boolean getIsFrontTireSelected() {
+        return mFrontTireSelected;
     }
 
-    public void setTotFrontWheel(int totFrontWheel) {
-        this.mTotFrontWheel = totFrontWheel;
+    public boolean getIsRearTireSelected() {
+        return mRearTireSelected;
     }
 
-    public int getTotRearWheel() {
-        return mTotRearWheel;
+    public void setFrontTireSelected(boolean mFrontTireSelected) {
+        this.mFrontTireSelected = mFrontTireSelected;
+        if (mFrontTireSelected) {
+            incrementFront();
+        } else {
+            decrementFront();
+        }
     }
 
-    public void setTotRearWheel(int totRearWheel) {
-        this.mTotRearWheel = totRearWheel;
+    public void setRearTireSelected(boolean mRearTireSelected) {
+        this.mRearTireSelected = mRearTireSelected;
+        if (mRearTireSelected) {
+            incrementRear();
+        } else {
+            decrementRear();
+        }
+    }
+
+    public void incrementFront() {
+        mTotFrontWheel++;
+    }
+
+    public void incrementRear() {
+        mTotRearWheel++;
+    }
+
+    public void decrementFront() {
+        mTotFrontWheel--;
+        if (mTotFrontWheel < 0) mTotFrontWheel = 0;
+    }
+
+    public void decrementRear() {
+        mTotRearWheel--;
+        if (mTotRearWheel < 0) mTotRearWheel = 0;
+    }
+
+    public void resetSelection() {
+        mFrontTireSelected = false;
+        mRearTireSelected = false;
     }
 }

@@ -5,6 +5,7 @@
     <dimen name="tire_button_margin">8dp</dimen>
     <dimen name="tire_button_bottom_margin">8dp</dimen>
     <dimen name="tire_button_padding">12dp</dimen>
+    <dimen name="tire_button_height">45dp</dimen>
     <dimen name="listview_padding">4dp</dimen>
     <dimen name="tire_button_internal_padding">50dp</dimen>
     <dimen name="tire_button_external_padding">4dp</dimen>

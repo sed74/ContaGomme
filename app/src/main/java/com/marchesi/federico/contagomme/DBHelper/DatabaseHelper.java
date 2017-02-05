@@ -9,6 +9,7 @@ import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
+import android.nfc.Tag;
 import android.provider.BaseColumns;
 import android.util.Log;
 
@@ -44,10 +45,12 @@ public class DatabaseHelper extends SQLiteOpenHelper implements BaseColumns {
     public static final String COLUMN_WHEEL_BRAND_ID = "wheel_brand_id";
     public static final String COLUMN_WHEEL_TOT_FRONT_WHEEL = "tot_front_wheel";
     public static final String COLUMN_WHEEL_TOT_REAR_WHEEL = "tot_rear_wheel";
+    public static final String IS_FRONT_SELECTED = "is_front_selected";
+    public static final String IS_REAR_SELECTED = "is_rear_selected";
     // RACES_WHEEL_LIST VIEW
-    public static final String VIEW_RACES_WHEEL_LIST = "view_reces_wheel_list";
+    public static final String VIEW_RACES_WHEEL_LIST = "view_races_wheel_list";
     // Database Version
-    private static final int DATABASE_VERSION = 3;
+    private static final int DATABASE_VERSION = 9;
     // Logcat tag
     private static final String TAG = DatabaseHelper.class.getName();
     // Database Name
@@ -59,6 +62,8 @@ public class DatabaseHelper extends SQLiteOpenHelper implements BaseColumns {
                     "(" + _ID + " INTEGER PRIMARY KEY," +
                     COLUMN_BRAND_ORDER + " INTEGER," +
                     COLUMN_BRAND_NAME + " TEXT)";
+    //                    IS_FRONT_SELECTED + " INT, "+
+//                    IS_REAR_SELECTED + "INT)";
     // RACES table create statement
     private static final String CREATE_TABLE_RACES =
             "CREATE TABLE " + TABLE_RACES +
@@ -75,7 +80,7 @@ public class DatabaseHelper extends SQLiteOpenHelper implements BaseColumns {
                     COLUMN_WHEEL_RACE_ID + " INTEGER," +
                     COLUMN_WHEEL_BRAND_ID + " INTEGER," +
                     COLUMN_WHEEL_TOT_FRONT_WHEEL + " INTEGER," +
-                    COLUMN_WHEEL_TOT_REAR_WHEEL + " TEXT," +
+                    COLUMN_WHEEL_TOT_REAR_WHEEL + " INTEGER," +
                     " FOREIGN KEY (" + COLUMN_WHEEL_RACE_ID + ") REFERENCES " +
                     TABLE_RACES + "(" + _ID + ") ON DELETE CASCADE, " +
                     " FOREIGN KEY (" + COLUMN_WHEEL_BRAND_ID + ") REFERENCES " +
@@ -84,6 +89,10 @@ public class DatabaseHelper extends SQLiteOpenHelper implements BaseColumns {
     private static final String CREATE_RACES_WHEEL_LIST_VIEW =
             "CREATE VIEW " + VIEW_RACES_WHEEL_LIST +
                     " AS SELECT " + TABLE_WHEEL_LIST + "." + _ID + ", " +
+                    TABLE_RACES + "." + _ID + " raceId, " +
+                    TABLE_BRANDS + "." + _ID + " brandId, " +
+//                    TABLE_BRANDS + "." + IS_FRONT_SELECTED + ", " +
+//                    TABLE_BRANDS + "." + IS_REAR_SELECTED + ", " +
                     TABLE_RACES + "." + COLUMN_RACE_NAME + ", " +
                     TABLE_BRANDS + "." + COLUMN_BRAND_NAME + ", " +
                     COLUMN_WHEEL_TOT_FRONT_WHEEL + ", " +
@@ -171,9 +180,22 @@ public class DatabaseHelper extends SQLiteOpenHelper implements BaseColumns {
 
     }
 
-    /*
-             * get single Brand
-             */
+    public Cursor getCursorById(String tableName, String columnID, int idValue) {
+        SQLiteDatabase db = this.getReadableDatabase();
+        String selectQuery = "SELECT * FROM " + tableName + " WHERE " + columnID + "= " +
+                String.valueOf(idValue);
+
+        Log.e(TAG, selectQuery);
+
+        Cursor c = db.rawQuery(selectQuery, null);
+
+        return c;
+
+    }
+
+    /**
+     * get single Brand
+     */
     public Brand getBrand(long todo_id) {
         SQLiteDatabase db = this.getReadableDatabase();
 
@@ -521,6 +543,25 @@ public class DatabaseHelper extends SQLiteOpenHelper implements BaseColumns {
     /**
      * get Table count
      */
+    public int getRowCount(String tableName, String columnId, int valueID) {
+        String selectQuery = "SELECT COUNT(*) as count FROM " + tableName +
+                " WHERE " + columnId + " = " + String.valueOf(valueID);
+
+        Log.e(TAG, selectQuery);
+
+        SQLiteDatabase db = this.getReadableDatabase();
+        Cursor c = db.rawQuery(selectQuery, null);
+
+        int rowCount = 0;
+        // looping through all rows and adding to list
+        if (c.moveToFirst()) {
+            rowCount = c.getInt((c.getColumnIndex("count")));
+        }
+
+        closeDB();
+        return rowCount;
+    }
+
     public int getRowCount(String tableName) {
         String selectQuery = "SELECT COUNT(*) as count FROM " + tableName;
 
@@ -546,7 +587,9 @@ public class DatabaseHelper extends SQLiteOpenHelper implements BaseColumns {
                 COLUMN_WHEEL_BRAND_ID + "," + COLUMN_WHEEL_RACE_ID + ")" +
                 " SELECT " + TABLE_BRANDS + "." + _ID + ", " + String.valueOf(raceID) +
                 " FROM " + TABLE_BRANDS + " WHERE " + _ID + " NOT IN (SELECT " +
-                COLUMN_WHEEL_BRAND_ID + " FROM " + TABLE_WHEEL_LIST + ")";
+                COLUMN_WHEEL_BRAND_ID + " FROM " + TABLE_WHEEL_LIST + " WHERE " +
+                COLUMN_WHEEL_RACE_ID + " = " + String.valueOf(raceID) + ")";
+        Log.e(TAG, insertStatement);
 
         executeScript(insertStatement);
     }
