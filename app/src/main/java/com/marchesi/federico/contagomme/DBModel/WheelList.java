@@ -125,4 +125,9 @@ public class WheelList {
         mFrontTireSelected = false;
         mRearTireSelected = false;
     }
+
+    public void resetCounter() {
+        mTotFrontWheel = 0;
+        mTotRearWheel = 0;
+    }
 }

@@ -13,9 +13,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.marchesi.federico.contagomme.DBHelper.DatabaseHelper;
-import com.marchesi.federico.contagomme.DBModel.Race;
 import com.marchesi.federico.contagomme.DBModel.WheelList;
-import com.marchesi.federico.contagomme.Dialog.InputDialogRace;
 import com.marchesi.federico.contagomme.R;
 
 import java.util.ArrayList;
@@ -33,7 +31,6 @@ public class WheelCountPerRaceCursorAdapter extends CursorAdapter {
     private TextView frontCount;
     private TextView rearCount;
     private ArrayList<WheelList> wheelLists = new ArrayList<>();
-    private View.OnClickListener clickListener;
     private OnChange onChangeListener;
 
 
@@ -167,49 +164,6 @@ public class WheelCountPerRaceCursorAdapter extends CursorAdapter {
             if (array.getId() == wheelListId) return array;
         }
         return null;
-    }
-
-    private void editRace(final Context context, View v) {
-        final DatabaseHelper dbHelper = new DatabaseHelper(context);
-
-        int id = (int) v.getTag();
-        final Race[] race = {dbHelper.getRace(id)};
-
-
-        InputDialogRace inputDialog = new InputDialogRace(context, R.string.add_race_dialog_title,
-                R.string.add_race_dialog_hint);
-        inputDialog.setRaceName(race[0].getName());
-        inputDialog.setRaceDescr(race[0].getDesc());
-        inputDialog.setRaceDate(race[0].getDate());
-
-        inputDialog.setInputListener(new InputDialogRace.InputListener() {
-
-            @Override
-            public InputDialogRace.ValidationResult isInputValid(String input) {
-                return null;
-            }
-
-            @Override
-            public void onConfirm(String raceName, String raceDescr, String raceDate) {
-                if (!raceName.isEmpty())
-                    race[0].setName(raceName);
-
-                if (!raceDescr.isEmpty())
-                    race[0].setDesc(raceDescr);
-
-                if (!raceDate.isEmpty())
-                    race[0].setDate(raceDate);
-
-                dbHelper.updateRace(race[0]);
-                Cursor c = dbHelper.getCursor(DatabaseHelper.TABLE_RACES, DatabaseHelper.COLUMN_RACE_DATETIME);
-                Cursor old = swapCursor(c);
-                old.close();
-                //Toast.makeText(MainActivity.this, getResources().getString(R.string.data_saved), Toast.LENGTH_SHORT).show();
-            }
-
-
-        });
-        inputDialog.show();
     }
 
     private void setSelected(TextView view, boolean isSelected, boolean isFront) {

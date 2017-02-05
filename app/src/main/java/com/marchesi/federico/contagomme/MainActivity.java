@@ -50,13 +50,13 @@ public class MainActivity extends AppCompatActivity {
 
     public static final String INTENT_NAME_RACE_ID = "race_id";
     public static final String INTENT_NAME_RACE_NAME = "race_name";
+    public static final String APP_VERSION = "app_version";
+    public static final String USE_HTML = "use_html";
+    public static final String AUTO_NEXT = "auto_next";
+    public static final String BIKE_COUNTER = "bike_counter";
     private static final String TAG = PackageInfo.class.getName();
-    private static final String APP_VERSION = "app_version";
     private static final String RACE_NAME = "race_name";
     private static final String RACE_DESCR = "race_descr";
-    private static final String USE_HTML = "use_html";
-    private static final String AUTO_NEXT = "auto_next";
-    private static final String BIKE_COUNTER = "bike_counter";
     private static final int REQUEST_WRITE_EXTERNAL_STORAGE = 1;
     private static final String ARRAY_NAME = "array_name";
     private static final String ARRAY_SIZE = "array_size";

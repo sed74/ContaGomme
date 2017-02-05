@@ -177,7 +177,6 @@ public class DatabaseHelper extends SQLiteOpenHelper implements BaseColumns {
         Cursor c = db.rawQuery(selectQuery, null);
 
         return c;
-
     }
 
     public Cursor getCursorById(String tableName, String columnID, int idValue) {
@@ -426,6 +425,13 @@ public class DatabaseHelper extends SQLiteOpenHelper implements BaseColumns {
     /**
      * getting all WHEEL_LIST under single race
      */
+    public void populateWheelList(ArrayList<WheelList> wheelList) {
+        if (wheelList == null) return;
+
+        for (WheelList list : wheelList) {
+            this.updateWheelList(list);
+        }
+    }
     public List<WheelList> getAllWheelListByRace(String raceId) {
         List<WheelList> wheelLists = new ArrayList<>();
 
@@ -610,4 +616,17 @@ public class DatabaseHelper extends SQLiteOpenHelper implements BaseColumns {
             db.close();
     }
 
+    public int resetRace(int raceID) {
+        SQLiteDatabase db = this.getWritableDatabase();
+
+        ContentValues values = new ContentValues();
+        values.put(COLUMN_WHEEL_TOT_FRONT_WHEEL, 0);
+        values.put(COLUMN_WHEEL_TOT_REAR_WHEEL, 0);
+
+        // updating row
+        int retVal = db.update(TABLE_WHEEL_LIST, values, COLUMN_WHEEL_RACE_ID + " = ?",
+                new String[]{String.valueOf(raceID)});
+        closeDB();
+        return retVal;
+    }
 }
