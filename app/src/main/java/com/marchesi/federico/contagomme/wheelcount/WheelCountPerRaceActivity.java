@@ -1,4 +1,4 @@
-package com.marchesi.federico.contagomme.WheelCountPerRace;
+package com.marchesi.federico.contagomme.wheelcount;
 
 import android.content.Context;
 import android.content.SharedPreferences;

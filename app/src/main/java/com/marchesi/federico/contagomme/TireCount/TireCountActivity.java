@@ -27,7 +27,7 @@ import com.marchesi.federico.contagomme.DBModel.WheelList;
 import com.marchesi.federico.contagomme.R;
 import com.marchesi.federico.contagomme.SettingsActivity;
 import com.marchesi.federico.contagomme.Utils.FileClass;
-import com.marchesi.federico.contagomme.WheelCountPerRace.WheelCountPerRaceActivity;
+import com.marchesi.federico.contagomme.wheelcount.WheelCountPerRaceActivity;
 
 import java.text.DateFormat;
 import java.util.ArrayList;

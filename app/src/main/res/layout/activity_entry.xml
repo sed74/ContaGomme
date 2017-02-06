@@ -1,0 +1,119 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/activity_entry"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:paddingBottom="@dimen/activity_vertical_margin"
+    android:paddingLeft="@dimen/activity_horizontal_margin"
+    android:paddingRight="@dimen/activity_horizontal_margin"
+    android:paddingTop="@dimen/activity_vertical_margin"
+    tools:context="com.marchesi.federico.contagomme.EntryActivity">
+
+    <RelativeLayout
+        android:id="@+id/open_race"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:padding="@dimen/tire_button_padding">
+
+        <ImageView
+            android:id="@+id/race_icon"
+            android:layout_width="60dp"
+            android:layout_height="60dp"
+            android:layout_alignBottom="@+id/textView2"
+            android:paddingRight="@dimen/tire_button_padding"
+            android:src="@drawable/finish_flag" />
+
+        <TextView
+            android:id="@+id/race_main_label"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_toRightOf="@id/race_icon"
+            android:text="@string/fill_in_wheel_count"
+            android:textColor="@android:color/black"
+            android:textSize="16sp"
+            android:textStyle="bold" />
+
+        <TextView
+            android:id="@+id/textView2"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/race_main_label"
+            android:layout_toRightOf="@id/race_icon"
+            android:text="@string/fill_in_wheel_count_desc"
+            android:textColor="@android:color/black"
+            android:textSize="14sp" />
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:id="@+id/open_tire_list"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:padding="@dimen/tire_button_padding">
+
+        <ImageView
+            android:id="@+id/tire_icon"
+            android:layout_width="60dp"
+            android:layout_height="60dp"
+            android:paddingRight="@dimen/tire_button_padding"
+            android:src="@drawable/wheel_512" />
+
+        <TextView
+            android:id="@+id/tire_main_label"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_toRightOf="@id/tire_icon"
+            android:text="@string/open_tire_list_label"
+            android:textColor="@android:color/black"
+            android:textSize="16sp"
+            android:textStyle="bold" />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/tire_main_label"
+            android:layout_toRightOf="@id/tire_icon"
+            android:text="@string/open_tire_list_desc"
+            android:textColor="@android:color/black"
+            android:textSize="14sp" />
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:id="@+id/open_race_list"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:clickable="true"
+        android:orientation="horizontal"
+        android:padding="@dimen/tire_button_padding">
+
+        <ImageView
+            android:id="@+id/race_list_icon"
+            android:layout_width="60dp"
+            android:layout_height="60dp"
+            android:paddingRight="@dimen/tire_button_padding"
+            android:src="@drawable/bike_icon" />
+
+        <TextView
+            android:id="@+id/race_list_main_label"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_toRightOf="@id/race_list_icon"
+            android:text="@string/open_race_list_label"
+            android:textColor="@android:color/black"
+            android:textSize="16sp"
+            android:textStyle="bold" />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/race_list_main_label"
+            android:layout_toRightOf="@id/race_list_icon"
+            android:text="@string/fill_in_wheel_count_desc"
+            android:textColor="@android:color/black"
+            android:textSize="14sp" />
+    </RelativeLayout>
+
+</LinearLayout>

@@ -36,7 +36,7 @@ import android.widget.Toast;
 
 import com.marchesi.federico.contagomme.DBHelper.DatabaseHelper;
 import com.marchesi.federico.contagomme.Dialog.InputDialog;
-import com.marchesi.federico.contagomme.WheelCountPerRace.WheelCountPerRaceActivity;
+import com.marchesi.federico.contagomme.wheelcount.WheelCountPerRaceActivity;
 
 import java.io.File;
 import java.io.FileWriter;
