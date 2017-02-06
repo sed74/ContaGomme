@@ -9,7 +9,6 @@ import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
-import android.nfc.Tag;
 import android.provider.BaseColumns;
 import android.util.Log;
 
@@ -193,6 +192,31 @@ public class DatabaseHelper extends SQLiteOpenHelper implements BaseColumns {
     }
 
     /**
+     * get Brand Name
+     */
+    public String getStringField(String tableName, String idColumnName, int idColumnValue,
+                                 String returnColumnName) {
+
+        SQLiteDatabase db = this.getReadableDatabase();
+
+        String selectQuery = "SELECT " + returnColumnName + " FROM " + tableName + " WHERE " +
+                idColumnName + " = " + String.valueOf(idColumnValue);
+
+        Log.e(TAG, selectQuery);
+
+        Cursor c = db.rawQuery(selectQuery, null);
+
+        String retVal = "";
+        if (c != null) {
+            c.moveToFirst();
+            retVal = c.getString(1);
+            c.close();
+        }
+        return retVal;
+
+    }
+
+    /**
      * get single Brand
      */
     public Brand getBrand(long todo_id) {
@@ -238,13 +262,44 @@ public class DatabaseHelper extends SQLiteOpenHelper implements BaseColumns {
                 brand.setName((c.getString(c.getColumnIndex(COLUMN_BRAND_NAME))));
                 brand.setOrder((c.getInt(c.getColumnIndex(COLUMN_BRAND_ORDER))));
 
-                // adding to todo list
                 brands.add(brand);
             } while (c.moveToNext());
         }
 
         closeDB();
         return brands;
+    }
+
+    /*
+     * getting all brands
+     * */
+    public ArrayList<WheelList> getAllWheelListByRaceId(int raceId) {
+        ArrayList<WheelList> tires = new ArrayList<>();
+
+        String selectQuery = "SELECT * FROM " + VIEW_RACES_WHEEL_LIST + " WHERE " +
+                COLUMN_WHEEL_RACE_ID + " = " + String.valueOf(raceId);
+
+        Log.e(TAG, selectQuery);
+
+        SQLiteDatabase db = this.getReadableDatabase();
+        Cursor c = db.rawQuery(selectQuery, null);
+
+        // looping through all rows and adding to list
+        if (c.moveToFirst()) {
+            do {
+                WheelList tire = new WheelList();
+                tire.setId(c.getInt((c.getColumnIndex(_ID))));
+                tire.setRaceId(c.getInt((c.getColumnIndex(COLUMN_WHEEL_RACE_ID))));
+                tire.setBrandId(c.getInt((c.getColumnIndex(COLUMN_WHEEL_BRAND_ID))));
+                tire.setTotFrontWheel(c.getInt((c.getColumnIndex(COLUMN_WHEEL_TOT_FRONT_WHEEL))));
+                tire.setTotRearWheel(c.getInt((c.getColumnIndex(COLUMN_WHEEL_TOT_FRONT_WHEEL))));
+
+                tires.add(tire);
+            } while (c.moveToNext());
+        }
+
+        c.close();
+        return tires;
     }
 
     /*
@@ -422,16 +477,17 @@ public class DatabaseHelper extends SQLiteOpenHelper implements BaseColumns {
                 new String[]{String.valueOf(race.getId())});
     }
 
-    /**
-     * getting all WHEEL_LIST under single race
-     */
-    public void populateWheelList(ArrayList<WheelList> wheelList) {
+    public void populateWheelListTableFromRaceId(ArrayList<WheelList> wheelList) {
         if (wheelList == null) return;
 
         for (WheelList list : wheelList) {
             this.updateWheelList(list);
         }
     }
+
+    /**
+     * getting all WHEEL_LIST under single race
+     */
     public List<WheelList> getAllWheelListByRace(String raceId) {
         List<WheelList> wheelLists = new ArrayList<>();
 
@@ -452,7 +508,6 @@ public class DatabaseHelper extends SQLiteOpenHelper implements BaseColumns {
 //                wl.setNote((c.getString(c.getColumnIndex(KEY_TODO))));
 //                wl.setCreatedAt(c.getString(c.getColumnIndex(KEY_CREATED_AT)));
 
-                // adding to todo list
                 wheelLists.add(wl);
             } while (c.moveToNext());
         }
@@ -586,7 +641,7 @@ public class DatabaseHelper extends SQLiteOpenHelper implements BaseColumns {
         return rowCount;
     }
 
-    public void populateWheelList(Integer raceID) {
+    public void populateWheelListTableFromRaceId(Integer raceID) {
         deleteWheelListByRace(raceID, true);
 
         String insertStatement = "INSERT INTO " + TABLE_WHEEL_LIST + " (" +

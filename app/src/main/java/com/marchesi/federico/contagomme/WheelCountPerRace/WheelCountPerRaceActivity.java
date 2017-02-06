@@ -46,6 +46,8 @@ public class WheelCountPerRaceActivity extends AppCompatActivity {
         raceID = getIntent().getIntExtra(MainActivity.INTENT_NAME_RACE_ID, 0);
         raceName = getIntent().getStringExtra(MainActivity.INTENT_NAME_RACE_NAME);
 
+        loadPrefs(this);
+
         Button nextButton = (Button) findViewById(R.id.button_next);
         nextButton.setVisibility(mAutoNext ? View.GONE : View.VISIBLE);
 
@@ -87,7 +89,6 @@ public class WheelCountPerRaceActivity extends AppCompatActivity {
             }
         });
 
-        loadPrefs(this);
         setupActionBar();
     }
 
@@ -157,7 +158,7 @@ public class WheelCountPerRaceActivity extends AppCompatActivity {
                             @Override
                             public void onClick(View view) {
                                 wheelLists.addAll(tempList);
-                                dbHelper.populateWheelList(wheelLists);
+                                dbHelper.populateWheelListTableFromRaceId(wheelLists);
                                 swapCursor();
 
                                 Snackbar.make(view, getResources().getString(R.string.done_undo),
@@ -214,7 +215,7 @@ public class WheelCountPerRaceActivity extends AppCompatActivity {
             return;
         }
 
-        mAutoNext = sp.getBoolean(MainActivity.AUTO_NEXT, false);
+        mAutoNext = sp.getBoolean(MainActivity.AUTO_NEXT, true);
         mUseHTML = sp.getBoolean(MainActivity.USE_HTML, false);
         mBikeCounter = sp.getInt(MainActivity.BIKE_COUNTER, 0);
     }

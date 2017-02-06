@@ -1,5 +1,9 @@
 package com.marchesi.federico.contagomme.DBModel;
 
+import android.content.Context;
+
+import com.marchesi.federico.contagomme.DBHelper.DatabaseHelper;
+
 /**
  * Created by federico.marchesi on 26/01/2017.
  */
@@ -8,23 +12,28 @@ public class WheelList {
     private int mWheelListId;
     private int mRaceId;
     private int mBrandId;
+    private String mBrandName;
     private int mTotFrontWheel = 0;
     private int mTotRearWheel = 0;
     private boolean mFrontTireSelected = false;
     private boolean mRearTireSelected = false;
+    private Context mContext;
 
 
     public WheelList() {
     }
 
-    public WheelList(int wheelListId) {
+    public WheelList(Context context, int wheelListId) {
         mWheelListId = wheelListId;
+        mContext = context;
     }
 
     public WheelList(int wheelListId, int raceId, int brandId) {
         mWheelListId = wheelListId;
         mRaceId = raceId;
         mBrandId = brandId;
+//        mBrandName = new DatabaseHelper(mContext).getStringField(DatabaseHelper.TABLE_BRANDS,
+//                DatabaseHelper._ID, brandId, DatabaseHelper.COLUMN_BRAND_NAME);
     }
 
     public WheelList(int wheelListId, int raceId, int brandId, int totFront, int totRear) {
@@ -33,6 +42,19 @@ public class WheelList {
         mBrandId = brandId;
         mTotFrontWheel = totFront;
         mTotRearWheel = totRear;
+
+    }
+
+    public WheelList(Context context, int wheelListId, int raceId, int brandId, int totFront, int totRear) {
+        mWheelListId = wheelListId;
+        mRaceId = raceId;
+        mBrandId = brandId;
+        mTotFrontWheel = totFront;
+        mTotRearWheel = totRear;
+        mContext = context;
+
+        mBrandName = new DatabaseHelper(context).getStringField(DatabaseHelper.TABLE_BRANDS,
+                DatabaseHelper._ID, brandId, DatabaseHelper.COLUMN_BRAND_NAME);
     }
 
     // getters
@@ -129,5 +151,9 @@ public class WheelList {
     public void resetCounter() {
         mTotFrontWheel = 0;
         mTotRearWheel = 0;
+    }
+
+    public String getBrandName() {
+        return mBrandName;
     }
 }

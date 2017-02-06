@@ -26,7 +26,7 @@ android {
 }
 
 ext {
-    supportLibVersion = '25.0.0'  // variable that can be referenced to keep support libs consistent
+    supportLibVersion = '25.1.1'  // variable that can be referenced to keep support libs consistent
 }
 dependencies {
     compile fileTree(include: ['*.jar'], dir: 'libs')
@@ -35,8 +35,8 @@ dependencies {
     })
     compile "com.android.support:appcompat-v7:${supportLibVersion}"
     compile "com.android.support:design:${supportLibVersion}"
-    compile 'com.android.support:appcompat-v7:25.1.0'
-    compile 'com.android.support:support-v4:25.1.0'
-    compile 'com.android.support:support-vector-drawable:25.1.0'
+    compile "com.android.support:appcompat-v7:${supportLibVersion}"
+    compile "com.android.support:support-v4:${supportLibVersion}"
+    compile "com.android.support:support-vector-drawable:${supportLibVersion}"
     testCompile 'junit:junit:4.12'
 }

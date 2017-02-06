@@ -375,10 +375,10 @@ public class MainActivity extends AppCompatActivity {
 
         if (rowCount == 0 || rowCount < brandCount) {
             // table wheel_list has to be build/rebuild
-            dbHelper.populateWheelList(raceID);
+            dbHelper.populateWheelListTableFromRaceId(raceID);
         } else if (rowCount == 0 || rowCount > brandCount) {
             // table wheel_list has to be build/rebuild
-            dbHelper.populateWheelList(raceID);
+            dbHelper.populateWheelListTableFromRaceId(raceID);
         }
         Intent wheelCountIntent = new Intent(this, WheelCountPerRaceActivity.class);
         wheelCountIntent.putExtra(INTENT_NAME_RACE_ID, raceID);

@@ -170,7 +170,7 @@ public class RaceCursorAdapter extends CursorAdapter {
 //        InputDialogBrand inputDialog = new InputDialogBrand(context,
 //                R.string.edit_brand_dialog_title, R.string.add_race_dialog_hint);
 //
-//        inputDialog.setInitialInput(race[0].getName());
+//        inputDialog.setInitialInput(race[0].getBrandName());
 ////        inputDialog.setInitialOrder(oldOrder);
 //        inputDialog.setInputListener(new InputDialogBrand.InputListener() {
 //            @Override
