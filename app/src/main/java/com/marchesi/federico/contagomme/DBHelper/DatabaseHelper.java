@@ -202,6 +202,7 @@ public class DatabaseHelper extends SQLiteOpenHelper implements BaseColumns {
         String selectQuery = "SELECT " + returnColumnName + " FROM " + tableName + " WHERE " +
                 idColumnName + " = " + String.valueOf(idColumnValue);
 
+
         Log.e(TAG, selectQuery);
 
         Cursor c = db.rawQuery(selectQuery, null);
