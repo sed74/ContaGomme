@@ -196,7 +196,6 @@ public class DatabaseHelper extends SQLiteOpenHelper implements BaseColumns {
      */
     public String getStringField(String tableName, String idColumnName, int idColumnValue,
                                  String returnColumnName) {
-
         SQLiteDatabase db = this.getReadableDatabase();
 
         String selectQuery = "SELECT " + returnColumnName + " FROM " + tableName + " WHERE " +
