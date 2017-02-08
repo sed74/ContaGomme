@@ -96,6 +96,8 @@ public class WheelCountPerRaceCursorAdapter extends CursorAdapter {
         FrontSelected = currentWheelList.getIsFrontTireSelected();
         RearSelected = currentWheelList.getIsRearTireSelected();
 
+//        Toast.makeText(context, "Id = " + race + "\nFront: " + FrontSelected + "\nRear: " +
+//                RearSelected, Toast.LENGTH_SHORT).show();
         TextView viewFrontWheel = (TextView) view.findViewById(R.id.front_tire);
         TextView viewRearWheel = (TextView) view.findViewById(R.id.rear_tire);
 

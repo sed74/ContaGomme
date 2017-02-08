@@ -90,8 +90,6 @@ public class DatabaseHelper extends SQLiteOpenHelper implements BaseColumns {
                     " AS SELECT " + TABLE_WHEEL_LIST + "." + _ID + ", " +
                     TABLE_RACES + "." + _ID + " raceId, " +
                     TABLE_BRANDS + "." + _ID + " brandId, " +
-//                    TABLE_BRANDS + "." + IS_FRONT_SELECTED + ", " +
-//                    TABLE_BRANDS + "." + IS_REAR_SELECTED + ", " +
                     TABLE_RACES + "." + COLUMN_RACE_NAME + ", " +
                     TABLE_BRANDS + "." + COLUMN_BRAND_NAME + ", " +
                     COLUMN_WHEEL_TOT_FRONT_WHEEL + ", " +
@@ -186,6 +184,19 @@ public class DatabaseHelper extends SQLiteOpenHelper implements BaseColumns {
         Log.e(TAG, selectQuery);
 
         Cursor c = db.rawQuery(selectQuery, null);
+
+        if (c.moveToFirst()) {
+            do {
+
+                int id = c.getInt((c.getColumnIndex(_ID)));
+                int brandId = c.getInt((c.getColumnIndex("brandId")));
+                int raceid = c.getInt((c.getColumnIndex("raceId")));
+                int totFront = c.getInt((c.getColumnIndex(COLUMN_WHEEL_TOT_FRONT_WHEEL)));
+                int totRear = c.getInt((c.getColumnIndex(COLUMN_WHEEL_TOT_REAR_WHEEL)));
+
+            } while (c.moveToNext());
+        }
+
 
         return c;
 

@@ -8,7 +8,7 @@ import com.marchesi.federico.contagomme.DBHelper.DatabaseHelper;
  * Created by federico.marchesi on 26/01/2017.
  */
 
-public class WheelList {
+public class WheelList implements Cloneable {
     private int mWheelListId;
     private int mRaceId;
     private int mBrandId;
@@ -17,15 +17,12 @@ public class WheelList {
     private int mTotRearWheel = 0;
     private boolean mFrontTireSelected = false;
     private boolean mRearTireSelected = false;
-    private Context mContext;
-
 
     public WheelList() {
     }
 
     public WheelList(Context context, int wheelListId) {
         mWheelListId = wheelListId;
-        mContext = context;
     }
 
     public WheelList(int wheelListId, int raceId, int brandId) {
@@ -51,7 +48,6 @@ public class WheelList {
         mBrandId = brandId;
         mTotFrontWheel = totFront;
         mTotRearWheel = totRear;
-        mContext = context;
 
         mBrandName = new DatabaseHelper(context).getStringField(DatabaseHelper.TABLE_BRANDS,
                 DatabaseHelper._ID, brandId, DatabaseHelper.COLUMN_BRAND_NAME);

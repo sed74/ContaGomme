@@ -4,9 +4,9 @@
     android:id="@+id/activity_entry"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="?android:attr/selectableItemBackground"
     android:orientation="vertical"
     android:paddingBottom="@dimen/activity_vertical_margin"
-    android:paddingLeft="@dimen/activity_horizontal_margin"
     android:paddingRight="@dimen/activity_horizontal_margin"
     android:paddingTop="@dimen/activity_vertical_margin"
     tools:context="com.marchesi.federico.contagomme.EntryActivity">
@@ -15,8 +15,11 @@
         android:id="@+id/open_race"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:background="?attr/selectableItemBackground"
+        android:clickable="true"
         android:orientation="horizontal"
         android:padding="@dimen/tire_button_padding">
+
 
         <ImageView
             android:id="@+id/race_icon"
@@ -51,6 +54,8 @@
         android:id="@+id/open_tire_list"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:background="?attr/selectableItemBackground"
+        android:clickable="true"
         android:orientation="horizontal"
         android:padding="@dimen/tire_button_padding">
 
@@ -85,6 +90,7 @@
         android:id="@+id/open_race_list"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:background="?attr/selectableItemBackground"
         android:clickable="true"
         android:orientation="horizontal"
         android:padding="@dimen/tire_button_padding">

@@ -18,28 +18,28 @@
             android:label="@string/title_activity_settings">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value=".MainActivity" />
+                android:value=".EntryActivity" />
         </activity>
         <activity
             android:name=".BrandListActivity"
             android:label="@string/brand_list_activity_name">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value=".MainActivity" />
+                android:value=".EntryActivity" />
         </activity>
         <activity
             android:name=".RaceListActivity"
             android:label="@string/race_list_activity_name">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value=".MainActivity" />
+                android:value=".EntryActivity" />
         </activity>
         <activity
             android:name=".wheelcount.WheelCountPerRaceActivity"
             android:label="@string/race_list_activity_name">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value=".MainActivity" />
+                android:value=".EntryActivity" />
         </activity>
         <activity android:name=".EntryActivity">
             <intent-filter>

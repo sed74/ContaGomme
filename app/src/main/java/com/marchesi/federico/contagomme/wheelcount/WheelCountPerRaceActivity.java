@@ -48,13 +48,14 @@ public class WheelCountPerRaceActivity extends AppCompatActivity {
 
         loadPrefs(this);
 
-        Button nextButton = (Button) findViewById(R.id.button_next);
+        final Button nextButton = (Button) findViewById(R.id.button_next);
         nextButton.setVisibility(mAutoNext ? View.GONE : View.VISIBLE);
 
         nextButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 nextBike();
+                nextButton.setEnabled(false);
             }
         });
 
@@ -74,15 +75,17 @@ public class WheelCountPerRaceActivity extends AppCompatActivity {
                     public void onSelectionChange(boolean frontSelected, boolean rearSelected) {
 
                         if (frontSelected && rearSelected) {
-                            final Handler handler = new Handler();
-                            handler.postDelayed(new Runnable() {
-                                @Override
-                                public void run() {
-                                    nextBike();
-                                }
-                            }, 500);
-
+                            if (mAutoNext) {
+                                final Handler handler = new Handler();
+                                handler.postDelayed(new Runnable() {
+                                    @Override
+                                    public void run() {
+                                        nextBike();
+                                    }
+                                }, 500);
+                            }
                         }
+                        nextButton.setEnabled(frontSelected && rearSelected);
 //                        wheelCountAdapter.notifyDataSetChanged();
                     }
                 });
@@ -97,8 +100,6 @@ public class WheelCountPerRaceActivity extends AppCompatActivity {
         Cursor c = dbHelper.getCursorById(
                 DatabaseHelper.VIEW_RACES_WHEEL_LIST, "raceId", raceID);
         wheelCountAdapter.swapCursor(c);
-        wheelCountAdapter.notifyDataSetChanged();
-
     }
 
     private void resetArray() {
@@ -145,7 +146,7 @@ public class WheelCountPerRaceActivity extends AppCompatActivity {
         //noinspection SimplifiableIfStatement
         switch (id) {
             case R.id.reset:
-                final ArrayList<WheelList> tempList = new ArrayList<>(wheelLists);
+                final ArrayList<WheelList> tempList = copyValues(wheelLists);
                 dbHelper.resetRace(raceID);
                 resetWheelCounter(wheelLists);
                 swapCursor();
@@ -157,9 +158,9 @@ public class WheelCountPerRaceActivity extends AppCompatActivity {
                         .setAction(getResources().getString(R.string.reset_undo), new View.OnClickListener() {
                             @Override
                             public void onClick(View view) {
-                                wheelLists.addAll(tempList);
+                                wheelLists = copyValues(tempList);
                                 dbHelper.populateWheelListTableFromRaceId(wheelLists);
-                                swapCursor();
+//                                swapCursor();
 
                                 Snackbar.make(view, getResources().getString(R.string.done_undo),
                                         Snackbar.LENGTH_SHORT).show();
@@ -175,6 +176,15 @@ public class WheelCountPerRaceActivity extends AppCompatActivity {
         return super.onOptionsItemSelected(item);
     }
 
+    private ArrayList<WheelList> copyValues(ArrayList<WheelList> arrayOrigin) {
+        ArrayList<WheelList> retValue = new ArrayList<>();
+
+        for (WheelList wheel : arrayOrigin) {
+            retValue.add(new WheelList(wheel.getId(), wheel.getBrandId(), wheel.getRaceId(),
+                    wheel.getTotFrontWheel(), wheel.getTotRearWheel()));
+        }
+        return retValue;
+    }
     private void resetWheelCounter(ArrayList<WheelList> wheelLists) {
         for (WheelList list : wheelLists) {
             list.setTotFrontWheel(0);
@@ -184,9 +194,11 @@ public class WheelCountPerRaceActivity extends AppCompatActivity {
     }
 
     private void swapCursor() {
-        Cursor c = dbHelper.getCursorById(DatabaseHelper.VIEW_RACES_WHEEL_LIST,
-                "raceId", raceID);
-        Cursor old = wheelCountAdapter.swapCursor(c);
+
+        Cursor c = dbHelper.getCursorById(DatabaseHelper.VIEW_RACES_WHEEL_LIST, "raceId", raceID);
+
+//        Cursor old =
+        wheelCountAdapter.swapCursor(c);
 //    old.close();
 
     }
@@ -215,9 +227,9 @@ public class WheelCountPerRaceActivity extends AppCompatActivity {
             return;
         }
 
-        mAutoNext = sp.getBoolean(MainActivity.AUTO_NEXT, true);
-        mUseHTML = sp.getBoolean(MainActivity.USE_HTML, false);
-        mBikeCounter = sp.getInt(MainActivity.BIKE_COUNTER, 0);
+        mAutoNext = sp.getBoolean(getResources().getString(R.string.pref_auto_continue), true);
+        //mUseHTML = sp.getBoolean(MainActivity.USE_HTML, false);
+        mBikeCounter = sp.getInt(getResources().getString(R.string.pref_bike_counter), 0);
     }
 }
 

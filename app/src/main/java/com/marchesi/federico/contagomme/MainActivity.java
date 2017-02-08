@@ -301,6 +301,7 @@ public class MainActivity extends AppCompatActivity {
 //                SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(this);
                 Intent i = new Intent(this, SettingsActivity.class);
                 startActivity(i);
+                break;
             case R.id.race_menu:
 
                 View menuItemView = findViewById(R.id.race_menu); // SAME ID AS MENU ID
