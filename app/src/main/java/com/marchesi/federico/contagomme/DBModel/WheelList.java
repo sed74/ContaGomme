@@ -42,6 +42,16 @@ public class WheelList implements Cloneable {
 
     }
 
+    public WheelList(int wheelListId, String brandName, int raceId, int brandId, int totFront, int totRear) {
+        mWheelListId = wheelListId;
+        mRaceId = raceId;
+        mBrandId = brandId;
+        mTotFrontWheel = totFront;
+        mTotRearWheel = totRear;
+        mBrandName = brandName;
+
+    }
+
     public WheelList(Context context, int wheelListId, int raceId, int brandId, int totFront, int totRear) {
         mWheelListId = wheelListId;
         mRaceId = raceId;

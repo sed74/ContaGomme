@@ -11,6 +11,7 @@ import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.provider.BaseColumns;
 import android.util.Log;
+import android.widget.Toast;
 
 import com.marchesi.federico.contagomme.DBModel.Brand;
 import com.marchesi.federico.contagomme.DBModel.Race;
@@ -35,11 +36,7 @@ public class DatabaseHelper extends SQLiteOpenHelper implements BaseColumns {
     public static final String COLUMN_RACE_PLACE = "race_place";
     public static final String COLUMN_RACE_DATETIME = "race_datetime";
     public static final String COLUMN_RACE_DESCRIPTION = "race_desc";
-    // WHEEL_LIST Table - column names
-    //    public static final String COLUMN_RACE_ORDER_BY =
-//            "SubStr(" + DatabaseHelper.COLUMN_RACE_DATE + ", 7, 4), " +
-//                    "SubStr(" + DatabaseHelper.COLUMN_RACE_DATE + ", 4, 2), " +
-//                    "SubStr(" + DatabaseHelper.COLUMN_RACE_DATE + ", 1, 2)";
+    // WHEEL Table - column names
     public static final String COLUMN_WHEEL_RACE_ID = "wheel_race_id";
     public static final String COLUMN_WHEEL_BRAND_ID = "wheel_brand_id";
     public static final String COLUMN_WHEEL_TOT_FRONT_WHEEL = "tot_front_wheel";
@@ -48,8 +45,10 @@ public class DatabaseHelper extends SQLiteOpenHelper implements BaseColumns {
     public static final String IS_REAR_SELECTED = "is_rear_selected";
     // RACES_WHEEL_LIST VIEW
     public static final String VIEW_RACES_WHEEL_LIST = "view_races_wheel_list";
+    public static final String COLUMN_VIEW_RACE_ID = "race_id";
+    public static final String COLUMN_VIEW_BRAND_ID = "brand_id";
     // Database Version
-    private static final int DATABASE_VERSION = 9;
+    private static final int DATABASE_VERSION = 10;
     // Logcat tag
     private static final String TAG = DatabaseHelper.class.getName();
     // Database Name
@@ -88,8 +87,8 @@ public class DatabaseHelper extends SQLiteOpenHelper implements BaseColumns {
     private static final String CREATE_RACES_WHEEL_LIST_VIEW =
             "CREATE VIEW " + VIEW_RACES_WHEEL_LIST +
                     " AS SELECT " + TABLE_WHEEL_LIST + "." + _ID + ", " +
-                    TABLE_RACES + "." + _ID + " raceId, " +
-                    TABLE_BRANDS + "." + _ID + " brandId, " +
+                    TABLE_RACES + "." + _ID + " " + COLUMN_VIEW_RACE_ID + ", " +
+                    TABLE_BRANDS + "." + _ID + " " + COLUMN_VIEW_BRAND_ID + ", " +
                     TABLE_RACES + "." + COLUMN_RACE_NAME + ", " +
                     TABLE_BRANDS + "." + COLUMN_BRAND_NAME + ", " +
                     COLUMN_WHEEL_TOT_FRONT_WHEEL + ", " +
@@ -189,8 +188,8 @@ public class DatabaseHelper extends SQLiteOpenHelper implements BaseColumns {
             do {
 
                 int id = c.getInt((c.getColumnIndex(_ID)));
-                int brandId = c.getInt((c.getColumnIndex("brandId")));
-                int raceid = c.getInt((c.getColumnIndex("raceId")));
+                int brandId = c.getInt((c.getColumnIndex(COLUMN_VIEW_BRAND_ID)));
+                int raceid = c.getInt((c.getColumnIndex(COLUMN_VIEW_RACE_ID)));
                 int totFront = c.getInt((c.getColumnIndex(COLUMN_WHEEL_TOT_FRONT_WHEEL)));
                 int totRear = c.getInt((c.getColumnIndex(COLUMN_WHEEL_TOT_REAR_WHEEL)));
 

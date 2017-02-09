@@ -73,12 +73,7 @@ public class WheelCountPerRaceActivity extends AppCompatActivity {
 
             @Override
             public void run() {
-                dbHelper = new DatabaseHelper(getBaseContext());
-                Cursor c = dbHelper.getCursorById(DatabaseHelper.VIEW_RACES_WHEEL_LIST,
-                        "raceId", raceID);
-                wheelCountAdapter = new WheelCountPerRaceCursorAdapter(WheelCountPerRaceActivity.this, c);
-                listView.setAdapter(wheelCountAdapter);
-                wheelLists = wheelCountAdapter.populateArray(c);
+                setAdapter();
 
                 wheelCountAdapter.setOnChangeListener(new WheelCountPerRaceCursorAdapter.OnChange() {
                     @Override
@@ -92,7 +87,7 @@ public class WheelCountPerRaceActivity extends AppCompatActivity {
                                     public void run() {
                                         nextBike();
                                     }
-                                }, 500);
+                                }, 100);
                             }
                         }
                         nextButton.setEnabled(frontSelected && rearSelected);
@@ -105,10 +100,23 @@ public class WheelCountPerRaceActivity extends AppCompatActivity {
         setupActionBar();
     }
 
+    private void setAdapter() {
+
+        if (dbHelper != null) dbHelper.closeDB();
+        dbHelper = new DatabaseHelper(getBaseContext());
+        Cursor c = dbHelper.getCursorById(DatabaseHelper.VIEW_RACES_WHEEL_LIST,
+                DatabaseHelper.COLUMN_VIEW_RACE_ID, raceID);
+        if (wheelCountAdapter != null) wheelCountAdapter = null;
+        wheelCountAdapter = new WheelCountPerRaceCursorAdapter(WheelCountPerRaceActivity.this, c);
+        listView.setAdapter(wheelCountAdapter);
+        wheelLists = wheelCountAdapter.populateArray(c);
+
+    }
+
     private void nextBike() {
         resetArray();
         Cursor c = dbHelper.getCursorById(
-                DatabaseHelper.VIEW_RACES_WHEEL_LIST, "raceId", raceID);
+                DatabaseHelper.VIEW_RACES_WHEEL_LIST, DatabaseHelper.COLUMN_VIEW_RACE_ID, raceID);
         wheelCountAdapter.swapCursor(c);
     }
 
@@ -168,17 +176,18 @@ public class WheelCountPerRaceActivity extends AppCompatActivity {
                         .setAction(getResources().getString(R.string.reset_undo), new View.OnClickListener() {
                             @Override
                             public void onClick(View view) {
-                                wheelLists = copyValues(tempList);
-                                dbHelper.populateWheelListTableFromRaceId(wheelLists);
-//                                swapCursor();
 
+                                dbHelper.populateWheelListTableFromRaceId(tempList);
+
+                                wheelLists = wheelCountAdapter.populateArray(getCursor());
+                                swapCursor();
                                 Snackbar.make(view, getResources().getString(R.string.done_undo),
                                         Snackbar.LENGTH_SHORT).show();
-
                             }
                         });
 
                 snackbar.show();
+                break;
             case R.id.send_email:
                 sendEmail();
                 break;
@@ -190,7 +199,7 @@ public class WheelCountPerRaceActivity extends AppCompatActivity {
         ArrayList<WheelList> retValue = new ArrayList<>();
 
         for (WheelList wheel : arrayOrigin) {
-            retValue.add(new WheelList(wheel.getId(), wheel.getBrandId(), wheel.getRaceId(),
+            retValue.add(new WheelList(wheel.getId(), wheel.getRaceId(), wheel.getBrandId(),
                     wheel.getTotFrontWheel(), wheel.getTotRearWheel()));
         }
         return retValue;
@@ -203,9 +212,13 @@ public class WheelCountPerRaceActivity extends AppCompatActivity {
 
     }
 
+    private Cursor getCursor() {
+        return dbHelper.getCursorById(DatabaseHelper.VIEW_RACES_WHEEL_LIST,
+                DatabaseHelper.COLUMN_VIEW_RACE_ID, raceID);
+    }
     private void swapCursor() {
 
-        Cursor c = dbHelper.getCursorById(DatabaseHelper.VIEW_RACES_WHEEL_LIST, "raceId", raceID);
+        Cursor c = getCursor();
 
 //        Cursor old =
         wheelCountAdapter.swapCursor(c);

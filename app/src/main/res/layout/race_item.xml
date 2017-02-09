@@ -6,7 +6,8 @@
     android:layout_height="wrap_content"
     android:background="@drawable/tire_rectangle_race"
     android:clickable="true"
-    android:orientation="horizontal">
+    android:orientation="horizontal"
+    android:padding="@dimen/listview_padding_race">
 
     <TextView
         android:id="@+id/race_name"

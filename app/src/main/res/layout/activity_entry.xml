@@ -23,20 +23,20 @@
 
         <ImageView
             android:id="@+id/race_icon"
-            android:layout_width="60dp"
-            android:layout_height="60dp"
-            android:layout_alignBottom="@+id/textView2"
+            android:layout_width="@dimen/entry_icon_width"
+            android:layout_height="@dimen/entry_icon_height"
             android:paddingRight="@dimen/tire_button_padding"
-            android:src="@drawable/finish_flag" />
+            android:src="@drawable/counter_icon" />
 
         <TextView
             android:id="@+id/race_main_label"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/entry_title_label_top_margin"
             android:layout_toRightOf="@id/race_icon"
             android:text="@string/fill_in_wheel_count"
             android:textColor="@android:color/black"
-            android:textSize="16sp"
+            android:textSize="@dimen/entry_title_font_size"
             android:textStyle="bold" />
 
         <TextView
@@ -61,19 +61,20 @@
 
         <ImageView
             android:id="@+id/tire_icon"
-            android:layout_width="60dp"
-            android:layout_height="60dp"
+            android:layout_width="@dimen/entry_icon_width"
+            android:layout_height="@dimen/entry_icon_height"
             android:paddingRight="@dimen/tire_button_padding"
-            android:src="@drawable/wheel_512" />
+            android:src="@drawable/wheel" />
 
         <TextView
             android:id="@+id/tire_main_label"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/entry_title_label_top_margin"
             android:layout_toRightOf="@id/tire_icon"
             android:text="@string/open_tire_list_label"
             android:textColor="@android:color/black"
-            android:textSize="16sp"
+            android:textSize="@dimen/entry_title_font_size"
             android:textStyle="bold" />
 
         <TextView
@@ -97,19 +98,20 @@
 
         <ImageView
             android:id="@+id/race_list_icon"
-            android:layout_width="60dp"
-            android:layout_height="60dp"
+            android:layout_width="@dimen/entry_icon_width"
+            android:layout_height="@dimen/entry_icon_height"
             android:paddingRight="@dimen/tire_button_padding"
-            android:src="@drawable/bike_icon" />
+            android:src="@drawable/checkered_flag" />
 
         <TextView
             android:id="@+id/race_list_main_label"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/entry_title_label_top_margin"
             android:layout_toRightOf="@id/race_list_icon"
             android:text="@string/open_race_list_label"
             android:textColor="@android:color/black"
-            android:textSize="16sp"
+            android:textSize="@dimen/entry_title_font_size"
             android:textStyle="bold" />
 
         <TextView

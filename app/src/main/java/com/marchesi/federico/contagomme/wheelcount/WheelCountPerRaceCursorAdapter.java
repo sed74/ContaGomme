@@ -43,17 +43,22 @@ public class WheelCountPerRaceCursorAdapter extends CursorAdapter {
     }
 
     public ArrayList<WheelList> populateArray(Cursor cursor) {
-
+        if (wheelLists != null) {
+            wheelLists = null;
+            wheelLists = new ArrayList<>();
+        }
         // looping through all rows and adding to list
         if (cursor.moveToFirst()) {
             do {
                 wheelLists.add(new WheelList(
                         cursor.getInt(
                                 cursor.getColumnIndex(DatabaseHelper._ID)),
+                        cursor.getString(
+                                cursor.getColumnIndex(DatabaseHelper.COLUMN_BRAND_NAME)),
                         cursor.getInt(
-                                cursor.getColumnIndex("raceId")),
+                                cursor.getColumnIndex(DatabaseHelper.COLUMN_VIEW_RACE_ID)),
                         cursor.getInt(
-                                cursor.getColumnIndex("brandId")),
+                                cursor.getColumnIndex(DatabaseHelper.COLUMN_VIEW_BRAND_ID)),
                         cursor.getInt(
                                 cursor.getColumnIndex(DatabaseHelper.COLUMN_WHEEL_TOT_FRONT_WHEEL)),
                         cursor.getInt(

@@ -12,11 +12,16 @@
     <dimen name="margin_default_half">8dp</dimen>
     <dimen name="margin_default">16dp</dimen>
     <dimen name="margin_small">2dp</dimen>
-    <dimen name="list_divider_height">5dp</dimen>
+    <dimen name="list_divider_height">3dp</dimen>
     <dimen name="listview_side_padding">4dp</dimen>
     <dimen name="delete_max_width">70dp</dimen>
     <dimen name="nav_header_vertical_spacing">16dp</dimen>
     <dimen name="fab_margin">16dp</dimen>
     <dimen name="nav_header_height">160dp</dimen>
     <dimen name="label_size">12sp</dimen>
+    <dimen name="entry_icon_width">60dp</dimen>
+    <dimen name="entry_icon_height">60dp</dimen>
+    <dimen name="entry_title_font_size">16sp</dimen>
+    <dimen name="entry_title_label_top_margin">0dp</dimen>
+    <dimen name="listview_padding_race">2dp</dimen>
 </resources>

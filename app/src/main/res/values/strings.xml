@@ -83,7 +83,7 @@
     <string name="race_menu">Gare</string>
     <string name="open_race_menu">Apri gara</string>
     <string name="select_race_dialog">Seleziona la gara</string>
-    <string name="fill_in_wheel_count">Apri gara</string>
+    <string name="fill_in_wheel_count">Conta!</string>
     <string name="fill_in_wheel_count_desc">Apri la gara corrente per poter effettuare il conteggio delle gomme.</string>
     <string name="open_race_list_label">Anagrafica gare</string>
     <string name="open_race_list_desc">Aggiungi, modifica e cancella le gare della stagione.</string>
