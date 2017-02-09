@@ -13,6 +13,7 @@
     <string name="use_html">Usa HTML in email</string>
     <string name="auto_go_on">Continua automaticamente</string>
     <string name="subject">Conteggio gomme gara %1$s del %2$s.</string>
+    <string name="subject_no_date">Conteggio gomme gara %1$s.</string>
     <string name="data_saved">Salvataggio effettuato</string>
     <string name="race_reset">Azzeramento effettuato con successo.</string>
     <string name="reset_undo">Annulla</string>

@@ -27,8 +27,9 @@ public class FileClass {
 
         try {
 
+            fileName = "fede";
             if (!fileName.endsWith(".")) fileName += ".";
-            fileName += extension;
+            fileName += extension.toLowerCase();
             // this will create a new name everytime and unique
             File root = new File(Environment.getExternalStorageDirectory(), "ContaGomme");
 //            File root = new File(getExternalFilesDir(null), fileName);

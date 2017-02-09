@@ -1,10 +1,12 @@
 package com.marchesi.federico.contagomme.wheelcount;
 
 import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.database.Cursor;
+import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
 import android.preference.PreferenceManager;
@@ -22,13 +24,18 @@ import com.marchesi.federico.contagomme.DBHelper.DatabaseHelper;
 import com.marchesi.federico.contagomme.DBModel.WheelList;
 import com.marchesi.federico.contagomme.MainActivity;
 import com.marchesi.federico.contagomme.R;
+import com.marchesi.federico.contagomme.SettingsActivity;
+import com.marchesi.federico.contagomme.Utils.FileClass;
 
+import java.text.DateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 
 public class WheelCountPerRaceActivity extends AppCompatActivity {
 
-    String raceName;
-    int raceID;
+    private final String TEXT_SEPARATOR = ",";
+    private String raceName;
+    private int raceID;
     private DatabaseHelper dbHelper;
     private WheelCountPerRaceCursorAdapter wheelCountAdapter;
     private ListView listView;
@@ -36,6 +43,9 @@ public class WheelCountPerRaceActivity extends AppCompatActivity {
     private boolean mAutoNext;
     private boolean mUseHTML;
     private int mBikeCounter;
+    private String mEmailRecipient;
+    private boolean mAttachFile;
+    private int mAttachType;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -170,7 +180,7 @@ public class WheelCountPerRaceActivity extends AppCompatActivity {
 
                 snackbar.show();
             case R.id.send_email:
-
+                sendEmail();
                 break;
         }
         return super.onOptionsItemSelected(item);
@@ -230,6 +240,121 @@ public class WheelCountPerRaceActivity extends AppCompatActivity {
         mAutoNext = sp.getBoolean(getResources().getString(R.string.pref_auto_continue), true);
         //mUseHTML = sp.getBoolean(MainActivity.USE_HTML, false);
         mBikeCounter = sp.getInt(getResources().getString(R.string.pref_bike_counter), 0);
+        mEmailRecipient = sp.getString(SettingsActivity.KEY_PREF_EMAIL_RECIPIENT, "");
+        mAttachFile = sp.getBoolean(SettingsActivity.KEY_PREF_ATTACH_FILE, false);
+        mAttachType = Integer.parseInt(sp.getString(
+                SettingsActivity.KEY_PREF_ATTACHMENT_TYPE, "1"));
     }
+
+    public void sendEmail() {
+
+        Intent intent = new Intent(Intent.ACTION_SENDTO);
+        intent.setType("text/html");
+        intent.setData(Uri.parse("mailto:")); // only email apps should handle this
+
+        String emailContent = getEmailBody();
+
+        String currentDateTimeString = DateFormat.getDateInstance().format(new Date());
+        String subject = String.format(getResources().getString(R.string.subject_no_date),
+                raceName);
+        intent.putExtra(Intent.EXTRA_SUBJECT, subject);
+
+        if (!mEmailRecipient.isEmpty()) {
+
+            String[] to = mEmailRecipient.split(",");
+            intent.putExtra(Intent.EXTRA_EMAIL, to);
+        }
+
+        if (mAttachFile) {
+            String emailAttach = "";
+            FileClass.checkForArchiveAccess(this);
+
+            switch (mAttachType) {
+                case 0: // TXT
+                    emailAttach = emailContent;
+                    break;
+                case 1: // CSV
+                    emailAttach = getEmailBodyCSV();
+                    break;
+                case 2: // HTML
+                    emailAttach = getEmailBodyHTML();
+                    break;
+            }
+
+            String[] mTestArray = getResources().getStringArray(R.array.pref_file_type);
+            String createFileName = subject.replaceAll("\t", "_").replaceAll("\\(", "")
+                    .replaceAll("\\)", "").replaceAll(" ", "_").replaceAll("/", "_");
+
+            String fileName = FileClass.createFile(createFileName, emailAttach, mTestArray[mAttachType]);
+            if (fileName.isEmpty()) return;
+            intent.putExtra(Intent.EXTRA_STREAM, Uri.parse("file://" + fileName));
+        }
+
+//        Toast.makeText(this, subject, Toast.LENGTH_SHORT).show();
+        intent.putExtra(Intent.EXTRA_TEXT, emailContent);
+        if (intent.resolveActivity(getPackageManager()) != null) {
+            startActivity(intent);
+        }
+    }
+
+    private String getEmailBodyHTML() {
+
+        String emailContent = "";//"<html><body><br>";
+
+        emailContent += "Gara di <b>" + raceName + "</b><br><br>";
+
+//        if (!mRaceDescr.isEmpty()) {
+//            emailContent += "\n\n" + mRaceDescr + "<br>";
+//        }
+        for (WheelList t : wheelLists) {
+            emailContent += "<p>";
+            emailContent += "<b>" + t.getBrandName() + "</b><br>";
+            emailContent += "Anteriori: " + t.getTotFrontWheel() + "<br>";
+            emailContent += "Posteriori: " + t.getTotRearWheel() + "<br>";
+            emailContent += "</p>";
+        }
+        //emailContent += "</body></meta></html>";
+//        Toast.makeText(this, emailContent, Toast.LENGTH_LONG).show();
+        return emailContent;
+    }
+
+    private String getEmailBody() {
+
+        String emailContent = "";
+
+        emailContent += "Gara di " + raceName;
+        emailContent += "\n\n";
+
+//        if (!mRaceDescr.isEmpty()) {
+//            emailContent += "\n\n" + mRaceDescr;
+//        }
+        for (WheelList t : wheelLists) {
+            emailContent += "\n\n" + t.getBrandName();
+            emailContent += "\n" + "Anteriori: " + t.getTotFrontWheel();
+            emailContent += "\n" + "Posteriori: " + t.getTotRearWheel();
+        }
+
+        return emailContent;
+    }
+
+    private String getEmailBodyCSV() {
+
+        String emailContent = "";
+
+        emailContent += getResources().getString(R.string.race_name) + raceName;
+        emailContent += "\n";
+        emailContent += getResources().getString(R.string.brand) + TEXT_SEPARATOR;
+        emailContent += getResources().getString(R.string.front_tire) + TEXT_SEPARATOR;
+        emailContent += getResources().getString(R.string.rear_tire) + TEXT_SEPARATOR;
+
+        for (WheelList t : wheelLists) {
+            emailContent += "\n" + t.getBrandName() + TEXT_SEPARATOR;
+            emailContent += t.getTotFrontWheel() + TEXT_SEPARATOR;
+            emailContent += t.getTotRearWheel() + TEXT_SEPARATOR;
+        }
+
+        return emailContent;
+    }
+
 }
 
