@@ -27,9 +27,7 @@ import com.marchesi.federico.contagomme.R;
 import com.marchesi.federico.contagomme.SettingsActivity;
 import com.marchesi.federico.contagomme.Utils.FileClass;
 
-import java.text.DateFormat;
 import java.util.ArrayList;
-import java.util.Date;
 
 public class WheelCountPerRaceActivity extends AppCompatActivity {
 
@@ -267,9 +265,9 @@ public class WheelCountPerRaceActivity extends AppCompatActivity {
 
         String emailContent = getEmailBody();
 
-        String currentDateTimeString = DateFormat.getDateInstance().format(new Date());
+//        String currentDateTimeString = DateFormat.getDateInstance().format(new Date());
         String subject = String.format(getResources().getString(R.string.subject_no_date),
-                raceName);
+                raceName.replaceAll("\\(", " ").replaceAll("\\)", " "));
         intent.putExtra(Intent.EXTRA_SUBJECT, subject);
 
         if (!mEmailRecipient.isEmpty()) {
