@@ -11,7 +11,6 @@ import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.provider.BaseColumns;
 import android.util.Log;
-import android.widget.Toast;
 
 import com.marchesi.federico.contagomme.DBModel.Brand;
 import com.marchesi.federico.contagomme.DBModel.Race;
@@ -521,7 +520,7 @@ public class DatabaseHelper extends SQLiteOpenHelper implements BaseColumns {
                 wheelLists.add(wl);
             } while (c.moveToNext());
         }
-        closeDB();
+        c.close();
         return wheelLists;
     }
 
@@ -693,5 +692,20 @@ public class DatabaseHelper extends SQLiteOpenHelper implements BaseColumns {
                 new String[]{String.valueOf(raceID)});
         closeDB();
         return retVal;
+    }
+
+    public int getBikeCount(int raceID) {
+        String sqlQuery = "SELECT Sum(" + COLUMN_WHEEL_TOT_FRONT_WHEEL + ") as count FROM " +
+                TABLE_WHEEL_LIST + " WHERE " + COLUMN_WHEEL_RACE_ID + " = " + raceID;
+        SQLiteDatabase db = this.getReadableDatabase();
+        Cursor c = db.rawQuery(sqlQuery, null);
+        int bikeCount = 0;
+        // looping through all rows and adding to list
+        if (c.moveToFirst()) {
+            bikeCount = c.getInt((c.getColumnIndex("count")));
+        }
+        c.close();
+
+        return bikeCount;
     }
 }

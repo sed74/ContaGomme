@@ -94,5 +94,6 @@
     <string name="pref_attach_file">attach_file</string>
     <string name="pref_attach_file_type">file_type_list</string>
     <string name="pref_bike_counter">bike_counter</string>
+    <string name="no_bike_inserted">Nessuna moto inserita per ora...</string>
 
 </resources>

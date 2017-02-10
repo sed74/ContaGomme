@@ -18,6 +18,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ListView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.marchesi.federico.contagomme.DBHelper.DatabaseHelper;
@@ -33,7 +34,6 @@ import java.util.Date;
 
 public class WheelCountPerRaceActivity extends AppCompatActivity {
 
-    private final String TEXT_SEPARATOR = ",";
     private String raceName;
     private int raceID;
     private DatabaseHelper dbHelper;
@@ -41,12 +41,11 @@ public class WheelCountPerRaceActivity extends AppCompatActivity {
     private ListView listView;
     private ArrayList<WheelList> wheelLists;
     private boolean mAutoNext;
-    private boolean mUseHTML;
     private int mBikeCounter;
     private String mEmailRecipient;
     private boolean mAttachFile;
     private int mAttachType;
-
+    private TextView headerTextView;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -60,6 +59,7 @@ public class WheelCountPerRaceActivity extends AppCompatActivity {
 
         final Button nextButton = (Button) findViewById(R.id.button_next);
         nextButton.setVisibility(mAutoNext ? View.GONE : View.VISIBLE);
+        headerTextView = (TextView) findViewById(R.id.moto_inserite);
 
         nextButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -74,7 +74,8 @@ public class WheelCountPerRaceActivity extends AppCompatActivity {
             @Override
             public void run() {
                 setAdapter();
-
+                mBikeCounter = dbHelper.getBikeCount(raceID);
+                updateHeader();
                 wheelCountAdapter.setOnChangeListener(new WheelCountPerRaceCursorAdapter.OnChange() {
                     @Override
                     public void onSelectionChange(boolean frontSelected, boolean rearSelected) {
@@ -86,6 +87,8 @@ public class WheelCountPerRaceActivity extends AppCompatActivity {
                                     @Override
                                     public void run() {
                                         nextBike();
+                                        mBikeCounter++;
+                                        updateHeader();
                                     }
                                 }, 100);
                             }
@@ -164,10 +167,14 @@ public class WheelCountPerRaceActivity extends AppCompatActivity {
         //noinspection SimplifiableIfStatement
         switch (id) {
             case R.id.reset:
+                // back up variables
                 final ArrayList<WheelList> tempList = copyValues(wheelLists);
+                final int bikeCounter = mBikeCounter;
+                mBikeCounter = 0;
                 dbHelper.resetRace(raceID);
                 resetWheelCounter(wheelLists);
                 swapCursor();
+                updateHeader();
                 View view = findViewById(R.id.activity_main);
 
                 Snackbar snackbar = Snackbar
@@ -178,9 +185,10 @@ public class WheelCountPerRaceActivity extends AppCompatActivity {
                             public void onClick(View view) {
 
                                 dbHelper.populateWheelListTableFromRaceId(tempList);
-
                                 wheelLists = wheelCountAdapter.populateArray(getCursor());
+                                mBikeCounter = bikeCounter;
                                 swapCursor();
+                                updateHeader();
                                 Snackbar.make(view, getResources().getString(R.string.done_undo),
                                         Snackbar.LENGTH_SHORT).show();
                             }
@@ -252,7 +260,6 @@ public class WheelCountPerRaceActivity extends AppCompatActivity {
 
         mAutoNext = sp.getBoolean(getResources().getString(R.string.pref_auto_continue), true);
         //mUseHTML = sp.getBoolean(MainActivity.USE_HTML, false);
-        mBikeCounter = sp.getInt(getResources().getString(R.string.pref_bike_counter), 0);
         mEmailRecipient = sp.getString(SettingsActivity.KEY_PREF_EMAIL_RECIPIENT, "");
         mAttachFile = sp.getBoolean(SettingsActivity.KEY_PREF_ATTACH_FILE, false);
         mAttachType = Integer.parseInt(sp.getString(
@@ -316,9 +323,6 @@ public class WheelCountPerRaceActivity extends AppCompatActivity {
 
         emailContent += "Gara di <b>" + raceName + "</b><br><br>";
 
-//        if (!mRaceDescr.isEmpty()) {
-//            emailContent += "\n\n" + mRaceDescr + "<br>";
-//        }
         for (WheelList t : wheelLists) {
             emailContent += "<p>";
             emailContent += "<b>" + t.getBrandName() + "</b><br>";
@@ -326,8 +330,6 @@ public class WheelCountPerRaceActivity extends AppCompatActivity {
             emailContent += "Posteriori: " + t.getTotRearWheel() + "<br>";
             emailContent += "</p>";
         }
-        //emailContent += "</body></meta></html>";
-//        Toast.makeText(this, emailContent, Toast.LENGTH_LONG).show();
         return emailContent;
     }
 
@@ -338,9 +340,6 @@ public class WheelCountPerRaceActivity extends AppCompatActivity {
         emailContent += "Gara di " + raceName;
         emailContent += "\n\n";
 
-//        if (!mRaceDescr.isEmpty()) {
-//            emailContent += "\n\n" + mRaceDescr;
-//        }
         for (WheelList t : wheelLists) {
             emailContent += "\n\n" + t.getBrandName();
             emailContent += "\n" + "Anteriori: " + t.getTotFrontWheel();
@@ -351,11 +350,13 @@ public class WheelCountPerRaceActivity extends AppCompatActivity {
     }
 
     private String getEmailBodyCSV() {
+        String TEXT_SEPARATOR = ",";
 
         String emailContent = "";
 
         emailContent += getResources().getString(R.string.race_name) + raceName;
         emailContent += "\n";
+
         emailContent += getResources().getString(R.string.brand) + TEXT_SEPARATOR;
         emailContent += getResources().getString(R.string.front_tire) + TEXT_SEPARATOR;
         emailContent += getResources().getString(R.string.rear_tire) + TEXT_SEPARATOR;
@@ -367,6 +368,14 @@ public class WheelCountPerRaceActivity extends AppCompatActivity {
         }
 
         return emailContent;
+    }
+
+    private void updateHeader() {
+        if (mBikeCounter > 0) {
+            headerTextView.setText(String.format(getResources().getString(R.string.moto_inserite), String.valueOf(mBikeCounter)));
+        } else {
+            headerTextView.setText(getResources().getString(R.string.no_bike_inserted));
+        }
     }
 
 }
