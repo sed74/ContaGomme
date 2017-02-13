@@ -10,7 +10,6 @@
     <string name="input_race_name">Nome/luogo della gara</string>
     <string name="input_race_notes">Note</string>
     <string name="race_name_title">Nome Gara</string>
-    <string name="use_html">Usa HTML in email</string>
     <string name="auto_go_on">Continua automaticamente</string>
     <string name="subject">Conteggio gomme gara %1$s del %2$s.</string>
     <string name="subject_no_date">Conteggio gomme gara %1$s.</string>
@@ -25,19 +24,7 @@
 
 
     <!-- Example General settings -->
-    <string name="pref_header_general">General</string>
 
-    <string name="pref_title_social_recommendations">Enable social recommendations</string>
-    <string name="pref_description_social_recommendations">Recommendations for people to contact
-        based on your message history
-    </string>
-
-    <string name="pref_title_display_name">Display name</string>
-    <string name="pref_default_display_name">John Smith</string>
-
-    <string name="pref_title_add_friends_to_messages">Add friends to messages</string>
-
-    <string name="pref_title_vibrate">Vibrate</string>
     <string name="settings_menu">Opzioni</string>
     <string name="auto_continue_title">Continua automaticamente</string>
     <string name="auto_continue_summary">Seleziona per continuare automaticamente alla moto successiva quanto entrambe le gomme, anteriore e posteriore, sono selezionate.</string>
@@ -45,7 +32,6 @@
     <string name="attach_file_summary">Allega file con dettaglio gomme all\'email</string>
     <string name="email_recipient">Destinatario email</string>
     <string name="pref_title_file_type">Tipo di file da allegare</string>
-    <string name="explain_why_write_storage">L\'accesso alla scrittura è necessario per poter salvare il file con la lista delle gomme.</string>
     <string name="permision_available_write_storage">Accesso all\'archivio concesso</string>
     <string name="permision_not_available_write_storage">Accesso all\'archivio negato. Non sarà possibile allegare file alle email.\nLa relativa opzione è stata deselezionata automaticamente.</string>
     <string name="race_name">Gara di</string>
@@ -59,15 +45,9 @@
     <string name="dialog_cancel_button">Annulla</string>
     <string name="add_brand_dialog_title">Aggiungi una marca</string>
     <string name="add_brand_dialog_hint">Nome Marca</string>
-    <string name="dialog_new_brand_title">Aggiungi nuova marca</string>
-    <string name="dialog_new_brand_message">Inserisci la nuova marca</string>
-    <string name="dialog_add_button">Aggiungi</string>
     <string name="brand_list_activity_name">Marche</string>
 
-    <string name="navigation_drawer_open">Open navigation drawer</string>
-    <string name="navigation_drawer_close">Close navigation drawer</string>
     <string name="races">Anagrafica Gare</string>
-    <string name="label_order">Ordine</string>
     <string name="order_hint">Ordine di visualizzazione</string>
     <string name="edit_brand_dialog_title">Modifica</string>
     <string name="add_race_dialog_hint">Nome gara</string>
@@ -86,7 +66,6 @@
     <string name="fill_in_wheel_count">Conta!</string>
     <string name="fill_in_wheel_count_desc">Apri la gara corrente per poter effettuare il conteggio delle gomme.</string>
     <string name="open_race_list_label">Anagrafica gare</string>
-    <string name="open_race_list_desc">Aggiungi, modifica e cancella le gare della stagione.</string>
     <string name="open_tire_list_label">Anagrafica pneumatici</string>
     <string name="open_tire_list_desc">Aggiugi, modifica e cancelle le marche dei pneumatici.</string>
     <string name="pref_auto_continue">auto_continue</string>
