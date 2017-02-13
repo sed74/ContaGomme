@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">Conta Gomme</string>
+    <string name="app_name">GoldeTyre counter</string>
     <string name="front_tire">Anteriore</string>
     <string name="rear_tire">Posteriore</string>
     <string name="reset_button">Azzera</string>

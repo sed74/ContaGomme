@@ -13,7 +13,6 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.RelativeLayout;
-import android.widget.Toast;
 
 import com.marchesi.federico.contagomme.DBHelper.DatabaseHelper;
 import com.marchesi.federico.contagomme.wheelcount.WheelCountPerRaceActivity;
@@ -150,13 +149,13 @@ public class EntryActivity extends AppCompatActivity {
 
         String appVersion = sp.getString(APP_VERSION, "0");
 
-        if (!appVersion.equalsIgnoreCase(packageVersion) && !appVersion.isEmpty()) {
+        if (!appVersion.equalsIgnoreCase(packageVersion)) {
             // a new version is running, have to clear the saved data
             SharedPreferences.Editor mEdit1 = sp.edit();
             mEdit1.clear();
             mEdit1.apply();
-            Toast.makeText(this, getResources().getString(R.string.new_version_detected),
-                    Toast.LENGTH_LONG).show();
+//            Toast.makeText(this, getResources().getString(R.string.new_version_detected),
+//                    Toast.LENGTH_LONG).show();
             saveVersion(packageVersion);
         }
 
