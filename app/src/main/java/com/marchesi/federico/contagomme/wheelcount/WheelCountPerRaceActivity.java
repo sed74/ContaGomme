@@ -3,8 +3,6 @@ package com.marchesi.federico.contagomme.wheelcount;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.content.pm.PackageInfo;
-import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
@@ -19,11 +17,9 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.ListView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.marchesi.federico.contagomme.DBHelper.DatabaseHelper;
 import com.marchesi.federico.contagomme.DBModel.WheelList;
-import com.marchesi.federico.contagomme.MainActivity;
 import com.marchesi.federico.contagomme.R;
 import com.marchesi.federico.contagomme.SettingsActivity;
 import com.marchesi.federico.contagomme.Utils.FileClass;
@@ -34,6 +30,8 @@ import java.util.Date;
 
 public class WheelCountPerRaceActivity extends AppCompatActivity {
 
+    public static final String INTENT_NAME_RACE_ID = "race_id";
+    public static final String INTENT_NAME_RACE_NAME = "race_name";
     private String raceName;
     private int raceID;
     private DatabaseHelper dbHelper;
@@ -52,8 +50,8 @@ public class WheelCountPerRaceActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
         listView = (ListView) findViewById(R.id.list);
-        raceID = getIntent().getIntExtra(MainActivity.INTENT_NAME_RACE_ID, 0);
-        raceName = getIntent().getStringExtra(MainActivity.INTENT_NAME_RACE_NAME);
+        raceID = getIntent().getIntExtra(INTENT_NAME_RACE_ID, 0);
+        raceName = getIntent().getStringExtra(INTENT_NAME_RACE_NAME);
 
         loadPrefs(this);
 
@@ -237,29 +235,7 @@ public class WheelCountPerRaceActivity extends AppCompatActivity {
     public void loadPrefs(Context mContext) {
         SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(mContext);
 
-        PackageInfo packageInfo = null;
-        String packageVersion = "";
-        try {
-            packageInfo = getPackageManager().getPackageInfo(getPackageName(), 0);
-            packageVersion = packageInfo.versionName;
-        } catch (PackageManager.NameNotFoundException e) {
-            e.printStackTrace();
-        }
-
-        String appVersion = sp.getString(MainActivity.APP_VERSION, "0");
-
-        if (!appVersion.equalsIgnoreCase(packageVersion)) {
-            // a new version is running, have to clear the saved data
-            SharedPreferences.Editor mEdit1 = sp.edit();
-            mEdit1.clear();
-            mEdit1.apply();
-            Toast.makeText(this, getResources().getString(R.string.new_version_detected),
-                    Toast.LENGTH_LONG).show();
-            return;
-        }
-
         mAutoNext = sp.getBoolean(getResources().getString(R.string.pref_auto_continue), true);
-        //mUseHTML = sp.getBoolean(MainActivity.USE_HTML, false);
         mEmailRecipient = sp.getString(SettingsActivity.KEY_PREF_EMAIL_RECIPIENT, "");
         mAttachFile = sp.getBoolean(SettingsActivity.KEY_PREF_ATTACH_FILE, false);
         mAttachType = Integer.parseInt(sp.getString(

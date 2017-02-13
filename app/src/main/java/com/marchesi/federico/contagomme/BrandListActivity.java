@@ -91,7 +91,7 @@ public class BrandListActivity extends AppCompatActivity {
                 dbHelper.createBrand(brand);
                 Cursor d = dbHelper.getCursor(DatabaseHelper.TABLE_BRANDS, DatabaseHelper.COLUMN_BRAND_ORDER);
                 brandAdapter.swapCursor(d);
-                //Toast.makeText(MainActivity.this, getResources().getString(R.string.data_saved), Toast.LENGTH_SHORT).show();
+
             }
         });
         inputDialog.show();

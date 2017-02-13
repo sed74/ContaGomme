@@ -140,7 +140,6 @@ public class BrandCursorAdapter extends CursorAdapter {
                 Cursor old = swapCursor(c);
                 old.close();
 
-                //Toast.makeText(MainActivity.this, getResources().getString(R.string.data_saved), Toast.LENGTH_SHORT).show();
             }
         });
         inputDialog.show();

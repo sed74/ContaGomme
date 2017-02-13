@@ -158,7 +158,7 @@ public class RaceCursorAdapter extends CursorAdapter {
                 Cursor c = dbHelper.getCursor(DatabaseHelper.TABLE_RACES, DatabaseHelper.COLUMN_RACE_DATETIME);
                 Cursor old = swapCursor(c);
                 old.close();
-                //Toast.makeText(MainActivity.this, getResources().getString(R.string.data_saved), Toast.LENGTH_SHORT).show();
+
             }
 
 
@@ -166,43 +166,6 @@ public class RaceCursorAdapter extends CursorAdapter {
         inputDialog.show();
 
 
-//
-//        InputDialogBrand inputDialog = new InputDialogBrand(context,
-//                R.string.edit_brand_dialog_title, R.string.add_race_dialog_hint);
-//
-//        inputDialog.setInitialInput(race[0].getBrandName());
-////        inputDialog.setInitialOrder(oldOrder);
-//        inputDialog.setInputListener(new InputDialogBrand.InputListener() {
-//            @Override
-//            public InputDialogBrand.ValidationResult isInputValid(String newCoffeeType) {
-//                if (newCoffeeType.isEmpty()) {
-////                    return new InputDialog.ValidationResult(false, R.string.error_empty_name);
-//                }
-//                return new InputDialogBrand.ValidationResult(true, 0);
-//            }
-//
-//            @Override
-//            public void onConfirm(String brandName, int order) {
-//
-//                race[0].setName(brandName);
-////                race[0].setDate(order);
-//                dbHelper.updateRace(race[0]);
-//                Cursor c = dbHelper.getBrandsCursor();
-//                Cursor old = swapCursor(c);
-//                old.close();
-//
-//                //Toast.makeText(MainActivity.this, getResources().getString(R.string.data_saved), Toast.LENGTH_SHORT).show();
-//            }
-//        });
-//        inputDialog.show();
     }
 
-//    @Override
-//    public Cursor swapCursor(Cursor newCursor) {
-//        Cursor oldCursor = super.swapCursor(newCursor);
-//        if (oldCursor != null) {
-//            oldCursor.close();
-//        }
-//        return oldCursor;
-//    }
 }

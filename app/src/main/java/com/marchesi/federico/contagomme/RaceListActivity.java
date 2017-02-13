@@ -109,7 +109,7 @@ public class RaceListActivity extends AppCompatActivity {
                 Cursor d = dbHelper.getCursor(DatabaseHelper.TABLE_RACES,
                         DatabaseHelper.COLUMN_RACE_DATETIME);
                 raceAdapter.swapCursor(d);
-                //Toast.makeText(MainActivity.this, getResources().getString(R.string.data_saved), Toast.LENGTH_SHORT).show();
+
             }
 
 
