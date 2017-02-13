@@ -75,4 +75,7 @@
     <string name="pref_bike_counter">bike_counter</string>
     <string name="no_bike_inserted">Nessuna moto inserita per ora...</string>
 
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+
 </resources>

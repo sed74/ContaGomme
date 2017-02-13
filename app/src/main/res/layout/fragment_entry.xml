@@ -1,0 +1,134 @@
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="com.marchesi.federico.contagomme.EntryFragment">
+
+    <!-- TODO: Update blank fragment layout -->
+    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:tools="http://schemas.android.com/tools"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="?android:attr/selectableItemBackground"
+        android:orientation="vertical"
+        android:paddingBottom="@dimen/activity_vertical_margin"
+        android:paddingRight="@dimen/activity_horizontal_margin"
+        android:paddingTop="@dimen/activity_vertical_margin"
+        tools:context="com.marchesi.federico.contagomme.EntryActivity">
+
+        <RelativeLayout
+            android:id="@+id/open_race"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="?attr/selectableItemBackground"
+            android:clickable="true"
+            android:orientation="horizontal"
+            android:padding="@dimen/tire_button_padding">
+
+
+            <ImageView
+                android:id="@+id/race_icon"
+                android:layout_width="@dimen/entry_icon_width"
+                android:layout_height="@dimen/entry_icon_height"
+                android:paddingRight="@dimen/tire_button_padding"
+                android:src="@drawable/counter_icon" />
+
+            <TextView
+                android:id="@+id/race_main_label"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/entry_title_label_top_margin"
+                android:layout_toRightOf="@id/race_icon"
+                android:text="@string/fill_in_wheel_count"
+                android:textColor="@android:color/black"
+                android:textSize="@dimen/entry_title_font_size"
+                android:textStyle="bold" />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/race_main_label"
+                android:layout_toRightOf="@id/race_icon"
+                android:text="@string/fill_in_wheel_count_desc"
+                android:textColor="@android:color/black"
+                android:textSize="14sp" />
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:id="@+id/open_tire_list"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="?attr/selectableItemBackground"
+            android:clickable="true"
+            android:orientation="horizontal"
+            android:padding="@dimen/tire_button_padding">
+
+            <ImageView
+                android:id="@+id/tire_icon"
+                android:layout_width="@dimen/entry_icon_width"
+                android:layout_height="@dimen/entry_icon_height"
+                android:paddingRight="@dimen/tire_button_padding"
+                android:src="@drawable/wheel" />
+
+            <TextView
+                android:id="@+id/tire_main_label"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/entry_title_label_top_margin"
+                android:layout_toRightOf="@id/tire_icon"
+                android:text="@string/open_tire_list_label"
+                android:textColor="@android:color/black"
+                android:textSize="@dimen/entry_title_font_size"
+                android:textStyle="bold" />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/tire_main_label"
+                android:layout_toRightOf="@id/tire_icon"
+                android:text="@string/open_tire_list_desc"
+                android:textColor="@android:color/black"
+                android:textSize="14sp" />
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:id="@+id/open_race_list"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="?attr/selectableItemBackground"
+            android:clickable="true"
+            android:orientation="horizontal"
+            android:padding="@dimen/tire_button_padding">
+
+            <ImageView
+                android:id="@+id/race_list_icon"
+                android:layout_width="@dimen/entry_icon_width"
+                android:layout_height="@dimen/entry_icon_height"
+                android:paddingRight="@dimen/tire_button_padding"
+                android:src="@drawable/checkered_flag" />
+
+            <TextView
+                android:id="@+id/race_list_main_label"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/entry_title_label_top_margin"
+                android:layout_toRightOf="@id/race_list_icon"
+                android:text="@string/open_race_list_label"
+                android:textColor="@android:color/black"
+                android:textSize="@dimen/entry_title_font_size"
+                android:textStyle="bold" />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/race_list_main_label"
+                android:layout_toRightOf="@id/race_list_icon"
+                android:text="@string/fill_in_wheel_count_desc"
+                android:textColor="@android:color/black"
+                android:textSize="14sp" />
+        </RelativeLayout>
+
+    </LinearLayout>
+
+
+</FrameLayout>
