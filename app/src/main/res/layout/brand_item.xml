@@ -44,21 +44,29 @@
         android:padding="@dimen/listview_padding"
         android:textColor="@android:color/black"
         android:textSize="12sp"
+        android:visibility="gone"
+
         tools:text="1" />
+
+    <ImageView
+        android:id="@+id/up_arrow"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true"
+        android:layout_toLeftOf="@id/brand_order"
+        android:paddingLeft="@dimen/tire_up_down_button_padding"
+        android:paddingRight="@dimen/tire_up_down_button_padding"
+
+        android:src="@drawable/ic_arrow_up_thick_black_24dp" />
+
     <ImageView
         android:id="@+id/down_arrow"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_toLeftOf="@id/delete_button"
-        android:padding="@dimen/tire_button_padding"
-        android:src="@android:drawable/arrow_down_float"
-        android:visibility="gone" />
+        android:layout_centerInParent="true"
+        android:layout_toLeftOf="@id/up_arrow"
+        android:paddingLeft="@dimen/tire_up_down_button_padding"
+        android:paddingRight="@dimen/tire_up_down_button_padding"
+        android:src="@drawable/ic_arrow_down_thick_black_24dp" />
 
-    <ImageView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_toLeftOf="@id/down_arrow"
-        android:padding="@dimen/tire_button_padding"
-        android:src="@android:drawable/arrow_up_float"
-        android:visibility="gone" />
 </RelativeLayout>

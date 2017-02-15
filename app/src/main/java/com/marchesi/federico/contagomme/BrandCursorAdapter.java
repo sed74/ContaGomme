@@ -22,12 +22,21 @@ import com.marchesi.federico.contagomme.Dialog.InputDialogBrand;
 public class BrandCursorAdapter extends CursorAdapter {
     private static final String TAG = BrandCursorAdapter.class.getName();
     private LayoutInflater cursorInflater;
-
+    private int minOrder;
+    private int maxOrder;
 
     public BrandCursorAdapter(Context context, Cursor cursor) {
         super(context, cursor, 0);
         cursorInflater = (LayoutInflater) context.getSystemService(
                 Context.LAYOUT_INFLATER_SERVICE);
+    }
+
+    public void setMinOrder(int order) {
+        minOrder = order;
+    }
+
+    public void setMaxOrder(int order) {
+        maxOrder = order;
     }
 
     // The newView method is used to inflate a new view and return it,
@@ -49,11 +58,52 @@ public class BrandCursorAdapter extends CursorAdapter {
         // Extract properties from cursor
         final String brand = cursor.getString(
                 cursor.getColumnIndex(DatabaseHelper.COLUMN_BRAND_NAME));
-        int id = cursor.getInt(cursor.getColumnIndex(DatabaseHelper._ID));
+        final int id = cursor.getInt(cursor.getColumnIndex(DatabaseHelper._ID));
 
         brandTV.setTag(id);
         // Populate fields with extracted properties
         brandTV.setText(brand);
+
+        // get reference to the MoveUp and Move Down objects
+        ImageView upArrow = (ImageView) view.findViewById(R.id.up_arrow);
+        upArrow.setTag(cursor.getInt(cursor.getColumnIndex(DatabaseHelper.COLUMN_BRAND_ORDER)));
+
+        if (cursor.getPosition() == 0) {
+            upArrow.setVisibility(View.GONE);
+        } else {
+            upArrow.setVisibility(View.VISIBLE);
+        }
+
+        ImageView downArrow = (ImageView) view.findViewById(R.id.down_arrow);
+        downArrow.setTag(cursor.getInt(cursor.getColumnIndex(DatabaseHelper.COLUMN_BRAND_ORDER)));
+
+        if (cursor.getPosition() == cursor.getCount() - 1) {
+            downArrow.setVisibility(View.GONE);
+        } else {
+            downArrow.setVisibility(View.VISIBLE);
+        }
+
+        ImageView.OnClickListener upDownListener = new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                ImageView objClicked = (ImageView) v;
+                int order = (int) objClicked.getTag();
+                DatabaseHelper dbHelper = new DatabaseHelper(context);
+                switch (objClicked.getId()) {
+                    case R.id.up_arrow:
+                        dbHelper.moveBrand(id, (Integer) objClicked.getTag(), true);
+                        break;
+                    case R.id.down_arrow:
+                        dbHelper.moveBrand(id, (Integer) objClicked.getTag(), false);
+                        break;
+                }
+                swapCursor(dbHelper.getCursor(DatabaseHelper.TABLE_BRANDS,
+                        DatabaseHelper.COLUMN_BRAND_ORDER));
+            }
+        };
+
+        upArrow.setOnClickListener(upDownListener);
+        downArrow.setOnClickListener(upDownListener);
 
         brandTV.setOnLongClickListener(new View.OnLongClickListener() {
             @Override
@@ -62,7 +112,7 @@ public class BrandCursorAdapter extends CursorAdapter {
                 return false;
             }
         });
-        //tvPriority.setText(String.valueOf(priority));
+
         ImageView deleteImage = (ImageView) view.findViewById(R.id.delete_button);
 
         TextView orderTV = (TextView) view.findViewById(R.id.brand_order);
@@ -134,7 +184,7 @@ public class BrandCursorAdapter extends CursorAdapter {
 
                 }
                 brand[0].setName(brandName);
-                brand[0].setOrder(order);
+//                brand[0].setOrder(order);
                 dbHelper.updateBrand(brand[0]);
                 Cursor c = dbHelper.getCursor(DatabaseHelper.TABLE_BRANDS, DatabaseHelper.COLUMN_BRAND_ORDER);
                 Cursor old = swapCursor(c);

@@ -8,7 +8,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
-import android.widget.NumberPicker;
 
 import com.marchesi.federico.contagomme.R;
 
@@ -29,26 +28,13 @@ public class InputDialogBrand {
         this.title = title;
         this.editName = (EditText) dialogView.findViewById(R.id.input);
         this.numberPicker = (EditText) dialogView.findViewById(R.id.brand_order);
+        numberPicker.setVisibility(View.GONE);
         editName.setHint(hint);
         this.okBtn = dialogView.findViewById(R.id.btn_ok);
         this.cancelBtn = dialogView.findViewById(R.id.btn_cancel);
 
     }
 
-    public InputDialogBrand(Context context, int title, int hint, String defaultName, String defaultDescr) {
-        this.context = context;
-        this.dialogView = LayoutInflater.from(context).inflate(R.layout.input_dialog, null);
-        this.title = title;
-        this.editName = (EditText) dialogView.findViewById(R.id.input);
-        this.numberPicker = (EditText) dialogView.findViewById(R.id.brand_order);
-        editName.setHint(hint);
-        this.okBtn = dialogView.findViewById(R.id.btn_ok);
-        this.cancelBtn = dialogView.findViewById(R.id.btn_cancel);
-
-        if (!defaultName.isEmpty()) {
-            editName.setText(defaultName);
-        }
-    }
 
     public void setInputListener(final InputListener inputListener) {
         this.inputListener = inputListener;
@@ -92,8 +78,8 @@ public class InputDialogBrand {
             @Override
             public void onClick(View v) {
                 if (inputListener != null)
-                    inputListener.onConfirm(editName.getText().toString(),
-                            Integer.parseInt(numberPicker.getText().toString()));
+                    inputListener.onConfirm(editName.getText().toString(), 0);
+//                Integer.parseInt(numberPicker.getText().toString()));
                 inputMethodManager.hideSoftInputFromWindow(editName.getWindowToken(), 0);
                 dialog.dismiss();
             }
@@ -113,7 +99,6 @@ public class InputDialogBrand {
         ValidationResult isInputValid(String input);
 
         void onConfirm(String input, int order);
-
     }
 
     public static class ValidationResult {

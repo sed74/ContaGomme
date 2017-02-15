@@ -35,6 +35,7 @@ public class BrandListActivity extends AppCompatActivity {
                 dbHelper = new DatabaseHelper(getBaseContext());
                 Cursor c = dbHelper.getCursor(DatabaseHelper.TABLE_BRANDS, DatabaseHelper.COLUMN_BRAND_ORDER);
                 brandAdapter = new BrandCursorAdapter(BrandListActivity.this, c);
+
                 listView.setAdapter(brandAdapter);
             }
 
@@ -86,7 +87,9 @@ public class BrandListActivity extends AppCompatActivity {
 
             @Override
             public void onConfirm(String brandName, int order) {
-                Brand brand = new Brand(brandName, order);
+                order = dbHelper.getMax(DatabaseHelper.TABLE_BRANDS,
+                        DatabaseHelper.COLUMN_BRAND_ORDER, 0);
+                Brand brand = new Brand(brandName, order + 10);
                 Cursor cur = brandAdapter.getCursor();
                 dbHelper.createBrand(brand);
                 Cursor d = dbHelper.getCursor(DatabaseHelper.TABLE_BRANDS, DatabaseHelper.COLUMN_BRAND_ORDER);
