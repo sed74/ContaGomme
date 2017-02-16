@@ -27,7 +27,7 @@ public class FileClass {
 
         try {
 
-            fileName = "fede";
+//            fileName = "fede";
             if (!fileName.endsWith(".")) fileName += ".";
             fileName += extension.toLowerCase();
             // this will create a new name everytime and unique

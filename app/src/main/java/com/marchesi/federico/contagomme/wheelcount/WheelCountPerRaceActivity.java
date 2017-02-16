@@ -42,6 +42,7 @@ public class WheelCountPerRaceActivity extends AppCompatActivity {
     private boolean mAttachFile;
     private int mAttachType;
     private TextView headerTextView;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -208,6 +209,7 @@ public class WheelCountPerRaceActivity extends AppCompatActivity {
         }
         return retValue;
     }
+
     private void resetWheelCounter(ArrayList<WheelList> wheelLists) {
         for (WheelList list : wheelLists) {
             list.setTotFrontWheel(0);
@@ -220,6 +222,7 @@ public class WheelCountPerRaceActivity extends AppCompatActivity {
         return dbHelper.getCursorById(DatabaseHelper.VIEW_RACES_WHEEL_LIST,
                 DatabaseHelper.COLUMN_VIEW_RACE_ID, raceID);
     }
+
     private void swapCursor() {
 
         Cursor c = getCursor();
@@ -295,15 +298,19 @@ public class WheelCountPerRaceActivity extends AppCompatActivity {
 
         String emailContent = "";//"<html><body><br>";
 
-        emailContent += "Gara di <b>" + raceName + "</b><br><br>";
+        emailContent += getResources().getString(R.string.race_name) + " <b>" + raceName + "</b><br><br>";
 
         for (WheelList t : wheelLists) {
             emailContent += "<p>";
             emailContent += "<b>" + t.getBrandName() + "</b><br>";
-            emailContent += "Anteriori: " + t.getTotFrontWheel() + "<br>";
-            emailContent += "Posteriori: " + t.getTotRearWheel() + "<br>";
+            emailContent += getResources().getString(R.string.front_tires) + ":: " + t.getTotFrontWheel() + "<br>";
+            emailContent += getResources().getString(R.string.rear_tires) + ": " + t.getTotRearWheel() + "<br>";
             emailContent += "</p>";
         }
+        emailContent += "<p>";
+        emailContent += "<b>" + getResources().getString(R.string.total_no_of_bikes) + "</b>";
+        emailContent += " " + mBikeCounter;
+        emailContent += "</p>";
         return emailContent;
     }
 
@@ -311,15 +318,16 @@ public class WheelCountPerRaceActivity extends AppCompatActivity {
 
         String emailContent = "";
 
-        emailContent += "Gara di " + raceName;
+        emailContent += getResources().getString(R.string.race_name) + " " + raceName;
         emailContent += "\n\n";
 
         for (WheelList t : wheelLists) {
             emailContent += "\n\n" + t.getBrandName();
-            emailContent += "\n" + "Anteriori: " + t.getTotFrontWheel();
-            emailContent += "\n" + "Posteriori: " + t.getTotRearWheel();
+            emailContent += "\n" + getResources().getString(R.string.front_tires) + ": " + t.getTotFrontWheel();
+            emailContent += "\n" + getResources().getString(R.string.rear_tires) + ": " + t.getTotRearWheel();
         }
-
+        emailContent += "\n\n" + getResources().getString(R.string.total_no_of_bikes) + ": " +
+                mBikeCounter;
         return emailContent;
     }
 
@@ -332,14 +340,16 @@ public class WheelCountPerRaceActivity extends AppCompatActivity {
         emailContent += "\n";
 
         emailContent += getResources().getString(R.string.brand) + TEXT_SEPARATOR;
-        emailContent += getResources().getString(R.string.front_tire) + TEXT_SEPARATOR;
-        emailContent += getResources().getString(R.string.rear_tire) + TEXT_SEPARATOR;
+        emailContent += getResources().getString(R.string.front_tires) + TEXT_SEPARATOR;
+        emailContent += getResources().getString(R.string.rear_tires) + TEXT_SEPARATOR;
 
         for (WheelList t : wheelLists) {
             emailContent += "\n" + t.getBrandName() + TEXT_SEPARATOR;
             emailContent += t.getTotFrontWheel() + TEXT_SEPARATOR;
             emailContent += t.getTotRearWheel() + TEXT_SEPARATOR;
         }
+        emailContent += "\n" + getResources().getString(R.string.total_no_of_bikes) + TEXT_SEPARATOR +
+                mBikeCounter + TEXT_SEPARATOR;
 
         return emailContent;
     }

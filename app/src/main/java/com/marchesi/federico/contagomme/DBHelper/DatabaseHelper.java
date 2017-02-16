@@ -27,6 +27,7 @@ public class DatabaseHelper extends SQLiteOpenHelper implements BaseColumns {
     public static final String TABLE_BRANDS = "brands";
     public static final String TABLE_RACES = "races";
     public static final String TABLE_WHEEL_LIST = "wheel_list";
+    public static final String TABLE_BIKE_DETAILS = "bike_details";
     // BRANDS Table - column names
     public static final String COLUMN_BRAND_NAME = "brand_name";
     public static final String COLUMN_BRAND_ORDER = "brand_order";
@@ -40,14 +41,18 @@ public class DatabaseHelper extends SQLiteOpenHelper implements BaseColumns {
     public static final String COLUMN_WHEEL_BRAND_ID = "wheel_brand_id";
     public static final String COLUMN_WHEEL_TOT_FRONT_WHEEL = "tot_front_wheel";
     public static final String COLUMN_WHEEL_TOT_REAR_WHEEL = "tot_rear_wheel";
-    public static final String IS_FRONT_SELECTED = "is_front_selected";
-    public static final String IS_REAR_SELECTED = "is_rear_selected";
+    // BIKE_DETAIL - column names
+    public static final String COLUMN_BIKE_RACE_ID = "bike_race_id";
+    public static final String COLUMN_BIKE_FRONT_BRAND_ID = "bike_front_brand_id";
+    public static final String COLUMN_BIKE_REAR_BRAND_ID = "bike_rear_brand_id";
+    public static final String COLUMN_BIKE_INSERTED = "bike_inserted";
+
     // RACES_WHEEL_LIST VIEW
     public static final String VIEW_RACES_WHEEL_LIST = "view_races_wheel_list";
     public static final String COLUMN_VIEW_RACE_ID = "race_id";
     public static final String COLUMN_VIEW_BRAND_ID = "brand_id";
     // Database Version
-    private static final int DATABASE_VERSION = 10;
+    private static final int DATABASE_VERSION = 11;
     // Logcat tag
     private static final String TAG = DatabaseHelper.class.getName();
     // Database Name
@@ -70,6 +75,24 @@ public class DatabaseHelper extends SQLiteOpenHelper implements BaseColumns {
 //                    COLUMN_RACE_DATE + " TEXT," +
                     COLUMN_RACE_DATETIME + " INTEGER," +
                     COLUMN_RACE_DESCRIPTION + " TEXT)";
+
+
+    // BIKE_DETAILS table create statement
+    private static final String CREATE_TABLE_BIKE_DETAILS =
+            "CREATE TABLE " + TABLE_BIKE_DETAILS +
+                    "(" + _ID + " INTEGER PRIMARY KEY," +
+                    COLUMN_BIKE_RACE_ID + " INTEGER," +
+                    COLUMN_BIKE_FRONT_BRAND_ID + " INTEGER," +
+                    COLUMN_BIKE_REAR_BRAND_ID + " INTEGER," +
+                    COLUMN_BIKE_INSERTED + " INTEGER," +
+                    " FOREIGN KEY (" + COLUMN_BIKE_RACE_ID + ") REFERENCES " +
+                    TABLE_RACES + "(" + _ID + ") ON DELETE CASCADE, " +
+                    " FOREIGN KEY (" + COLUMN_BIKE_FRONT_BRAND_ID + ") REFERENCES " +
+                    TABLE_BRANDS + "(" + _ID + ") ON DELETE CASCADE, " +
+                    " FOREIGN KEY (" + COLUMN_BIKE_REAR_BRAND_ID + ") REFERENCES " +
+                    TABLE_BRANDS + "(" + _ID + ") ON DELETE CASCADE)";
+
+
     // WHEEL_LIST table create statement
     private static final String CREATE_TABLE_WHEEL_LIST =
             "CREATE TABLE " + TABLE_WHEEL_LIST +
@@ -106,6 +129,7 @@ public class DatabaseHelper extends SQLiteOpenHelper implements BaseColumns {
         mContext = context;
     }
 
+
     @Override
     public void onCreate(SQLiteDatabase db) {
 
@@ -113,6 +137,7 @@ public class DatabaseHelper extends SQLiteOpenHelper implements BaseColumns {
         db.execSQL(CREATE_TABLE_BRANDS);
         db.execSQL(CREATE_TABLE_RACES);
         db.execSQL(CREATE_TABLE_WHEEL_LIST);
+        db.execSQL(CREATE_TABLE_BIKE_DETAILS);
         db.execSQL(CREATE_RACES_WHEEL_LIST_VIEW);
         this.populateBrand(db);
     }
