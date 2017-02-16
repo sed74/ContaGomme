@@ -5,7 +5,7 @@
     <string name="reset_button">Azzera</string>
     <string name="next_button">Prossima moto</string>
     <string name="moto_inserite">Moto inserite: %1$s</string>
-    <string name="send_email" translatable="false">E-mail</string>
+    <string name="send_email">E-mail</string>
     <string name="add_race_name">Inserisci luogo gara</string>
     <string name="input_race_name">Nome/luogo della gara</string>
     <string name="input_race_notes">Note</string>
@@ -57,7 +57,6 @@
     <string name="name">Nome gara</string>
     <string name="date">Data gara</string>
     <string name="note">Note</string>
-    <string name="dialog_ok_button" translatable="false">Ok</string>
     <string name="race_name_mandatory">Il nome della gara è obbligatorio</string>
     <string name="edit_race_dialog_title">Modifica gara</string>
     <string name="race_menu">Gare</string>
@@ -68,11 +67,11 @@
     <string name="open_race_list_label">Anagrafica gare</string>
     <string name="open_tire_list_label">Anagrafica pneumatici</string>
     <string name="open_tire_list_desc">Aggiugi, modifica e cancelle le marche dei pneumatici.</string>
-    <string name="pref_auto_continue" translatable="false">auto_continue</string>
-    <string name="pref_email_recipient" translatable="false">email_recipient</string>
-    <string name="pref_attach_file" translatable="false">attach_file</string>
-    <string name="pref_attach_file_type" translatable="false">file_type_list</string>
-    <string name="pref_bike_counter" translatable="false">bike_counter</string>
+    <string name="pref_auto_continue">auto_continue</string>
+    <string name="pref_email_recipient">email_recipient</string>
+    <string name="pref_attach_file">attach_file</string>
+    <string name="pref_attach_file_type">file_type_list</string>
+    <string name="pref_bike_counter">bike_counter</string>
     <string name="no_bike_inserted">Nessuna moto inserita per ora...</string>
 
     <!-- TODO: Remove or change this placeholder text -->
@@ -80,6 +79,5 @@
     <string name="total_no_of_bikes">Totale moto</string>
     <string name="front_tires">Anteriori</string>
     <string name="rear_tires">Posteriori</string>
-    <string name="input_brand_name">Marca del pneumatico</string>
 
 </resources>
