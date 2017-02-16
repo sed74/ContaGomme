@@ -12,6 +12,7 @@ import android.database.sqlite.SQLiteOpenHelper;
 import android.provider.BaseColumns;
 import android.util.Log;
 
+import com.marchesi.federico.contagomme.DBModel.BikeDetails;
 import com.marchesi.federico.contagomme.DBModel.Brand;
 import com.marchesi.federico.contagomme.DBModel.Race;
 import com.marchesi.federico.contagomme.DBModel.WheelList;
@@ -616,7 +617,6 @@ public class DatabaseHelper extends SQLiteOpenHelper implements BaseColumns {
         closeDB();
         return wheelList;
     }
-
     /**
      * Updating a WHEEL_LIST
      */
@@ -658,6 +658,31 @@ public class DatabaseHelper extends SQLiteOpenHelper implements BaseColumns {
                     new String[]{String.valueOf(raceId)});
         }
         closeDB();
+    }
+
+    /**
+     * @param bikeDetails
+     * @return
+     */
+    public long createBikeDetails(BikeDetails bikeDetails) {
+        SQLiteDatabase db = this.getWritableDatabase();
+
+        ContentValues values = new ContentValues();
+        values.put(COLUMN_BIKE_RACE_ID, bikeDetails.getRaceId());
+        values.put(COLUMN_BIKE_FRONT_BRAND_ID, bikeDetails.getFrontBrandId());
+        values.put(COLUMN_BIKE_REAR_BRAND_ID, bikeDetails.getRearBrandId());
+        values.put(COLUMN_BIKE_INSERTED, bikeDetails.getInserted());
+
+        // insert row
+        return db.insert(TABLE_BIKE_DETAILS, null, values);
+    }
+
+
+    /**
+     * @param wheelList
+     */
+    private void updateBikeDetails(SQLiteDatabase db, WheelList wheelList) {
+        // TODO: 16/02/2017 End method when the Insert Method is done
     }
 
     /**
