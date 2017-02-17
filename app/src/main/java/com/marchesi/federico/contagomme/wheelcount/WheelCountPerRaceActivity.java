@@ -17,9 +17,12 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.marchesi.federico.contagomme.DBHelper.DatabaseHelper;
+import com.marchesi.federico.contagomme.DBModel.BikeDetails;
 import com.marchesi.federico.contagomme.DBModel.WheelList;
+import com.marchesi.federico.contagomme.DateConverter;
 import com.marchesi.federico.contagomme.R;
 import com.marchesi.federico.contagomme.SettingsActivity;
 import com.marchesi.federico.contagomme.Utils.FileClass;
@@ -93,11 +96,24 @@ public class WheelCountPerRaceActivity extends AppCompatActivity {
                         nextButton.setEnabled(frontSelected && rearSelected);
 //                        wheelCountAdapter.notifyDataSetChanged();
                     }
+
+                    @Override
+                    public void onSelectionChange(int frontSelected, int rearSelected) {
+                        insertBikeDetail(frontSelected, rearSelected);
+                    }
                 });
             }
         });
 
         setupActionBar();
+    }
+
+    private void insertBikeDetail(int frontSelected, int rearSelected) {
+        int currentTimeStamp = (int) DateConverter.getCurrentTimeStampUnix();
+        BikeDetails bikeDetail = new BikeDetails(raceID, frontSelected, rearSelected,
+                currentTimeStamp);
+        dbHelper.createBikeDetails(bikeDetail);
+
     }
 
     private void setAdapter() {
@@ -167,6 +183,13 @@ public class WheelCountPerRaceActivity extends AppCompatActivity {
                 // back up variables
                 final ArrayList<WheelList> tempList = copyValues(wheelLists);
                 final int bikeCounter = mBikeCounter;
+
+                final DatabaseHelper dbTemp = new DatabaseHelper(getBaseContext());
+
+                dbTemp.createBackUpFroBikeDetails(raceID);
+                dbTemp.deleteBikeDetailByRace(raceID);
+                Toast.makeText(this, "Record after delete: " + dbHelper.getRowCount(DatabaseHelper.TABLE_BIKE_DETAILS,
+                        DatabaseHelper.COLUMN_BIKE_RACE_ID, raceID), Toast.LENGTH_SHORT).show();
                 mBikeCounter = 0;
                 dbHelper.resetRace(raceID);
                 resetWheelCounter(wheelLists);
@@ -181,6 +204,11 @@ public class WheelCountPerRaceActivity extends AppCompatActivity {
                             @Override
                             public void onClick(View view) {
 
+                                dbTemp.restoreBikeDetailFromTemp(raceID);
+                                Toast.makeText(WheelCountPerRaceActivity.this, "Record after restore: " +
+                                        dbHelper.getRowCount(DatabaseHelper.TABLE_BIKE_DETAILS,
+                                                DatabaseHelper.COLUMN_BIKE_RACE_ID, raceID), Toast.LENGTH_SHORT).show();
+                                dbTemp.close();
                                 dbHelper.populateWheelListTableFromRaceId(tempList);
                                 wheelLists = wheelCountAdapter.populateArray(getCursor());
                                 mBikeCounter = bikeCounter;

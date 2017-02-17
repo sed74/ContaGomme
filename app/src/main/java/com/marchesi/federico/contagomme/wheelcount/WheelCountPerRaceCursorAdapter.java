@@ -33,6 +33,9 @@ public class WheelCountPerRaceCursorAdapter extends CursorAdapter {
     private ArrayList<WheelList> wheelLists = new ArrayList<>();
     private OnChange onChangeListener;
 
+    private int frontBrandSelected;
+    private int rearBrandSelected;
+
 
     public WheelCountPerRaceCursorAdapter(Context context, Cursor cursor) {
         super(context, cursor, 0);
@@ -123,31 +126,34 @@ public class WheelCountPerRaceCursorAdapter extends CursorAdapter {
                 isFrontSelected = currentWheelList.getIsFrontTireSelected();
                 isRearSelected = currentWheelList.getIsRearTireSelected();
 
-                if (v.getId() == R.id.front_tire) {
-                    if (isFrontSelected) {
-                        currentWheelList.setFrontTireSelected(false);
-                        setSelected(((TextView) v), false, true);
-                        FrontSelected = false;
-                    } else {
-                        if (FrontSelected) return;
-                        currentWheelList.setFrontTireSelected(true);
-                        setSelected(((TextView) v), true, true);
-                        FrontSelected = true;
-                    }
-
-                } else if (v.getId() == R.id.rear_tire) {
-                    if (isRearSelected) {
-                        currentWheelList.setRearTireSelected(false);
-                        setSelected(((TextView) v), false, false);
-                        RearSelected = false;
-                    } else {
-                        if (RearSelected) return;
-                        currentWheelList.setRearTireSelected(true);
-                        setSelected(((TextView) v), true, false);
-                        RearSelected = true;
-                    }
-
-                }
+                handleSelection(currentWheelList, v, v.getId() == R.id.front_tire,
+                        (v.getId() == R.id.front_tire ? !isFrontSelected : !isRearSelected));
+//                if (v.getId() == R.id.front_tire) {
+//
+//                    if (isFrontSelected) {
+//                        currentWheelList.setFrontTireSelected(false);
+//                        setSelected(((TextView) v), false, true);
+//                        FrontSelected = false;
+//                    } else {
+//                        if (FrontSelected) return;
+//                        currentWheelList.setFrontTireSelected(true);
+//                        setSelected(((TextView) v), true, true);
+//                        FrontSelected = true;
+//                    }
+//
+//                } else if (v.getId() == R.id.rear_tire) {
+//                    if (isRearSelected) {
+//                        currentWheelList.setRearTireSelected(false);
+//                        setSelected(((TextView) v), false, false);
+//                        RearSelected = false;
+//                    } else {
+//                        if (RearSelected) return;
+//                        currentWheelList.setRearTireSelected(true);
+//                        setSelected(((TextView) v), true, false);
+//                        RearSelected = true;
+//                    }
+//
+//                }
                 onChangeListener.onSelectionChange(FrontSelected, RearSelected);
                 DatabaseHelper dbHelper = new DatabaseHelper(context);
                 dbHelper.updateWheelList(currentWheelList);
@@ -160,8 +166,32 @@ public class WheelCountPerRaceCursorAdapter extends CursorAdapter {
         viewRearWheel.setOnClickListener(mOnClickListener);
     }
 
-    public void setOnChangeListener(OnChange listener) {
-        onChangeListener = listener;
+    /**
+     * Method used to respond to clicks on the list
+     *
+     * @param currentWheelList
+     * @param v
+     * @param isFront
+     * @param isSelected
+     */
+    private void handleSelection(WheelList currentWheelList, View v, boolean isFront,
+                                 boolean isSelected) {
+        currentWheelList.setTireSelected(isFront, isSelected);
+        setSelected(((TextView) v), isSelected, isFront);
+
+        if (isFront) {
+            frontBrandSelected = (isSelected ? currentWheelList.getBrandId() : 0);
+            FrontSelected = isSelected;
+        } else {
+            rearBrandSelected = (isSelected ? currentWheelList.getBrandId() : 0);
+            RearSelected = isSelected;
+        }
+
+        if (frontBrandSelected != 0 && rearBrandSelected != 0) {
+            onChangeListener.onSelectionChange(frontBrandSelected, rearBrandSelected);
+            frontBrandSelected = 0;
+            rearBrandSelected = 0;
+        }
     }
 
     public WheelList getObjectFromId(int wheelListId) {
@@ -191,11 +221,16 @@ public class WheelCountPerRaceCursorAdapter extends CursorAdapter {
             view.setBackground(gd);
 //            view.setBackgroundColor(ContextCompat.getColor(getContext(), R.color.wheel_selected));
         }
+    }
 
+    public void setOnChangeListener(OnChange listener) {
+        onChangeListener = listener;
     }
 
     public interface OnChange {
         void onSelectionChange(boolean frontSelected, boolean rearSelected);
+
+        void onSelectionChange(int frontSelected, int rearSelected);
     }
 
 

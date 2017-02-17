@@ -24,6 +24,11 @@ import java.util.List;
 
 public class DatabaseHelper extends SQLiteOpenHelper implements BaseColumns {
 
+    /*
+        SELECT count(1), Front_ID, rear_id FROM "amos"."aa" where Front_ID = rear_id group by front_id, rear_id
+                union
+        SELECT count(1), Front_ID, rear_id FROM "amos"."aa" where Front_ID <> rear_id group by front_id, rear_id;
+    */
     // Table Names
     public static final String TABLE_BRANDS = "brands";
     public static final String TABLE_RACES = "races";
@@ -47,17 +52,38 @@ public class DatabaseHelper extends SQLiteOpenHelper implements BaseColumns {
     public static final String COLUMN_BIKE_FRONT_BRAND_ID = "bike_front_brand_id";
     public static final String COLUMN_BIKE_REAR_BRAND_ID = "bike_rear_brand_id";
     public static final String COLUMN_BIKE_INSERTED = "bike_inserted";
-
+    // STATISTIC VIEW
+    public static final String VIEW_STATISTIC = "statistics";
+    public static final String CREATE_VIEW_STATISTIC =
+            "CREATE VIEW " + VIEW_STATISTIC + " AS " +
+                    "SELECT count(1), " + COLUMN_BIKE_FRONT_BRAND_ID + ", " + COLUMN_BIKE_REAR_BRAND_ID +
+                    " FROM " + TABLE_BIKE_DETAILS + " WHERE " +
+                    COLUMN_BIKE_FRONT_BRAND_ID + " = " + COLUMN_BIKE_REAR_BRAND_ID +
+                    " GROUP BY " + COLUMN_BIKE_FRONT_BRAND_ID + ", " + COLUMN_BIKE_REAR_BRAND_ID +
+                    " UNION " +
+                    "SELECT count(1), " +
+                    COLUMN_BIKE_FRONT_BRAND_ID + ", " + COLUMN_BIKE_REAR_BRAND_ID +
+                    " FROM " + TABLE_BIKE_DETAILS + " WHERE " +
+                    COLUMN_BIKE_FRONT_BRAND_ID + " <> " + COLUMN_BIKE_REAR_BRAND_ID +
+                    " GROUP BY " + COLUMN_BIKE_FRONT_BRAND_ID + ", " + COLUMN_BIKE_REAR_BRAND_ID;
+    /*
+        SELECT count(1), Front_ID, rear_id FROM aa where Front_ID = rear_id group by front_id, rear_id
+                union
+        SELECT count(1), Front_ID, rear_id FROM aa where Front_ID <> rear_id group by front_id, rear_id;
+    */
     // RACES_WHEEL_LIST VIEW
     public static final String VIEW_RACES_WHEEL_LIST = "view_races_wheel_list";
     public static final String COLUMN_VIEW_RACE_ID = "race_id";
     public static final String COLUMN_VIEW_BRAND_ID = "brand_id";
+    // TEMP Table Name
+    private static final String TEMP_BIKE_DETAIL = "temp_bike_detail";
     // Database Version
-    private static final int DATABASE_VERSION = 11;
+    private static final int DATABASE_VERSION = 12;
     // Logcat tag
     private static final String TAG = DatabaseHelper.class.getName();
     // Database Name
     private static final String DATABASE_NAME = "contaGomme";
+
     // Table Create Statements
     // BRANDS table create statement
     private static final String CREATE_TABLE_BRANDS =
@@ -140,6 +166,8 @@ public class DatabaseHelper extends SQLiteOpenHelper implements BaseColumns {
         db.execSQL(CREATE_TABLE_WHEEL_LIST);
         db.execSQL(CREATE_TABLE_BIKE_DETAILS);
         db.execSQL(CREATE_RACES_WHEEL_LIST_VIEW);
+        db.execSQL(CREATE_VIEW_STATISTIC);
+
         this.populateBrand(db);
     }
 
@@ -150,15 +178,15 @@ public class DatabaseHelper extends SQLiteOpenHelper implements BaseColumns {
         db.execSQL("DROP TABLE IF EXISTS " + TABLE_BRANDS);
         db.execSQL("DROP TABLE IF EXISTS " + TABLE_RACES);
         db.execSQL("DROP TABLE IF EXISTS " + TABLE_WHEEL_LIST);
-        db.execSQL("DROP VIEW IF EXISTS " + VIEW_RACES_WHEEL_LIST);
+        db.execSQL("DROP TABLE IF EXISTS " + TABLE_BIKE_DETAILS);
+        db.execSQL("DROP VIEW  IF EXISTS " + VIEW_RACES_WHEEL_LIST);
+        db.execSQL("DROP VIEW  IF EXISTS " + VIEW_STATISTIC);
 
         // create new tables
         onCreate(db);
     }
 
     private void populateBrand(SQLiteDatabase db) {
-//        String[] Brands = {"GoldenTyre", "Metzeler", "Maxis", "Michelin", "Riga", "Mitas",
-//                "Gibson", "Altro"};
 
         String[] tyreBrands = mContext.getResources().getStringArray(R.array.tire_brands);
         ContentValues values = new ContentValues();
@@ -302,10 +330,10 @@ public class DatabaseHelper extends SQLiteOpenHelper implements BaseColumns {
         return brands;
     }
 
-    /*
+    /**
      * getting all brands
-     * */
-    public List<Brand> getAllBrandss() {
+     */
+    public List<Brand> getAllBrands() {
         List<Brand> brands = new ArrayList<>();
         String selectQuery = "SELECT * FROM " + TABLE_BRANDS;
 
@@ -330,9 +358,9 @@ public class DatabaseHelper extends SQLiteOpenHelper implements BaseColumns {
         return brands;
     }
 
-    /*
-     * getting all brands
-     * */
+    /**
+     * getting all brands by Race
+     */
     public ArrayList<WheelList> getAllWheelListByRaceId(int raceId) {
         ArrayList<WheelList> tires = new ArrayList<>();
 
@@ -377,7 +405,7 @@ public class DatabaseHelper extends SQLiteOpenHelper implements BaseColumns {
                 new String[]{String.valueOf(brands.getId())});
     }
 
-    /*
+    /**
      * Deleting a brand
      */
     public void deleteBrand(long brandId) {
@@ -426,11 +454,12 @@ public class DatabaseHelper extends SQLiteOpenHelper implements BaseColumns {
         race.setDesc((c.getString(c.getColumnIndex(COLUMN_RACE_DESCRIPTION))));
         race.setDateTime((c.getInt(c.getColumnIndex(COLUMN_RACE_DATETIME))));
 
-        closeDB();
+        c.close();
+        db.close();
         return race;
     }
 
-    /*
+    /**
      * Deleting a race
      */
     public void deleteRace(long raceId) {
@@ -471,6 +500,10 @@ public class DatabaseHelper extends SQLiteOpenHelper implements BaseColumns {
         return tags;
     }
 
+    /**
+     * @param getIds
+     * @return
+     */
     public Object[] getRacesArray(boolean getIds) {
         Object[] retVal;
         int rowCount = this.getRowCount(TABLE_RACES);
@@ -507,7 +540,8 @@ public class DatabaseHelper extends SQLiteOpenHelper implements BaseColumns {
                 i++;
             } while (c.moveToNext());
         }
-        closeDB();
+        c.close();
+        db.close();
         return retVal;
     }
 
@@ -617,6 +651,7 @@ public class DatabaseHelper extends SQLiteOpenHelper implements BaseColumns {
         closeDB();
         return wheelList;
     }
+
     /**
      * Updating a WHEEL_LIST
      */
@@ -677,6 +712,98 @@ public class DatabaseHelper extends SQLiteOpenHelper implements BaseColumns {
         return db.insert(TABLE_BIKE_DETAILS, null, values);
     }
 
+    /**
+     * Deleting a Bike Detail
+     */
+    public void deleteBikeDetailByRace(long raceId) {
+        SQLiteDatabase db = this.getWritableDatabase();
+        db.delete(TABLE_BIKE_DETAILS, COLUMN_BIKE_RACE_ID + " = ?",
+                new String[]{String.valueOf(raceId)});
+
+    }
+
+    public void createBackUpFroBikeDetails(int raceId) {
+        String sqlSelect;
+        SQLiteDatabase db = this.getWritableDatabase();
+
+        sqlSelect = "DROP TABLE IF EXISTS " + TEMP_BIKE_DETAIL;
+//
+        db.execSQL(sqlSelect);
+
+        sqlSelect = "CREATE TEMP TABLE IF NOT EXISTS " + TEMP_BIKE_DETAIL;
+        sqlSelect += " AS SELECT ";
+        sqlSelect += _ID + ",";
+        sqlSelect += COLUMN_BIKE_RACE_ID + ",";
+        sqlSelect += COLUMN_BIKE_FRONT_BRAND_ID + ",";
+        sqlSelect += COLUMN_BIKE_REAR_BRAND_ID + ",";
+        sqlSelect += COLUMN_BIKE_INSERTED + " ";
+        sqlSelect += " FROM " + TABLE_BIKE_DETAILS;
+        sqlSelect += " WHERE " + COLUMN_BIKE_RACE_ID + " = " + raceId;
+
+        db.execSQL(sqlSelect);
+    }
+
+    public void restoreBikeDetailFromTemp(int raceId) {
+        String sqlSelect;
+
+        sqlSelect = "INSERT INTO " + TABLE_BIKE_DETAILS;
+        sqlSelect += "(";
+        sqlSelect += _ID + ",";
+        sqlSelect += COLUMN_BIKE_RACE_ID + ",";
+        sqlSelect += COLUMN_BIKE_FRONT_BRAND_ID + ",";
+        sqlSelect += COLUMN_BIKE_REAR_BRAND_ID + ",";
+        sqlSelect += COLUMN_BIKE_INSERTED + ") ";
+        sqlSelect += " SELECT ";
+        sqlSelect += _ID + ",";
+        sqlSelect += COLUMN_BIKE_RACE_ID + ",";
+        sqlSelect += COLUMN_BIKE_FRONT_BRAND_ID + ",";
+        sqlSelect += COLUMN_BIKE_REAR_BRAND_ID + ",";
+        sqlSelect += COLUMN_BIKE_INSERTED + " ";
+        sqlSelect += " FROM " + TEMP_BIKE_DETAIL;
+        sqlSelect += " WHERE " + COLUMN_BIKE_RACE_ID + " = " + raceId;
+
+        SQLiteDatabase db = this.getWritableDatabase();
+
+        db.execSQL(sqlSelect);
+
+    }
+
+    public ArrayList<BikeDetails> getAllBikeDetail() {
+        return getAllBikeDetail(null);
+    }
+
+    /**
+     * getting all brands
+     */
+    public ArrayList<BikeDetails> getAllBikeDetail(String whereClause) {
+        ArrayList<BikeDetails> bikeDetails = new ArrayList<>();
+        String selectQuery = "SELECT * FROM " + TABLE_BIKE_DETAILS;
+        if (!whereClause.isEmpty() || whereClause == null) {
+            selectQuery += " " + whereClause;
+        }
+
+        Log.e(TAG, selectQuery);
+
+        SQLiteDatabase db = this.getReadableDatabase();
+        Cursor c = db.rawQuery(selectQuery, null);
+
+        // looping through all rows and adding to list
+        if (c.moveToFirst()) {
+            do {
+                BikeDetails bikeDetail = new BikeDetails();
+                bikeDetail.setId(c.getInt((c.getColumnIndex(_ID))));
+                bikeDetail.setRaceId((c.getInt(c.getColumnIndex(COLUMN_BIKE_RACE_ID))));
+                bikeDetail.setFrontBrandId((c.getInt(c.getColumnIndex(COLUMN_BIKE_FRONT_BRAND_ID))));
+                bikeDetail.setRearBrandId((c.getInt(c.getColumnIndex(COLUMN_BIKE_REAR_BRAND_ID))));
+                bikeDetail.setInserted((c.getInt(c.getColumnIndex(COLUMN_BIKE_INSERTED))));
+
+                bikeDetails.add(bikeDetail);
+            } while (c.moveToNext());
+        }
+
+        closeDB();
+        return bikeDetails;
+    }
 
     /**
      * @param wheelList
@@ -703,7 +830,8 @@ public class DatabaseHelper extends SQLiteOpenHelper implements BaseColumns {
             rowCount = c.getInt((c.getColumnIndex("count")));
         }
 
-        closeDB();
+        c.close();
+        db.close();
         return rowCount;
     }
 

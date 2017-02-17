@@ -113,6 +113,24 @@ public class WheelList implements Cloneable {
         return mRearTireSelected;
     }
 
+    public void setTireSelected(boolean isFront, boolean isSelected) {
+        if (isFront) {
+            this.mFrontTireSelected = isSelected;
+            if (mFrontTireSelected) {
+                incrementFront();
+            } else {
+                decrementFront();
+            }
+        } else {
+            this.mRearTireSelected = isSelected;
+            if (mRearTireSelected) {
+                incrementRear();
+            } else {
+                decrementRear();
+            }
+        }
+
+    }
     public void setFrontTireSelected(boolean frontTireSelected) {
         this.mFrontTireSelected = frontTireSelected;
         if (mFrontTireSelected) {

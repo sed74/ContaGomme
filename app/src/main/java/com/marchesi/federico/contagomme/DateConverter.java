@@ -30,6 +30,15 @@ public class DateConverter {
 
     }
 
+    public static long getCurrentTimeStampUnix() {
+        return System.currentTimeMillis() / 1000;
+    }
+
+    public static String getCurrentTimeStampDate() {
+        return fromUnixToDate(System.currentTimeMillis() / 1000, FORMAT_DATE_TIME);
+    }
+
+
     public static String fromUnixToDate(long unixDate) {
         return fromUnixToDate(unixDate, FORMAT_DATE);
     }
