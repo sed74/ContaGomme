@@ -5,14 +5,13 @@
     <string name="reset_button">Azzera</string>
     <string name="next_button">Prossima moto</string>
     <string name="moto_inserite">Moto inserite: %1$s</string>
-    <string name="send_email">E-mail</string>
     <string name="add_race_name">Inserisci luogo gara</string>
     <string name="input_race_name">Nome/luogo della gara</string>
     <string name="input_race_notes">Note</string>
     <string name="race_name_title">Nome Gara</string>
     <string name="auto_go_on">Continua automaticamente</string>
     <string name="subject">Conteggio gomme gara %1$s del %2$s.</string>
-    <string name="subject_no_date">Conteggio gomme gara %1$s.</string>
+    <string name="subject_no_date">Conteggio gomme gara %1$s</string>
     <string name="data_saved">Salvataggio effettuato</string>
     <string name="race_reset">Azzeramento effettuato con successo.</string>
     <string name="reset_undo">Annulla</string>
@@ -29,7 +28,7 @@
     <string name="auto_continue_title">Continua automaticamente</string>
     <string name="auto_continue_summary">Seleziona per continuare automaticamente alla moto successiva quanto entrambe le gomme, anteriore e posteriore, sono selezionate.</string>
     <string name="attach_file_title">Allega file</string>
-    <string name="attach_file_summary">Allega file con dettaglio gomme all\'email</string>
+    <string name="attach_file_summary">Allega all\'e-mail il file con il dettaglio delle gomme usate.</string>
     <string name="email_recipient">Destinatario email</string>
     <string name="pref_title_file_type">Tipo di file da allegare</string>
     <string name="permision_available_write_storage">Accesso all\'archivio concesso</string>
@@ -67,11 +66,7 @@
     <string name="open_race_list_label">Anagrafica gare</string>
     <string name="open_tire_list_label">Anagrafica pneumatici</string>
     <string name="open_tire_list_desc">Aggiugi, modifica e cancelle le marche dei pneumatici.</string>
-    <string name="pref_auto_continue">auto_continue</string>
-    <string name="pref_email_recipient">email_recipient</string>
     <string name="pref_attach_file">attach_file</string>
-    <string name="pref_attach_file_type">file_type_list</string>
-    <string name="pref_bike_counter">bike_counter</string>
     <string name="no_bike_inserted">Nessuna moto inserita per ora...</string>
 
     <!-- TODO: Remove or change this placeholder text -->
@@ -79,5 +74,8 @@
     <string name="total_no_of_bikes">Totale moto</string>
     <string name="front_tires">Anteriori</string>
     <string name="rear_tires">Posteriori</string>
+    <string name="attach_file_stats_summary">Allega all\'e-mail il file con le statistiche per moto.</string>
+    <string name="attach_file">Allega file</string>
+    <string name="pref_attach_title">Gestione allegati</string>
 
 </resources>

@@ -86,8 +86,6 @@ public class WheelCountPerRaceCursorAdapter extends CursorAdapter {
     public void bindView(final View view, final Context context, final Cursor cursor) {
 
         // Find fields to populate in inflated template
-        TextView raceTV = (TextView) view.findViewById(R.id.race_name);
-        //TextView tvPriority = (TextView) view.findViewById(R.id.tvPriority);
         // Extract properties from cursor
         final String race = cursor.getString(
                 cursor.getColumnIndex(DatabaseHelper.COLUMN_BRAND_NAME));
@@ -176,6 +174,12 @@ public class WheelCountPerRaceCursorAdapter extends CursorAdapter {
      */
     private void handleSelection(WheelList currentWheelList, View v, boolean isFront,
                                  boolean isSelected) {
+
+        // If we're selecting a front wheel when another front wheel is selected, we skip.
+        // If we're selecting a rear wheel when another rear wheel is selected, we skip.
+        if ((isFront && isSelected && FrontSelected) ||
+                (!isFront && isSelected && RearSelected)) return;
+
         currentWheelList.setTireSelected(isFront, isSelected);
         setSelected(((TextView) v), isSelected, isFront);
 

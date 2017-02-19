@@ -33,6 +33,7 @@ public class WheelCountPerRaceActivity extends AppCompatActivity {
 
     public static final String INTENT_NAME_RACE_ID = "race_id";
     public static final String INTENT_NAME_RACE_NAME = "race_name";
+    private static final String TEXT_SEPARATOR = ",";
     private String raceName;
     private int raceID;
     private DatabaseHelper dbHelper;
@@ -43,8 +44,11 @@ public class WheelCountPerRaceActivity extends AppCompatActivity {
     private int mBikeCounter;
     private String mEmailRecipient;
     private boolean mAttachFile;
+    private boolean mAttachFileStats;
     private int mAttachType;
     private TextView headerTextView;
+    private int ATTACH_FILE = 1;
+    private int ATTACH_STATS = 2;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -222,10 +226,32 @@ public class WheelCountPerRaceActivity extends AppCompatActivity {
                 snackbar.show();
                 break;
             case R.id.send_email:
+//                Toast.makeText(this, getStatistics(), Toast.LENGTH_LONG).show();
                 sendEmail();
                 break;
         }
         return super.onOptionsItemSelected(item);
+    }
+
+    private String getStatistics() {
+        String ls_stats;
+        Cursor stats = dbHelper.getCursor(DatabaseHelper.VIEW_STATISTIC, null);
+        ls_stats = getResources().getString(R.string.race_name) + " " + raceName;
+        ls_stats += "\n\n";
+        ls_stats += getResources().getString(R.string.no_of_bike) + TEXT_SEPARATOR;
+        ls_stats += getResources().getString(R.string.front_tire) + TEXT_SEPARATOR;
+        ls_stats += getResources().getString(R.string.rear_tire) + TEXT_SEPARATOR;
+
+        if (stats.moveToFirst()) {
+            do {
+                ls_stats += "\n" + stats.getString(0) + TEXT_SEPARATOR;
+                ls_stats += stats.getString(1) + TEXT_SEPARATOR;
+                ls_stats += stats.getString(2) + TEXT_SEPARATOR;
+            } while (stats.moveToNext());
+        }
+
+        stats.close();
+        return ls_stats;
     }
 
     private ArrayList<WheelList> copyValues(ArrayList<WheelList> arrayOrigin) {
@@ -267,15 +293,16 @@ public class WheelCountPerRaceActivity extends AppCompatActivity {
         mAutoNext = sp.getBoolean(getResources().getString(R.string.pref_auto_continue), true);
         mEmailRecipient = sp.getString(SettingsActivity.KEY_PREF_EMAIL_RECIPIENT, "");
         mAttachFile = sp.getBoolean(SettingsActivity.KEY_PREF_ATTACH_FILE, false);
+        mAttachFileStats = sp.getBoolean(SettingsActivity.KEY_PREF_ATTACH_FILE_STATS, false);
         mAttachType = Integer.parseInt(sp.getString(
                 SettingsActivity.KEY_PREF_ATTACHMENT_TYPE, "1"));
     }
 
     public void sendEmail() {
 
-        Intent intent = new Intent(Intent.ACTION_SENDTO);
+        Intent intent = new Intent(Intent.ACTION_SEND_MULTIPLE);
         intent.setType("text/html");
-        intent.setData(Uri.parse("mailto:")); // only email apps should handle this
+//        intent.setData(Uri.parse("mailto:")); // only email apps should handle this
 
         String emailContent = getEmailBody();
 
@@ -283,6 +310,7 @@ public class WheelCountPerRaceActivity extends AppCompatActivity {
         String subject = String.format(getResources().getString(R.string.subject_no_date),
                 raceName.replaceAll("\\(", " ").replaceAll("\\)", " "));
         intent.putExtra(Intent.EXTRA_SUBJECT, subject);
+        intent.putExtra(Intent.EXTRA_TEXT, emailContent);
 
         if (!mEmailRecipient.isEmpty()) {
 
@@ -290,37 +318,56 @@ public class WheelCountPerRaceActivity extends AppCompatActivity {
             intent.putExtra(Intent.EXTRA_EMAIL, to);
         }
 
-        if (mAttachFile) {
-            String emailAttach = "";
-            FileClass.checkForArchiveAccess(this);
+        if (mAttachFile || mAttachFileStats) {
 
-            switch (mAttachType) {
-                case 0: // TXT
-                    emailAttach = emailContent;
-                    break;
-                case 1: // CSV
-                    emailAttach = getEmailBodyCSV();
-                    break;
-                case 2: // HTML
-                    emailAttach = getEmailBodyHTML();
-                    break;
-            }
+            String emailAttach = "";
+            String emailStats;
+            FileClass.checkForArchiveAccess(this);
+            ArrayList<Uri> uris = new ArrayList<>();
+            String createFileName = subject.replaceAll("\t", "_").replaceAll("\\(", "")
+                    .replaceAll("\\)", "").replaceAll(" ", "").replaceAll("/", "_");
 
             String[] mTestArray = getResources().getStringArray(R.array.pref_file_type);
-            String createFileName = subject.replaceAll("\t", "_").replaceAll("\\(", "")
-                    .replaceAll("\\)", "").replaceAll(" ", "_").replaceAll("/", "_");
 
-            String fileName = FileClass.createFile(createFileName, emailAttach, mTestArray[mAttachType]);
-            if (fileName.isEmpty()) return;
-            intent.putExtra(Intent.EXTRA_STREAM, Uri.parse("file://" + fileName));
+            if (mAttachFile) {
+                switch (mAttachType) {
+                    case 0: // TXT
+                        emailAttach = emailContent;
+                        break;
+                    case 1: // CSV
+                        emailAttach = getEmailBodyCSV();
+                        break;
+                    case 2: // HTML
+                        emailAttach = getEmailBodyHTML();
+                        break;
+                }
+
+                String fileName = FileClass.createFile(createFileName, emailAttach,
+                        mTestArray[mAttachType]);
+                if (!fileName.isEmpty()) {
+                    uris.add(Uri.parse("file://" + fileName));
+                }
+            }
+            if (mAttachFileStats) {
+                emailStats = getStatistics();
+                createFileName += "_stats";
+                String fileStats = FileClass.createFile(createFileName, emailStats, "csv");
+                if (!fileStats.isEmpty()) {
+                    uris.add(Uri.parse("file://" + fileStats));
+                }
+
+            }
+            intent.putParcelableArrayListExtra(Intent.EXTRA_STREAM, uris);
         }
 
-//        Toast.makeText(this, subject, Toast.LENGTH_SHORT).show();
-        intent.putExtra(Intent.EXTRA_TEXT, emailContent);
-        if (intent.resolveActivity(getPackageManager()) != null) {
+        try {
             startActivity(intent);
+        } catch (android.content.ActivityNotFoundException ex) {
+            Toast.makeText(this, "NO APP TO HANDLE THIS", Toast.LENGTH_LONG).show();
         }
+
     }
+
 
     private String getEmailBodyHTML() {
 

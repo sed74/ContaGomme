@@ -35,6 +35,7 @@ import android.view.MenuItem;
 public class SettingsActivity extends AppCompatPreferenceActivity {
     public static final String KEY_PREF_AUTO_CONTINUE = "auto_continue";
     public static final String KEY_PREF_ATTACH_FILE = "attach_file";
+    public static final String KEY_PREF_ATTACH_FILE_STATS = "attach_file_stats";
     public static final String KEY_PREF_EMAIL_RECIPIENT = "email_recipient";
     public static final String KEY_PREF_ATTACHMENT_TYPE = "file_type_list";
 

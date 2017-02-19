@@ -56,16 +56,31 @@ public class DatabaseHelper extends SQLiteOpenHelper implements BaseColumns {
     public static final String VIEW_STATISTIC = "statistics";
     public static final String CREATE_VIEW_STATISTIC =
             "CREATE VIEW " + VIEW_STATISTIC + " AS " +
-                    "SELECT count(1), " + COLUMN_BIKE_FRONT_BRAND_ID + ", " + COLUMN_BIKE_REAR_BRAND_ID +
-                    " FROM " + TABLE_BIKE_DETAILS + " WHERE " +
+                    "SELECT count(1) as counter, " +
+                    "front_brand." + COLUMN_BRAND_NAME + " as front, " +
+                    "rear_brand." + COLUMN_BRAND_NAME + " as rear " +
+                    " FROM " + TABLE_BIKE_DETAILS + ", " + TABLE_BRANDS + " front_brand, " +
+                    TABLE_BRANDS + " rear_brand " +
+                    " WHERE " +
+                    "front_brand." + _ID + " = " + TABLE_BIKE_DETAILS + "." + COLUMN_BIKE_FRONT_BRAND_ID +
+                    " AND " +
+                    "rear_brand." + _ID + " = " + TABLE_BIKE_DETAILS + "." + COLUMN_BIKE_REAR_BRAND_ID +
+                    " AND " +
                     COLUMN_BIKE_FRONT_BRAND_ID + " = " + COLUMN_BIKE_REAR_BRAND_ID +
-                    " GROUP BY " + COLUMN_BIKE_FRONT_BRAND_ID + ", " + COLUMN_BIKE_REAR_BRAND_ID +
+                    " GROUP BY " + "front_brand." + COLUMN_BRAND_NAME + ", rear_brand." + COLUMN_BRAND_NAME +
                     " UNION " +
                     "SELECT count(1), " +
-                    COLUMN_BIKE_FRONT_BRAND_ID + ", " + COLUMN_BIKE_REAR_BRAND_ID +
-                    " FROM " + TABLE_BIKE_DETAILS + " WHERE " +
+                    "front_brand." + COLUMN_BRAND_NAME + " as front, " +
+                    "rear_brand." + COLUMN_BRAND_NAME + " as rear " +
+                    " FROM " + TABLE_BIKE_DETAILS + ", " + TABLE_BRANDS + " front_brand, " +
+                    TABLE_BRANDS + " rear_brand " +
+                    " WHERE " +
+                    "front_brand." + _ID + " = " + TABLE_BIKE_DETAILS + "." + COLUMN_BIKE_FRONT_BRAND_ID +
+                    " AND " +
+                    "rear_brand." + _ID + " = " + TABLE_BIKE_DETAILS + "." + COLUMN_BIKE_REAR_BRAND_ID +
+                    " AND " +
                     COLUMN_BIKE_FRONT_BRAND_ID + " <> " + COLUMN_BIKE_REAR_BRAND_ID +
-                    " GROUP BY " + COLUMN_BIKE_FRONT_BRAND_ID + ", " + COLUMN_BIKE_REAR_BRAND_ID;
+                    " GROUP BY " + "front_brand." + COLUMN_BRAND_NAME + ", rear_brand." + COLUMN_BRAND_NAME;
     /*
         SELECT count(1), Front_ID, rear_id FROM aa where Front_ID = rear_id group by front_id, rear_id
                 union
@@ -78,7 +93,7 @@ public class DatabaseHelper extends SQLiteOpenHelper implements BaseColumns {
     // TEMP Table Name
     private static final String TEMP_BIKE_DETAIL = "temp_bike_detail";
     // Database Version
-    private static final int DATABASE_VERSION = 12;
+    private static final int DATABASE_VERSION = 13;
     // Logcat tag
     private static final String TAG = DatabaseHelper.class.getName();
     // Database Name
