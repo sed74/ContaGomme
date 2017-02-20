@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">GoldeTyre counter</string>
+    <string name="app_name" translatable="false">GoldeTyre Counter</string>
     <string name="front_tire">Anteriore</string>
     <string name="rear_tire">Posteriore</string>
     <string name="reset_button">Azzera</string>
@@ -66,8 +66,9 @@
     <string name="fill_in_wheel_count">Conta!</string>
     <string name="fill_in_wheel_count_desc">Apri la gara corrente per poter effettuare il conteggio delle gomme.</string>
     <string name="open_race_list_label">Anagrafica gare</string>
+    <string name="open_race_list_desc">Aggiungi, modifica e cancella la lista delle gare.</string>
     <string name="open_tire_list_label">Anagrafica pneumatici</string>
-    <string name="open_tire_list_desc">Aggiugi, modifica e cancelle le marche dei pneumatici.</string>
+    <string name="open_tire_list_desc">Aggiungi, modifica e cancelle le marche dei pneumatici.</string>
     <string name="pref_auto_continue" translatable="false">auto_continue</string>
     <string name="pref_email_recipient" translatable="false">email_recipient</string>
     <string name="pref_attach_file" translatable="false">attach_file</string>
@@ -75,7 +76,7 @@
     <string name="pref_bike_counter" translatable="false">bike_counter</string>
     <string name="no_bike_inserted">Nessuna moto inserita per ora...</string>
 
-    <!-- TODO: Remove or change this placeholder text -->
+
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="total_no_of_bikes">Totale moto</string>
     <string name="front_tires">Anteriori</string>
@@ -85,8 +86,8 @@
     <string name="pref_attach_file_stats" translatable="false">attach_stats_file</string>
     <string name="attach_file_stats_title">Allega file statistiche</string>
     <string name="attach_file_stats_summary">Allega all\'e-mail il file con le statistiche per moto.</string>
-    <string name="pref_attach">attach</string>
+    <string name="pref_attach" translatable="false">attach</string>
     <string name="attach_file">Allega file</string>
-    <string name="pref_attach_title">Gestione allegati</string>
+    <string name="pref_attach_title" translatable="false">Gestione allegati</string>
 
 </resources>

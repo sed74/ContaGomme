@@ -1,5 +1,4 @@
 <resources>
-    <string name="app_name">GoldeTyre counter</string>
     <string name="front_tire">Anteriore</string>
     <string name="rear_tire">Posteriore</string>
     <string name="reset_button">Azzera</string>
@@ -77,5 +76,9 @@
     <string name="attach_file_stats_summary">Allega all\'e-mail il file con le statistiche per moto.</string>
     <string name="attach_file">Allega file</string>
     <string name="pref_attach_title">Gestione allegati</string>
+    <string name="attach_file_stats_title">Allega file statistiche</string>
+    <string name="input_brand_name">Marca del pneumatico</string>
+    <string name="no_of_bike">Numero di moto</string>
+    <string name="open_race_list_desc">Aggiungi, modifica e cancella la lista delle gare.</string>
 
 </resources>

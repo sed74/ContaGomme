@@ -117,7 +117,7 @@
             android:layout_height="wrap_content"
             android:layout_below="@id/race_list_main_label"
             android:layout_toRightOf="@id/race_list_icon"
-            android:text="@string/fill_in_wheel_count_desc"
+            android:text="@string/open_race_list_desc"
             android:textColor="@android:color/black"
             android:textSize="14sp" />
     </RelativeLayout>

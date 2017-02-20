@@ -233,26 +233,6 @@ public class WheelCountPerRaceActivity extends AppCompatActivity {
         return super.onOptionsItemSelected(item);
     }
 
-    private String getStatistics() {
-        String ls_stats;
-        Cursor stats = dbHelper.getCursor(DatabaseHelper.VIEW_STATISTIC, null);
-        ls_stats = getResources().getString(R.string.race_name) + " " + raceName;
-        ls_stats += "\n\n";
-        ls_stats += getResources().getString(R.string.no_of_bike) + TEXT_SEPARATOR;
-        ls_stats += getResources().getString(R.string.front_tire) + TEXT_SEPARATOR;
-        ls_stats += getResources().getString(R.string.rear_tire) + TEXT_SEPARATOR;
-
-        if (stats.moveToFirst()) {
-            do {
-                ls_stats += "\n" + stats.getString(0) + TEXT_SEPARATOR;
-                ls_stats += stats.getString(1) + TEXT_SEPARATOR;
-                ls_stats += stats.getString(2) + TEXT_SEPARATOR;
-            } while (stats.moveToNext());
-        }
-
-        stats.close();
-        return ls_stats;
-    }
 
     private ArrayList<WheelList> copyValues(ArrayList<WheelList> arrayOrigin) {
         ArrayList<WheelList> retValue = new ArrayList<>();
@@ -280,10 +260,7 @@ public class WheelCountPerRaceActivity extends AppCompatActivity {
     private void swapCursor() {
 
         Cursor c = getCursor();
-
-//        Cursor old =
         wheelCountAdapter.swapCursor(c);
-//    old.close();
 
     }
 
@@ -292,8 +269,8 @@ public class WheelCountPerRaceActivity extends AppCompatActivity {
 
         mAutoNext = sp.getBoolean(getResources().getString(R.string.pref_auto_continue), true);
         mEmailRecipient = sp.getString(SettingsActivity.KEY_PREF_EMAIL_RECIPIENT, "");
-        mAttachFile = sp.getBoolean(SettingsActivity.KEY_PREF_ATTACH_FILE, false);
-        mAttachFileStats = sp.getBoolean(SettingsActivity.KEY_PREF_ATTACH_FILE_STATS, false);
+        mAttachFile = sp.getBoolean(SettingsActivity.KEY_PREF_ATTACH_FILE, true);
+        mAttachFileStats = sp.getBoolean(SettingsActivity.KEY_PREF_ATTACH_FILE_STATS, true);
         mAttachType = Integer.parseInt(sp.getString(
                 SettingsActivity.KEY_PREF_ATTACHMENT_TYPE, "1"));
     }
@@ -407,7 +384,6 @@ public class WheelCountPerRaceActivity extends AppCompatActivity {
     }
 
     private String getEmailBodyCSV() {
-        String TEXT_SEPARATOR = ",";
 
         String emailContent = "";
 
@@ -427,6 +403,30 @@ public class WheelCountPerRaceActivity extends AppCompatActivity {
                 mBikeCounter + TEXT_SEPARATOR;
 
         return emailContent;
+    }
+
+    private String getStatistics() {
+        String ls_stats;
+        Cursor stats = dbHelper.getCursor(DatabaseHelper.VIEW_STATISTIC, null);
+        ls_stats = getResources().getString(R.string.race_name) + " " + raceName;
+        ls_stats += "\n\n";
+        ls_stats += getResources().getString(R.string.no_of_bike) + TEXT_SEPARATOR;
+        ls_stats += getResources().getString(R.string.front_tire) + TEXT_SEPARATOR;
+        ls_stats += getResources().getString(R.string.rear_tire) + TEXT_SEPARATOR;
+
+        if (stats.moveToFirst()) {
+            do {
+                ls_stats += "\n" + stats.getString(0) + TEXT_SEPARATOR;
+                ls_stats += stats.getString(1) + TEXT_SEPARATOR;
+                ls_stats += stats.getString(2) + TEXT_SEPARATOR;
+            } while (stats.moveToNext());
+        }
+        ls_stats += "\n\n";
+        ls_stats += getResources().getString(R.string.total_no_of_bikes) + TEXT_SEPARATOR +
+                mBikeCounter + TEXT_SEPARATOR;
+
+        stats.close();
+        return ls_stats;
     }
 
     private void updateHeader() {
