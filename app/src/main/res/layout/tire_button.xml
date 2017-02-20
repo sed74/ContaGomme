@@ -4,7 +4,7 @@
     android:layout_width="match_parent"
     android:layout_height="@dimen/tire_button_height"
     android:background="@drawable/tire_rectangle_shadow"
-    tools:context="com.marchesi.federico.contagomme.MainActivity">
+    tools:context="com.sed.willy.contagomme.MainActivity">
 
     <View
         android:id="@+id/fakeView"

@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string-array name="tire_brands">
+    <string-array name="tire_brands" translatable="false">
         <item>GoldenTyre</item>
         <item>Metzeler</item>
         <item>Maxis</item>
@@ -11,13 +11,13 @@
         <item>Altro</item>
     </string-array>
 
-    <string-array name="pref_file_type">
+    <string-array name="pref_file_type" translatable="false">
         <item>TXT</item>
         <item>CSV</item>
         <item>HTML</item>
     </string-array>
 
-    <string-array name="pref_file_type_values">
+    <string-array name="pref_file_type_values" translatable="false">
         <item>0</item>
         <item>1</item>
         <item>2</item>
