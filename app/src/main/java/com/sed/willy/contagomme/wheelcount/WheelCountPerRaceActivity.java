@@ -184,16 +184,14 @@ public class WheelCountPerRaceActivity extends AppCompatActivity {
         //noinspection SimplifiableIfStatement
         switch (id) {
             case R.id.reset:
-                // back up variables
+                // First I backup all info I'm going to delete to let the user cancel the operation
                 final ArrayList<WheelList> tempList = copyValues(wheelLists);
                 final int bikeCounter = mBikeCounter;
-
                 final DatabaseHelper dbTemp = new DatabaseHelper(getBaseContext());
 
                 dbTemp.createBackUpFroBikeDetails(raceID);
                 dbTemp.deleteBikeDetailByRace(raceID);
-                Toast.makeText(this, "Record after delete: " + dbHelper.getRowCount(DatabaseHelper.TABLE_BIKE_DETAILS,
-                        DatabaseHelper.COLUMN_BIKE_RACE_ID, raceID), Toast.LENGTH_SHORT).show();
+
                 mBikeCounter = 0;
                 dbHelper.resetRace(raceID);
                 resetWheelCounter(wheelLists);
@@ -208,10 +206,8 @@ public class WheelCountPerRaceActivity extends AppCompatActivity {
                             @Override
                             public void onClick(View view) {
 
+                                //Restore data
                                 dbTemp.restoreBikeDetailFromTemp(raceID);
-                                Toast.makeText(WheelCountPerRaceActivity.this, "Record after restore: " +
-                                        dbHelper.getRowCount(DatabaseHelper.TABLE_BIKE_DETAILS,
-                                                DatabaseHelper.COLUMN_BIKE_RACE_ID, raceID), Toast.LENGTH_SHORT).show();
                                 dbTemp.close();
                                 dbHelper.populateWheelListTableFromRaceId(tempList);
                                 wheelLists = wheelCountAdapter.populateArray(getCursor());
