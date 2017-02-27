@@ -14,6 +14,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.ListView;
 import android.widget.TextView;
@@ -45,6 +46,7 @@ public class WheelCountPerRaceActivity extends AppCompatActivity {
     private String mEmailRecipient;
     private boolean mAttachFile;
     private boolean mAttachFileStats;
+    private boolean mKeepScreenOn;
     private int mAttachType;
     private TextView headerTextView;
     private int ATTACH_FILE = 1;
@@ -60,6 +62,10 @@ public class WheelCountPerRaceActivity extends AppCompatActivity {
         raceName = getIntent().getStringExtra(INTENT_NAME_RACE_NAME);
 
         loadPrefs(this);
+
+        if (mKeepScreenOn) {
+            getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
+        }
 
         final Button nextButton = (Button) findViewById(R.id.button_next);
         nextButton.setVisibility(mAutoNext ? View.GONE : View.VISIBLE);
@@ -267,6 +273,7 @@ public class WheelCountPerRaceActivity extends AppCompatActivity {
         mEmailRecipient = sp.getString(SettingsActivity.KEY_PREF_EMAIL_RECIPIENT, "");
         mAttachFile = sp.getBoolean(SettingsActivity.KEY_PREF_ATTACH_FILE, true);
         mAttachFileStats = sp.getBoolean(SettingsActivity.KEY_PREF_ATTACH_FILE_STATS, true);
+        mKeepScreenOn = sp.getBoolean(SettingsActivity.KEY_PREF_KEEP_SCREEN_ON, false);
         mAttachType = Integer.parseInt(sp.getString(
                 SettingsActivity.KEY_PREF_ATTACHMENT_TYPE, "1"));
     }

@@ -5,6 +5,11 @@
         android:key="auto_continue"
         android:summary="@string/auto_continue_summary"
         android:title="@string/auto_continue_title" />
+    <SwitchPreference
+        android:defaultValue="true"
+        android:key="keep_screen_on"
+        android:summary="@string/screen_on_summary"
+        android:title="@string/screen_on_title" />
     <PreferenceCategory
         android:key="pref_key_storage_settings"
         android:title="@string/pref_attach_title">
