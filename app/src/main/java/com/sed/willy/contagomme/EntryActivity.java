@@ -30,7 +30,7 @@ public class EntryActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_entry);
 
-        checkVersion();
+//        checkVersion();
 
         RelativeLayout openRaceLayout = (RelativeLayout) findViewById(R.id.open_race);
         RelativeLayout openTireListLayout = (RelativeLayout) findViewById(R.id.open_tire_list);
