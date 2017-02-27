@@ -66,5 +66,7 @@
     <string name="no_of_bike">Numero di moto</string>
     <string name="open_race_list_desc">Aggiungi, modifica e cancella la lista delle gare.</string>
     <string name="no_race_found">Non esistono gare da aprire. Inserire almeno una gara prima di procedere.</string>
+    <string name="screen_on_summary">Tenere schermo acceso durante il conteggio delle gomme. \\nAttenzione: diminuisce la durata della batteria.</string>
+    <string name="screen_on_title">Tenere schermo acceso</string>
 
 </resources>

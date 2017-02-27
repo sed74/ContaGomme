@@ -58,4 +58,6 @@
     <string name="open_race_list_desc">Add, edit and delete the race list.</string>
     <string name="no_race_found">No race found. Please add a race before proceeding.</string>
     <string name="pref_attach_title">Attachment management</string>
+    <string name="screen_on_summary">Keep scree on during tyre count. \\nWarning: it can drain battery faster.</string>
+    <string name="screen_on_title">Keep screen on</string>
 </resources>
