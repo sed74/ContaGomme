@@ -68,20 +68,23 @@ public class BrandCursorAdapter extends CursorAdapter {
         ImageView upArrow = (ImageView) view.findViewById(R.id.up_arrow);
         upArrow.setTag(cursor.getInt(cursor.getColumnIndex(DatabaseHelper.COLUMN_BRAND_ORDER)));
 
-        if (cursor.getPosition() == 0) {
-            upArrow.setVisibility(View.GONE);
-        } else {
-            upArrow.setVisibility(View.VISIBLE);
-        }
+        upArrow.setVisibility(cursor.getPosition() == 0 ? View.GONE : View.VISIBLE);
+//        if (cursor.getPosition() == 0) {
+//            upArrow.setVisibility(View.GONE);
+//        } else {
+//            upArrow.setVisibility(View.VISIBLE);
+//        }
 
         ImageView downArrow = (ImageView) view.findViewById(R.id.down_arrow);
         downArrow.setTag(cursor.getInt(cursor.getColumnIndex(DatabaseHelper.COLUMN_BRAND_ORDER)));
 
-        if (cursor.getPosition() == cursor.getCount() - 1) {
-            downArrow.setVisibility(View.GONE);
-        } else {
-            downArrow.setVisibility(View.VISIBLE);
-        }
+        downArrow.setVisibility(cursor.getPosition() == cursor.getCount() - 1 ?
+                View.GONE : View.VISIBLE);
+//        if (cursor.getPosition() == cursor.getCount() - 1) {
+//            downArrow.setVisibility(View.GONE);
+//        } else {
+//            downArrow.setVisibility(View.VISIBLE);
+//        }
 
         ImageView.OnClickListener upDownListener = new View.OnClickListener() {
             @Override
@@ -125,7 +128,7 @@ public class BrandCursorAdapter extends CursorAdapter {
             @Override
             public void onClick(View v) {
 
-                AlertDialog myQuittingDialogBox = new AlertDialog.Builder(context)
+                new AlertDialog.Builder(context)
                         //set message, title, and icon
                         .setTitle(context.getResources().getString(R.string.dialog_delete_title))
                         .setMessage(String.format(context.getResources().getString(R.string.dialog_delete_message), brand))
