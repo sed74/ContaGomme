@@ -70,8 +70,10 @@ public class EntryActivity extends AppCompatActivity {
 
                         break;
                     case R.id.open_tire_list:
-                        Intent intent = new Intent(EntryActivity.this, BrandListActivity.class);
+                        Intent intent = new Intent(EntryActivity.this, TyreListRecyclerActivity.class);
                         startActivity(intent);
+//                        Intent intent = new Intent(EntryActivity.this, BrandListActivity.class);
+//                        startActivity(intent);
                         break;
 
                     case R.id.open_race_list:

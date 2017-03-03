@@ -103,7 +103,7 @@ public class DatabaseHelper extends SQLiteOpenHelper implements BaseColumns {
     // BRANDS table create statement
     private static final String CREATE_TABLE_BRANDS =
             "CREATE TABLE " + TABLE_BRANDS +
-                    "(" + _ID + " INTEGER PRIMARY KEY," +
+                    "(" + _ID + " INTEGER PRIMARY KEY AUTOINCREMENT," +
                     COLUMN_BRAND_ORDER + " INTEGER," +
                     COLUMN_BRAND_NAME + " TEXT)";
     //                    IS_FRONT_SELECTED + " INT, "+
@@ -111,7 +111,7 @@ public class DatabaseHelper extends SQLiteOpenHelper implements BaseColumns {
     // RACES table create statement
     private static final String CREATE_TABLE_RACES =
             "CREATE TABLE " + TABLE_RACES +
-                    "(" + _ID + " INTEGER PRIMARY KEY," +
+                    "(" + _ID + " INTEGER PRIMARY KEY AUTOINCREMENT," +
                     COLUMN_RACE_NAME + " TEXT," +
                     COLUMN_RACE_PLACE + " TEXT," +
 //                    COLUMN_RACE_DATE + " TEXT," +
@@ -122,7 +122,7 @@ public class DatabaseHelper extends SQLiteOpenHelper implements BaseColumns {
     // BIKE_DETAILS table create statement
     private static final String CREATE_TABLE_BIKE_DETAILS =
             "CREATE TABLE " + TABLE_BIKE_DETAILS +
-                    "(" + _ID + " INTEGER PRIMARY KEY," +
+                    "(" + _ID + " INTEGER PRIMARY KEY AUTOINCREMENT," +
                     COLUMN_BIKE_RACE_ID + " INTEGER," +
                     COLUMN_BIKE_FRONT_BRAND_ID + " INTEGER," +
                     COLUMN_BIKE_REAR_BRAND_ID + " INTEGER," +
@@ -138,7 +138,7 @@ public class DatabaseHelper extends SQLiteOpenHelper implements BaseColumns {
     // WHEEL_LIST table create statement
     private static final String CREATE_TABLE_WHEEL_LIST =
             "CREATE TABLE " + TABLE_WHEEL_LIST +
-                    "(" + _ID + " INTEGER PRIMARY KEY," +
+                    "(" + _ID + " INTEGER PRIMARY KEY AUTOINCREMENT," +
                     COLUMN_WHEEL_RACE_ID + " INTEGER," +
                     COLUMN_WHEEL_BRAND_ID + " INTEGER," +
                     COLUMN_WHEEL_TOT_FRONT_WHEEL + " INTEGER," +

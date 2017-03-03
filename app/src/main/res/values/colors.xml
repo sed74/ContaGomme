@@ -7,4 +7,12 @@
     <color name="rectangle_solid_brand">#7986CB</color>
     <color name="rectangle_solid_race">#ff525d</color>
     <color name="counter_color">#eaff00</color>
+
+    <color name="left_swype_background">#740000</color>
+    <color name="left_swype_undo_background">#cf0101</color>
+    <color name="left_swype_after_background">#ff0303</color>
+    <color name="right_swype_background">#1f7400</color>
+    <color name="right_swype_undo_background">#31cf01</color>
+    <color name="right_swype_after_background">#3eff03</color>
+
 </resources>

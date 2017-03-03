@@ -11,40 +11,41 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
         <activity
-            android:name="com.sed.willy.contagomme.SettingsActivity"
+            android:name=".SettingsActivity"
             android:label="@string/title_activity_settings">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="com.sed.willy.contagomme.EntryActivity" />
         </activity>
         <activity
-            android:name="com.sed.willy.contagomme.BrandListActivity"
+            android:name=".BrandListActivity"
             android:label="@string/brand_list_activity_name">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="com.sed.willy.contagomme.EntryActivity" />
         </activity>
         <activity
-            android:name="com.sed.willy.contagomme.RaceListActivity"
+            android:name=".RaceListActivity"
             android:label="@string/race_list_activity_name">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="com.sed.willy.contagomme.EntryActivity" />
         </activity>
         <activity
-            android:name="com.sed.willy.contagomme.wheelcount.WheelCountPerRaceActivity"
+            android:name=".wheelcount.WheelCountPerRaceActivity"
             android:label="@string/race_list_activity_name">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="com.sed.willy.contagomme.EntryActivity" />
         </activity>
-        <activity android:name="com.sed.willy.contagomme.EntryActivity">
+        <activity android:name=".EntryActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+        <activity android:name=".TyreListRecyclerActivity"></activity>
     </application>
 
 </manifest>
