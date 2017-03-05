@@ -3,8 +3,7 @@
     android:id="@+id/activity_main"
     android:layout_width="match_parent"
     android:layout_height="@dimen/tire_button_height"
-    android:background="@drawable/tire_rectangle_shadow"
-    tools:context="com.sed.willy.contagomme.MainActivity">
+    android:background="@drawable/tire_rectangle_shadow">
 
     <View
         android:id="@+id/fakeView"
@@ -82,16 +81,6 @@
         android:textSize="20sp"
         android:textStyle="bold"
         tools:text="Michelin" />
-
-    <Button
-        android:id="@+id/undo_button"
-        style="@style/Base.Widget.AppCompat.Button.Borderless"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="end|center_vertical"
-        android:text="@string/button_undo"
-        android:textAllCaps="true"
-        android:textColor="@android:color/white" />
 
 
 </RelativeLayout>

@@ -72,4 +72,17 @@
     <string name="screen_on_summary">Tenere schermo acceso durante il conteggio delle gomme. Attenzione: diminuisce la durata della batteria.</string>
     <string name="button_undo">Undo</string>
 
+    <array name="dummy_items">
+        <item>One</item>
+        <item>Two</item>
+        <item>Three</item>
+        <item>Four</item>
+        <item>Five</item>
+        <item>Six</item>
+        <item>Seven</item>
+        <item>Eight</item>
+        <item>Nine</item>
+        <item>Ten</item>
+    </array>
+
 </resources>

@@ -48,4 +48,6 @@ public class Brand {
     public void setOrder(int order) {
         this.order = order;
     }
+
+
 }

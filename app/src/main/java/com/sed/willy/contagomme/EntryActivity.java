@@ -35,6 +35,7 @@ public class EntryActivity extends AppCompatActivity {
         RelativeLayout openRaceLayout = (RelativeLayout) findViewById(R.id.open_race);
         RelativeLayout openTireListLayout = (RelativeLayout) findViewById(R.id.open_tire_list);
         RelativeLayout openRaceListLayout = (RelativeLayout) findViewById(R.id.open_race_list);
+        RelativeLayout openTestLayout = (RelativeLayout) findViewById(R.id.test_list);
 
         RelativeLayout.OnClickListener buttonListener = new View.OnClickListener() {
             @Override
@@ -70,10 +71,13 @@ public class EntryActivity extends AppCompatActivity {
 
                         break;
                     case R.id.open_tire_list:
-                        Intent intent = new Intent(EntryActivity.this, TyreListRecyclerActivity.class);
+                        Intent intent = new Intent(EntryActivity.this, BrandListActivity.class);
                         startActivity(intent);
-//                        Intent intent = new Intent(EntryActivity.this, BrandListActivity.class);
-//                        startActivity(intent);
+                        break;
+
+                    case R.id.test_list:
+                        Intent newIntent = new Intent(EntryActivity.this, TyreListRecyclerActivity.class);
+                        startActivity(newIntent);
                         break;
 
                     case R.id.open_race_list:
@@ -81,6 +85,7 @@ public class EntryActivity extends AppCompatActivity {
                         startActivity(racesIntent);
 
                         break;
+
                 }
             }
         };
@@ -88,6 +93,7 @@ public class EntryActivity extends AppCompatActivity {
         openRaceLayout.setOnClickListener(buttonListener);
         openTireListLayout.setOnClickListener(buttonListener);
         openRaceListLayout.setOnClickListener(buttonListener);
+        openTestLayout.setOnClickListener(buttonListener);
 
     }
 

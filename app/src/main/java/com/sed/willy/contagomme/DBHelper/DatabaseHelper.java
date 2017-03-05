@@ -11,6 +11,7 @@ import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.provider.BaseColumns;
 import android.util.Log;
+import android.widget.Toast;
 
 import com.sed.willy.contagomme.DBModel.BikeDetails;
 import com.sed.willy.contagomme.DBModel.Brand;
@@ -349,8 +350,15 @@ public class DatabaseHelper extends SQLiteOpenHelper implements BaseColumns {
      * getting all brands
      */
     public List<Brand> getAllBrands() {
+        return getAllBrands(false);
+    }
+
+    public List<Brand> getAllBrands(boolean ordered) {
         List<Brand> brands = new ArrayList<>();
         String selectQuery = "SELECT * FROM " + TABLE_BRANDS;
+        if (ordered) {
+            selectQuery += " ORDER BY " + COLUMN_BRAND_ORDER;
+        }
 
         Log.e(TAG, selectQuery);
 
@@ -418,6 +426,23 @@ public class DatabaseHelper extends SQLiteOpenHelper implements BaseColumns {
         // updating row
         return db.update(TABLE_BRANDS, values, _ID + " = ?",
                 new String[]{String.valueOf(brands.getId())});
+    }
+
+    public void switchBrand(ArrayList<Brand> brands, int fromPosition, int toPosition) {
+        SQLiteDatabase db = this.getWritableDatabase();
+
+        Brand fromBrand = brands.get(fromPosition);
+        Brand toBrand = brands.get(toPosition);
+
+        int from = fromBrand.getOrder();
+        int to = toBrand.getOrder();
+
+        fromBrand.setOrder(to);
+        updateBrand(fromBrand);
+
+        toBrand.setOrder(from);
+        updateBrand(toBrand);
+//        Toast.makeText(mContext, "from: " + from + "\nto: " + to, Toast.LENGTH_SHORT).show();
     }
 
     /**
