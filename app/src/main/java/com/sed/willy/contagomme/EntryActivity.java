@@ -32,6 +32,8 @@ public class EntryActivity extends AppCompatActivity {
 
 //        checkVersion();
 
+        checkBrandTable();
+
         RelativeLayout openRaceLayout = (RelativeLayout) findViewById(R.id.open_race);
         RelativeLayout openTireListLayout = (RelativeLayout) findViewById(R.id.open_tire_list);
         RelativeLayout openRaceListLayout = (RelativeLayout) findViewById(R.id.open_race_list);
@@ -94,6 +96,11 @@ public class EntryActivity extends AppCompatActivity {
         openTireListLayout.setOnClickListener(buttonListener);
         openRaceListLayout.setOnClickListener(buttonListener);
         openTestLayout.setOnClickListener(buttonListener);
+
+    }
+
+    private void checkBrandTable() {
+        DatabaseHelper dbHelper = new DatabaseHelper(this);
 
     }
 

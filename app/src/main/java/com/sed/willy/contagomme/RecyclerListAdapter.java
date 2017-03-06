@@ -17,9 +17,9 @@
 package com.sed.willy.contagomme;
 
 import android.content.Context;
-import android.graphics.Color;
 import android.support.v4.view.MotionEventCompat;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.helper.ItemTouchHelper;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
@@ -34,9 +34,7 @@ import com.sed.willy.contagomme.Helper.ItemTouchHelperViewHolder;
 import com.sed.willy.contagomme.Helper.OnStartDragListener;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collections;
-import java.util.List;
 
 /**
  * Simple RecyclerView.Adapter that implements {@link ItemTouchHelperAdapter} to respond to move and
@@ -48,7 +46,6 @@ public class RecyclerListAdapter extends RecyclerView.Adapter<RecyclerListAdapte
         implements ItemTouchHelperAdapter {
 
     private final OnStartDragListener mDragStartListener;
-    //    private final List<String> mItems = new ArrayList<>();
     private ArrayList<Brand> mBrandItems = new ArrayList<>();
     private Context mContext;
 
@@ -106,9 +103,21 @@ public class RecyclerListAdapter extends RecyclerView.Adapter<RecyclerListAdapte
         return true;
     }
 
+
     @Override
     public int getItemCount() {
         return mBrandItems.size();
+    }
+
+    public void addBrand(String brandName) {
+        DatabaseHelper dbHelper = new DatabaseHelper(mContext);
+
+        int order = dbHelper.getMax(DatabaseHelper.TABLE_BRANDS,
+                DatabaseHelper.COLUMN_BRAND_ORDER, 0);
+        Brand brand = new Brand(brandName, order + 10);
+        mBrandItems.add(brand);
+        dbHelper.createBrand(brand);
+        notifyDataSetChanged();
     }
 
     /**
@@ -128,13 +137,22 @@ public class RecyclerListAdapter extends RecyclerView.Adapter<RecyclerListAdapte
         }
 
         @Override
-        public void onItemSelected() {
-            itemView.setBackgroundColor(Color.LTGRAY);
+        public void onItemSelected(int actionState) {
+            TextView text = (TextView) itemView.findViewById(R.id.brand_name);
+
+//            itemView.setBackgroundColor(Color.LTGRAY);
+            if (actionState == ItemTouchHelper.ACTION_STATE_DRAG) {
+                text.setBackground(itemView.getResources().getDrawable(R.drawable.tire_rectangle_gray));
+            } else if (actionState == ItemTouchHelper.ACTION_STATE_SWIPE) {
+                text.setBackground(itemView.getResources().getDrawable(R.drawable.tire_rectangle_red));
+            }
         }
 
         @Override
         public void onItemClear() {
-            itemView.setBackgroundColor(0);
+//            itemView.setBackgroundColor(0);
+            TextView text = (TextView) itemView.findViewById(R.id.brand_name);
+            text.setBackground(itemView.getResources().getDrawable(R.drawable.tire_rectangle_shadow));
         }
     }
 }

@@ -104,7 +104,7 @@ public class SimpleItemTouchHelperCallback extends ItemTouchHelper.Callback {
             if (viewHolder instanceof ItemTouchHelperViewHolder) {
                 // Let the view holder know that this item is being moved or dragged
                 ItemTouchHelperViewHolder itemViewHolder = (ItemTouchHelperViewHolder) viewHolder;
-                itemViewHolder.onItemSelected();
+                itemViewHolder.onItemSelected(actionState);
             }
         }
 

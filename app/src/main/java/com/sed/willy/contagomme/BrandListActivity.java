@@ -27,7 +27,6 @@ public class BrandListActivity extends AppCompatActivity {
 
         listView = (ListView) findViewById(R.id.list);
 
-
         new Handler().post(new Runnable() {
 
             @Override
