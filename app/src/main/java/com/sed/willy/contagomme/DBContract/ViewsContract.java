@@ -50,7 +50,7 @@ public class ViewsContract {
 
     }
 
-    public static final class WhellListEntry implements BaseColumns {
+    public static final class WheelListEntry implements BaseColumns {
 
         // RACES_WHEEL_LIST VIEW
         public static final String VIEW = "view_races_wheel_list";

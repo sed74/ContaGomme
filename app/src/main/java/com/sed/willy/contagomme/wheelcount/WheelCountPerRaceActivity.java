@@ -21,13 +21,13 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.sed.willy.contagomme.DBContract.ViewsContract.StatsEntry;
-import com.sed.willy.contagomme.DBContract.ViewsContract.WhellListEntry;
+import com.sed.willy.contagomme.DBContract.ViewsContract.WheelListEntry;
 import com.sed.willy.contagomme.DBHelper.DatabaseHelper;
 import com.sed.willy.contagomme.DBModel.BikeDetails;
 import com.sed.willy.contagomme.DBModel.WheelList;
-import com.sed.willy.contagomme.DateConverter;
 import com.sed.willy.contagomme.R;
 import com.sed.willy.contagomme.SettingsActivity;
+import com.sed.willy.contagomme.Utils.DateConverter;
 import com.sed.willy.contagomme.Utils.FileClass;
 
 import java.util.ArrayList;
@@ -57,7 +57,7 @@ public class WheelCountPerRaceActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
+        setContentView(R.layout.wheel_count);
 
         listView = (ListView) findViewById(R.id.list);
         raceID = getIntent().getIntExtra(INTENT_NAME_RACE_ID, 0);
@@ -132,8 +132,8 @@ public class WheelCountPerRaceActivity extends AppCompatActivity {
 
         if (dbHelper != null) dbHelper.closeDB();
         dbHelper = new DatabaseHelper(getBaseContext());
-        Cursor c = dbHelper.getCursorById(WhellListEntry.VIEW,
-                WhellListEntry.RACE_ID, raceID);
+        Cursor c = dbHelper.getCursorById(WheelListEntry.VIEW,
+                WheelListEntry.RACE_ID, raceID);
         if (wheelCountAdapter != null) wheelCountAdapter = null;
         wheelCountAdapter = new WheelCountPerRaceCursorAdapter(WheelCountPerRaceActivity.this, c);
         listView.setAdapter(wheelCountAdapter);
@@ -144,7 +144,7 @@ public class WheelCountPerRaceActivity extends AppCompatActivity {
     private void nextBike() {
         resetArray();
         Cursor c = dbHelper.getCursorById(
-                WhellListEntry.VIEW, WhellListEntry.RACE_ID, raceID);
+                WheelListEntry.VIEW, WheelListEntry.RACE_ID, raceID);
         wheelCountAdapter.swapCursor(c);
     }
 
@@ -257,8 +257,8 @@ public class WheelCountPerRaceActivity extends AppCompatActivity {
     }
 
     private Cursor getCursor() {
-        return dbHelper.getCursorById(WhellListEntry.VIEW,
-                WhellListEntry.RACE_ID, raceID);
+        return dbHelper.getCursorById(WheelListEntry.VIEW,
+                WheelListEntry.RACE_ID, raceID);
     }
 
     private void swapCursor() {

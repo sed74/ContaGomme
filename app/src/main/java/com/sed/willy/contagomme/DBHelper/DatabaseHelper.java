@@ -17,14 +17,14 @@ import com.sed.willy.contagomme.DBContract.BikeDetailContract.BikeDetailEntry;
 import com.sed.willy.contagomme.DBContract.BrandContract.BrandEntry;
 import com.sed.willy.contagomme.DBContract.RaceContract.RaceEntry;
 import com.sed.willy.contagomme.DBContract.ViewsContract.StatsEntry;
-import com.sed.willy.contagomme.DBContract.ViewsContract.WhellListEntry;
+import com.sed.willy.contagomme.DBContract.ViewsContract.WheelListEntry;
 import com.sed.willy.contagomme.DBContract.WheelContract.WheelEntry;
 import com.sed.willy.contagomme.DBModel.BikeDetails;
 import com.sed.willy.contagomme.DBModel.Brand;
 import com.sed.willy.contagomme.DBModel.Race;
 import com.sed.willy.contagomme.DBModel.WheelList;
-import com.sed.willy.contagomme.DateConverter;
 import com.sed.willy.contagomme.R;
+import com.sed.willy.contagomme.Utils.DateConverter;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -56,7 +56,7 @@ public class DatabaseHelper extends SQLiteOpenHelper implements BaseColumns {
         db.execSQL(RaceEntry.CREATE_TABLE);
         db.execSQL(WheelEntry.CREATE_TABLE);
         db.execSQL(BikeDetailEntry.CREATE_TABLE);
-        db.execSQL(WhellListEntry.CREATE_VIEW);
+        db.execSQL(WheelListEntry.CREATE_VIEW);
         db.execSQL(StatsEntry.CREATE_VIEW);
 
         this.populateBrand(db);
@@ -75,7 +75,7 @@ public class DatabaseHelper extends SQLiteOpenHelper implements BaseColumns {
             db.execSQL("DROP TABLE IF EXISTS " + RaceEntry.TABLE);
             db.execSQL("DROP TABLE IF EXISTS " + WheelEntry.TABLE);
             db.execSQL("DROP TABLE IF EXISTS " + BikeDetailEntry.TABLE);
-            db.execSQL("DROP VIEW  IF EXISTS " + WhellListEntry.VIEW);
+            db.execSQL("DROP VIEW  IF EXISTS " + WheelListEntry.VIEW);
             db.execSQL("DROP VIEW  IF EXISTS " + StatsEntry.VIEW);
 
             // create new tables
@@ -164,8 +164,8 @@ public class DatabaseHelper extends SQLiteOpenHelper implements BaseColumns {
             do {
 
                 int id = c.getInt((c.getColumnIndex(_ID)));
-                int brandId = c.getInt((c.getColumnIndex(WhellListEntry.BRAND_ID)));
-                int raceid = c.getInt((c.getColumnIndex(WhellListEntry.RACE_ID)));
+                int brandId = c.getInt((c.getColumnIndex(WheelListEntry.BRAND_ID)));
+                int raceid = c.getInt((c.getColumnIndex(WheelListEntry.RACE_ID)));
                 int totFront = c.getInt((c.getColumnIndex(WheelEntry.TOT_FRONT_WHEEL)));
                 int totRear = c.getInt((c.getColumnIndex(WheelEntry.TOT_REAR_WHEEL)));
 
@@ -269,7 +269,7 @@ public class DatabaseHelper extends SQLiteOpenHelper implements BaseColumns {
     public ArrayList<WheelList> getAllWheelListByRaceId(int raceId) {
         ArrayList<WheelList> tires = new ArrayList<>();
 
-        String selectQuery = "SELECT * FROM " + WhellListEntry.VIEW + " WHERE " +
+        String selectQuery = "SELECT * FROM " + WheelListEntry.VIEW + " WHERE " +
                 WheelEntry.RACE_ID + " = " + String.valueOf(raceId);
 
         Log.e(TAG, selectQuery);

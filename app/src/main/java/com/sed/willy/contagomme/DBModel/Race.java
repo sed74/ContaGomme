@@ -1,6 +1,6 @@
 package com.sed.willy.contagomme.DBModel;
 
-import com.sed.willy.contagomme.DateConverter;
+import com.sed.willy.contagomme.Utils.DateConverter;
 
 /**
  * Created by federico.marchesi on 26/01/2017.

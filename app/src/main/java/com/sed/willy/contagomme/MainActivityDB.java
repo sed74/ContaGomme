@@ -10,7 +10,7 @@ import android.widget.Button;
 import android.widget.ListView;
 
 import com.sed.willy.contagomme.DBContract.RaceContract.RaceEntry;
-import com.sed.willy.contagomme.DBContract.ViewsContract.WhellListEntry;
+import com.sed.willy.contagomme.DBContract.ViewsContract.WheelListEntry;
 import com.sed.willy.contagomme.DBHelper.DatabaseHelper;
 import com.sed.willy.contagomme.DBModel.Race;
 import com.sed.willy.contagomme.Dialog.InputDialogRace;
@@ -37,7 +37,7 @@ public class MainActivityDB extends AppCompatActivity {
             @Override
             public void run() {
                 dbHelper = new DatabaseHelper(getBaseContext());
-                Cursor c = dbHelper.getCursor(WhellListEntry.VIEW,
+                Cursor c = dbHelper.getCursor(WheelListEntry.VIEW,
                         null);
                 raceAdapter = new RaceCursorAdapter(MainActivityDB.this, c);
                 listView.setAdapter(raceAdapter);

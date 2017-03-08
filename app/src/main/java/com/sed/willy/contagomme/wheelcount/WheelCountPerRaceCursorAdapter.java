@@ -13,7 +13,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.sed.willy.contagomme.DBContract.BrandContract.BrandEntry;
-import com.sed.willy.contagomme.DBContract.ViewsContract.WhellListEntry;
+import com.sed.willy.contagomme.DBContract.ViewsContract.WheelListEntry;
 import com.sed.willy.contagomme.DBHelper.DatabaseHelper;
 import com.sed.willy.contagomme.DBModel.WheelList;
 import com.sed.willy.contagomme.R;
@@ -57,17 +57,17 @@ public class WheelCountPerRaceCursorAdapter extends CursorAdapter {
             do {
                 wheelLists.add(new WheelList(
                         cursor.getInt(
-                                cursor.getColumnIndex(WhellListEntry._ID)),
+                                cursor.getColumnIndex(WheelListEntry._ID)),
                         cursor.getString(
-                                cursor.getColumnIndex(WhellListEntry.BRAND_NAME)),
+                                cursor.getColumnIndex(WheelListEntry.BRAND_NAME)),
                         cursor.getInt(
-                                cursor.getColumnIndex(WhellListEntry.RACE_ID)),
+                                cursor.getColumnIndex(WheelListEntry.RACE_ID)),
                         cursor.getInt(
-                                cursor.getColumnIndex(WhellListEntry.BRAND_ID)),
+                                cursor.getColumnIndex(WheelListEntry.BRAND_ID)),
                         cursor.getInt(
-                                cursor.getColumnIndex(WhellListEntry.TOT_FRONT_WHEEL)),
+                                cursor.getColumnIndex(WheelListEntry.TOT_FRONT_WHEEL)),
                         cursor.getInt(
-                                cursor.getColumnIndex(WhellListEntry.TOT_REAR_WHEEL))));
+                                cursor.getColumnIndex(WheelListEntry.TOT_REAR_WHEEL))));
             } while (cursor.moveToNext());
         }
         return wheelLists;
@@ -112,11 +112,11 @@ public class WheelCountPerRaceCursorAdapter extends CursorAdapter {
 
         frontCount = (TextView) view.findViewById(R.id.front_tire_count);
         frontCount.setText(String.valueOf(cursor.getInt(
-                cursor.getColumnIndex(WhellListEntry.TOT_FRONT_WHEEL))));
+                cursor.getColumnIndex(WheelListEntry.TOT_FRONT_WHEEL))));
 
         rearCount = (TextView) view.findViewById(R.id.rear_tire_count);
         rearCount.setText(String.valueOf(cursor.getInt(
-                cursor.getColumnIndex(WhellListEntry.TOT_REAR_WHEEL))));
+                cursor.getColumnIndex(WheelListEntry.TOT_REAR_WHEEL))));
 
 
         TextView.OnClickListener mOnClickListener = (new View.OnClickListener() {

@@ -1,4 +1,4 @@
-package com.sed.willy.contagomme;
+package com.sed.willy.contagomme.Utils;
 
 import java.text.DateFormat;
 import java.text.ParseException;
