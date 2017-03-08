@@ -13,12 +13,12 @@ import android.provider.BaseColumns;
 import android.util.Log;
 import android.widget.Toast;
 
-import com.sed.willy.contagomme.DBContract.BikeDetailContract.BikeDetailEntry;
-import com.sed.willy.contagomme.DBContract.BrandContract.BrandEntry;
-import com.sed.willy.contagomme.DBContract.RaceContract.RaceEntry;
-import com.sed.willy.contagomme.DBContract.ViewsContract.StatsEntry;
-import com.sed.willy.contagomme.DBContract.ViewsContract.WheelListEntry;
-import com.sed.willy.contagomme.DBContract.WheelContract.WheelEntry;
+import com.sed.willy.contagomme.DBContract.ContaGommeContract.BikeDetailEntry;
+import com.sed.willy.contagomme.DBContract.ContaGommeContract.BrandEntry;
+import com.sed.willy.contagomme.DBContract.ContaGommeContract.RaceEntry;
+import com.sed.willy.contagomme.DBContract.ContaGommeContract.StatsEntry;
+import com.sed.willy.contagomme.DBContract.ContaGommeContract.WheelEntry;
+import com.sed.willy.contagomme.DBContract.ContaGommeContract.WheelListEntry;
 import com.sed.willy.contagomme.DBModel.BikeDetails;
 import com.sed.willy.contagomme.DBModel.Brand;
 import com.sed.willy.contagomme.DBModel.Race;
@@ -153,24 +153,27 @@ public class DatabaseHelper extends SQLiteOpenHelper implements BaseColumns {
 
     public Cursor getCursorById(String tableName, String columnID, int idValue) {
         SQLiteDatabase db = this.getReadableDatabase();
-        String selectQuery = "SELECT * FROM " + tableName + " WHERE " + columnID + "= " +
-                String.valueOf(idValue);
 
-        Log.e(TAG, selectQuery);
+        // Define a projection that specifies which columns from the database
+        // you will actually use after this query.
+        String[] projection = {"*"};
 
-        Cursor c = db.rawQuery(selectQuery, null);
+        // Filter results WHERE "columnId" = 'idValue'
+        String selection = columnID + " = ?";
+        String[] selectionArgs = {String.valueOf(idValue)};
 
-        if (c.moveToFirst()) {
-            do {
+        Cursor c = db.query(
+                tableName,             // The table to query
+                projection,            // The columns to return
+                selection,             // The columns for the WHERE clause
+                selectionArgs,         // The values for the WHERE clause
+                null,                  // don't group the rows
+                null,                  // don't filter by row groups
+                null                   // The sort order
+        );
 
-                int id = c.getInt((c.getColumnIndex(_ID)));
-                int brandId = c.getInt((c.getColumnIndex(WheelListEntry.BRAND_ID)));
-                int raceid = c.getInt((c.getColumnIndex(WheelListEntry.RACE_ID)));
-                int totFront = c.getInt((c.getColumnIndex(WheelEntry.TOT_FRONT_WHEEL)));
-                int totRear = c.getInt((c.getColumnIndex(WheelEntry.TOT_REAR_WHEEL)));
 
-            } while (c.moveToNext());
-        }
+//        Cursor c = db.rawQuery(selectQuery, null);
 
         return c;
 

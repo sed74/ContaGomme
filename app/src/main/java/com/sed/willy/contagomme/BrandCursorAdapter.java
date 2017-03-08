@@ -11,7 +11,7 @@ import android.widget.CursorAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.sed.willy.contagomme.DBContract.BrandContract.BrandEntry;
+import com.sed.willy.contagomme.DBContract.ContaGommeContract.BrandEntry;
 import com.sed.willy.contagomme.DBHelper.DatabaseHelper;
 import com.sed.willy.contagomme.DBModel.Brand;
 import com.sed.willy.contagomme.Dialog.InputDialogBrand;
@@ -23,21 +23,11 @@ import com.sed.willy.contagomme.Dialog.InputDialogBrand;
 public class BrandCursorAdapter extends CursorAdapter {
     private static final String TAG = BrandCursorAdapter.class.getName();
     private LayoutInflater cursorInflater;
-    private int minOrder;
-    private int maxOrder;
 
     public BrandCursorAdapter(Context context, Cursor cursor) {
         super(context, cursor, 0);
         cursorInflater = (LayoutInflater) context.getSystemService(
                 Context.LAYOUT_INFLATER_SERVICE);
-    }
-
-    public void setMinOrder(int order) {
-        minOrder = order;
-    }
-
-    public void setMaxOrder(int order) {
-        maxOrder = order;
     }
 
     // The newView method is used to inflate a new view and return it,
@@ -70,22 +60,13 @@ public class BrandCursorAdapter extends CursorAdapter {
         upArrow.setTag(cursor.getInt(cursor.getColumnIndex(BrandEntry.BRAND_ORDER)));
 
         upArrow.setVisibility(cursor.getPosition() == 0 ? View.GONE : View.VISIBLE);
-//        if (cursor.getPosition() == 0) {
-//            upArrow.setVisibility(View.GONE);
-//        } else {
-//            upArrow.setVisibility(View.VISIBLE);
-//        }
+
 
         ImageView downArrow = (ImageView) view.findViewById(R.id.down_arrow);
         downArrow.setTag(cursor.getInt(cursor.getColumnIndex(BrandEntry.BRAND_ORDER)));
 
         downArrow.setVisibility(cursor.getPosition() == cursor.getCount() - 1 ?
                 View.GONE : View.VISIBLE);
-//        if (cursor.getPosition() == cursor.getCount() - 1) {
-//            downArrow.setVisibility(View.GONE);
-//        } else {
-//            downArrow.setVisibility(View.VISIBLE);
-//        }
 
         ImageView.OnClickListener upDownListener = new View.OnClickListener() {
             @Override

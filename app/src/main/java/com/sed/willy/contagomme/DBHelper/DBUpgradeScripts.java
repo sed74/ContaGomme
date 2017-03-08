@@ -2,7 +2,8 @@ package com.sed.willy.contagomme.DBHelper;
 
 import android.database.sqlite.SQLiteDatabase;
 
-import com.sed.willy.contagomme.DBContract.BrandContract.BrandEntry;
+import com.sed.willy.contagomme.DBContract.ContaGommeContract.BrandEntry;
+
 
 /**
  * Created by federico.marchesi on 07/03/2017.

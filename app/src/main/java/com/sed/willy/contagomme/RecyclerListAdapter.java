@@ -29,7 +29,7 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.sed.willy.contagomme.DBContract.BrandContract.BrandEntry;
+import com.sed.willy.contagomme.DBContract.ContaGommeContract.BrandEntry;
 import com.sed.willy.contagomme.DBHelper.DatabaseHelper;
 import com.sed.willy.contagomme.DBModel.Brand;
 import com.sed.willy.contagomme.Helper.ItemTouchHelperAdapter;

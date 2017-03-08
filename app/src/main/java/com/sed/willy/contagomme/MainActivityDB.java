@@ -9,8 +9,8 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.ListView;
 
-import com.sed.willy.contagomme.DBContract.RaceContract.RaceEntry;
-import com.sed.willy.contagomme.DBContract.ViewsContract.WheelListEntry;
+import com.sed.willy.contagomme.DBContract.ContaGommeContract.RaceEntry;
+import com.sed.willy.contagomme.DBContract.ContaGommeContract.WheelListEntry;
 import com.sed.willy.contagomme.DBHelper.DatabaseHelper;
 import com.sed.willy.contagomme.DBModel.Race;
 import com.sed.willy.contagomme.Dialog.InputDialogRace;

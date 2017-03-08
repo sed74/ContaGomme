@@ -12,8 +12,8 @@ import android.widget.CursorAdapter;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.sed.willy.contagomme.DBContract.BrandContract.BrandEntry;
-import com.sed.willy.contagomme.DBContract.ViewsContract.WheelListEntry;
+import com.sed.willy.contagomme.DBContract.ContaGommeContract.BrandEntry;
+import com.sed.willy.contagomme.DBContract.ContaGommeContract.WheelListEntry;
 import com.sed.willy.contagomme.DBHelper.DatabaseHelper;
 import com.sed.willy.contagomme.DBModel.WheelList;
 import com.sed.willy.contagomme.R;

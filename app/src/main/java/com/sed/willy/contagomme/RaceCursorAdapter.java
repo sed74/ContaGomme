@@ -12,7 +12,7 @@ import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
-import com.sed.willy.contagomme.DBContract.RaceContract.RaceEntry;
+import com.sed.willy.contagomme.DBContract.ContaGommeContract.RaceEntry;
 import com.sed.willy.contagomme.DBHelper.DatabaseHelper;
 import com.sed.willy.contagomme.DBModel.Race;
 import com.sed.willy.contagomme.Dialog.InputDialogRace;

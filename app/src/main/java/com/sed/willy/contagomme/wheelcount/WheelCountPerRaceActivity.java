@@ -20,8 +20,8 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.sed.willy.contagomme.DBContract.ViewsContract.StatsEntry;
-import com.sed.willy.contagomme.DBContract.ViewsContract.WheelListEntry;
+import com.sed.willy.contagomme.DBContract.ContaGommeContract.StatsEntry;
+import com.sed.willy.contagomme.DBContract.ContaGommeContract.WheelListEntry;
 import com.sed.willy.contagomme.DBHelper.DatabaseHelper;
 import com.sed.willy.contagomme.DBModel.BikeDetails;
 import com.sed.willy.contagomme.DBModel.WheelList;
@@ -32,10 +32,22 @@ import com.sed.willy.contagomme.Utils.FileClass;
 
 import java.util.ArrayList;
 
+/**
+ * Activity where the actual insert of wheel count takes place.
+ * User taps on the Front and Rear brand and the <i>bike setup</i> is stored, and we move onto the
+ * next bike.
+ */
 public class WheelCountPerRaceActivity extends AppCompatActivity {
 
+    /**
+     * Name of the EXTRAS we receive from the Spinner, use to getExtra from (@link Intent)
+     */
     public static final String INTENT_NAME_RACE_ID = "race_id";
+    /**
+     * Name of the EXTRAS we receive from the Spinner, use to getExtra from (@link Intent)
+     */
     public static final String INTENT_NAME_RACE_NAME = "race_name";
+
     private static final String TEXT_SEPARATOR = ",";
     private String raceName;
     private int raceID;
@@ -51,8 +63,6 @@ public class WheelCountPerRaceActivity extends AppCompatActivity {
     private boolean mKeepScreenOn;
     private int mAttachType;
     private TextView headerTextView;
-    private int ATTACH_FILE = 1;
-    private int ATTACH_STATS = 2;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -120,6 +130,13 @@ public class WheelCountPerRaceActivity extends AppCompatActivity {
         setupActionBar();
     }
 
+    /**
+     * Method added to store tire details that was not included in the first release.
+     * It saves, for the current race, an entry with the front and rear brand.
+     *
+     * @param frontSelected BrandId of the Front Tire
+     * @param rearSelected  BrandId of the Rear Front
+     */
     private void insertBikeDetail(int frontSelected, int rearSelected) {
         int currentTimeStamp = (int) DateConverter.getCurrentTimeStampUnix();
         BikeDetails bikeDetail = new BikeDetails(raceID, frontSelected, rearSelected,
@@ -268,6 +285,11 @@ public class WheelCountPerRaceActivity extends AppCompatActivity {
 
     }
 
+    /**
+     *
+     * Load SharedPreference from app folder.
+     * @param mContext the Context to get Pref from
+     */
     public void loadPrefs(Context mContext) {
         SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(mContext);
 

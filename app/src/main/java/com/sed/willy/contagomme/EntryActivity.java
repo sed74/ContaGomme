@@ -16,8 +16,8 @@ import android.view.View;
 import android.widget.RelativeLayout;
 import android.widget.Toast;
 
-import com.sed.willy.contagomme.DBContract.BrandContract.BrandEntry;
-import com.sed.willy.contagomme.DBContract.WheelContract.WheelEntry;
+import com.sed.willy.contagomme.DBContract.ContaGommeContract.BrandEntry;
+import com.sed.willy.contagomme.DBContract.ContaGommeContract.WheelEntry;
 import com.sed.willy.contagomme.DBHelper.DatabaseHelper;
 import com.sed.willy.contagomme.wheelcount.WheelCountPerRaceActivity;
 

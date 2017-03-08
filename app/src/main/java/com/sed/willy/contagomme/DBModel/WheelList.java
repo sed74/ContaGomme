@@ -2,7 +2,7 @@ package com.sed.willy.contagomme.DBModel;
 
 import android.content.Context;
 
-import com.sed.willy.contagomme.DBContract.BrandContract.BrandEntry;
+import com.sed.willy.contagomme.DBContract.ContaGommeContract.BrandEntry;
 import com.sed.willy.contagomme.DBHelper.DatabaseHelper;
 
 /**
