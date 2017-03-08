@@ -52,4 +52,17 @@ public interface ItemTouchHelperAdapter {
      * @see RecyclerView.ViewHolder#getAdapterPosition()
      */
     void onItemDismiss(int position);
+
+    /**
+     * Called when an item has been dismissed by a swipe.<br/>
+     * <br/>
+     * Implementations should call {@link RecyclerView.Adapter#notifyItemRemoved(int)} after
+     * adjusting the underlying data to reflect this removal.
+     *
+     * @param viewHolder   not quite clear what it is
+     * @param recyclerView the RecyclerView where the move takes place
+     * @see RecyclerView#getAdapterPositionFor(RecyclerView.ViewHolder)
+     * @see RecyclerView.ViewHolder#getAdapterPosition()
+     */
+    void onItemRemoved(final RecyclerView.ViewHolder viewHolder, final RecyclerView recyclerView);
 }

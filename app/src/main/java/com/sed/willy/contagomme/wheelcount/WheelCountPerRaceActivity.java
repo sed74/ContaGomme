@@ -20,6 +20,8 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.sed.willy.contagomme.DBContract.ViewsContract.StatsEntry;
+import com.sed.willy.contagomme.DBContract.ViewsContract.WhellListEntry;
 import com.sed.willy.contagomme.DBHelper.DatabaseHelper;
 import com.sed.willy.contagomme.DBModel.BikeDetails;
 import com.sed.willy.contagomme.DBModel.WheelList;
@@ -130,8 +132,8 @@ public class WheelCountPerRaceActivity extends AppCompatActivity {
 
         if (dbHelper != null) dbHelper.closeDB();
         dbHelper = new DatabaseHelper(getBaseContext());
-        Cursor c = dbHelper.getCursorById(DatabaseHelper.VIEW_RACES_WHEEL_LIST,
-                DatabaseHelper.COLUMN_VIEW_RACE_ID, raceID);
+        Cursor c = dbHelper.getCursorById(WhellListEntry.VIEW,
+                WhellListEntry.RACE_ID, raceID);
         if (wheelCountAdapter != null) wheelCountAdapter = null;
         wheelCountAdapter = new WheelCountPerRaceCursorAdapter(WheelCountPerRaceActivity.this, c);
         listView.setAdapter(wheelCountAdapter);
@@ -142,7 +144,7 @@ public class WheelCountPerRaceActivity extends AppCompatActivity {
     private void nextBike() {
         resetArray();
         Cursor c = dbHelper.getCursorById(
-                DatabaseHelper.VIEW_RACES_WHEEL_LIST, DatabaseHelper.COLUMN_VIEW_RACE_ID, raceID);
+                WhellListEntry.VIEW, WhellListEntry.RACE_ID, raceID);
         wheelCountAdapter.swapCursor(c);
     }
 
@@ -255,8 +257,8 @@ public class WheelCountPerRaceActivity extends AppCompatActivity {
     }
 
     private Cursor getCursor() {
-        return dbHelper.getCursorById(DatabaseHelper.VIEW_RACES_WHEEL_LIST,
-                DatabaseHelper.COLUMN_VIEW_RACE_ID, raceID);
+        return dbHelper.getCursorById(WhellListEntry.VIEW,
+                WhellListEntry.RACE_ID, raceID);
     }
 
     private void swapCursor() {
@@ -410,7 +412,7 @@ public class WheelCountPerRaceActivity extends AppCompatActivity {
 
     private String getStatistics() {
         String ls_stats;
-        Cursor stats = dbHelper.getCursor(DatabaseHelper.VIEW_STATISTIC, null);
+        Cursor stats = dbHelper.getCursor(StatsEntry.VIEW, null);
         ls_stats = getResources().getString(R.string.race_name) + " " + raceName;
         ls_stats += "\n\n";
         ls_stats += getResources().getString(R.string.no_of_bike) + TEXT_SEPARATOR;

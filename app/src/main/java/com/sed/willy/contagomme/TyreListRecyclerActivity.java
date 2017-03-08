@@ -14,12 +14,15 @@ import com.sed.willy.contagomme.Helper.OnStartDragListener;
 import com.sed.willy.contagomme.Helper.SimpleItemTouchHelperCallback;
 
 public class TyreListRecyclerActivity extends AppCompatActivity implements OnStartDragListener {
+
     private ItemTouchHelper mItemTouchHelper;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_tyre_list_recycler);
+
+        new DatabaseHelper(this).checkBrandTable();
 
         RecyclerView view = (RecyclerView) findViewById(R.id.list);
 
@@ -30,7 +33,7 @@ public class TyreListRecyclerActivity extends AppCompatActivity implements OnSta
         recyclerView.setAdapter(adapter);
         recyclerView.setLayoutManager(new LinearLayoutManager(getBaseContext()));
 
-        ItemTouchHelper.Callback callback = new SimpleItemTouchHelperCallback(adapter);
+        ItemTouchHelper.Callback callback = new SimpleItemTouchHelperCallback(adapter, view);
         mItemTouchHelper = new ItemTouchHelper(callback);
         mItemTouchHelper.attachToRecyclerView(recyclerView);
 
@@ -39,7 +42,7 @@ public class TyreListRecyclerActivity extends AppCompatActivity implements OnSta
         addTire.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                addBrand(adapter);
+                showAddBrandDialog(adapter);
             }
         });
 
@@ -55,13 +58,18 @@ public class TyreListRecyclerActivity extends AppCompatActivity implements OnSta
 
     }
 
+    @Override
+    protected void onStop() {
+        super.onStop();
+        new DatabaseHelper(this).purgeBrands();
+    }
 
     @Override
     public void onStartDrag(RecyclerView.ViewHolder viewHolder) {
         mItemTouchHelper.startDrag(viewHolder);
     }
 
-    private void addBrand(final RecyclerListAdapter adapter) {
+    private void showAddBrandDialog(final RecyclerListAdapter adapter) {
 
         final DatabaseHelper dbHelper = new DatabaseHelper(this);
         InputDialogBrand inputDialog = new InputDialogBrand(this, R.string.add_brand_dialog_title, R.string.add_brand_dialog_hint);
@@ -76,7 +84,6 @@ public class TyreListRecyclerActivity extends AppCompatActivity implements OnSta
 
             @Override
             public void onConfirm(String brandName, int order) {
-
                 adapter.addBrand(brandName);
 
             }

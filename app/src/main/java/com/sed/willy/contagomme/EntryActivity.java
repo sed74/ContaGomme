@@ -16,6 +16,8 @@ import android.view.View;
 import android.widget.RelativeLayout;
 import android.widget.Toast;
 
+import com.sed.willy.contagomme.DBContract.BrandContract.BrandEntry;
+import com.sed.willy.contagomme.DBContract.WheelContract.WheelEntry;
 import com.sed.willy.contagomme.DBHelper.DatabaseHelper;
 import com.sed.willy.contagomme.wheelcount.WheelCountPerRaceActivity;
 
@@ -32,12 +34,11 @@ public class EntryActivity extends AppCompatActivity {
 
 //        checkVersion();
 
-        checkBrandTable();
+        new DatabaseHelper(this).checkBrandTable();
 
         RelativeLayout openRaceLayout = (RelativeLayout) findViewById(R.id.open_race);
         RelativeLayout openTireListLayout = (RelativeLayout) findViewById(R.id.open_tire_list);
         RelativeLayout openRaceListLayout = (RelativeLayout) findViewById(R.id.open_race_list);
-        RelativeLayout openTestLayout = (RelativeLayout) findViewById(R.id.test_list);
 
         RelativeLayout.OnClickListener buttonListener = new View.OnClickListener() {
             @Override
@@ -73,11 +74,8 @@ public class EntryActivity extends AppCompatActivity {
 
                         break;
                     case R.id.open_tire_list:
-                        Intent intent = new Intent(EntryActivity.this, BrandListActivity.class);
-                        startActivity(intent);
-                        break;
-
-                    case R.id.test_list:
+//                        Intent intent = new Intent(EntryActivity.this, BrandListActivity.class);
+//                        startActivity(intent);
                         Intent newIntent = new Intent(EntryActivity.this, TyreListRecyclerActivity.class);
                         startActivity(newIntent);
                         break;
@@ -95,14 +93,10 @@ public class EntryActivity extends AppCompatActivity {
         openRaceLayout.setOnClickListener(buttonListener);
         openTireListLayout.setOnClickListener(buttonListener);
         openRaceListLayout.setOnClickListener(buttonListener);
-        openTestLayout.setOnClickListener(buttonListener);
+
 
     }
 
-    private void checkBrandTable() {
-        DatabaseHelper dbHelper = new DatabaseHelper(this);
-
-    }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -134,9 +128,9 @@ public class EntryActivity extends AppCompatActivity {
     private void openRaceActivity(Integer raceID, String raceName) {
         //  check if wheel_list exists for the race
         DatabaseHelper dbHelper = new DatabaseHelper(getBaseContext());
-        int brandCount = dbHelper.getRowCount(DatabaseHelper.TABLE_BRANDS);
-        int rowCount = dbHelper.getRowCount(DatabaseHelper.TABLE_WHEEL_LIST,
-                DatabaseHelper.COLUMN_WHEEL_RACE_ID, raceID);
+        int brandCount = dbHelper.getRowCount(BrandEntry.TABLE);
+        int rowCount = dbHelper.getRowCount(WheelEntry.TABLE,
+                WheelEntry.RACE_ID, raceID);
 
         if (rowCount == 0 || rowCount < brandCount) {
             // table wheel_list has to be build/rebuild

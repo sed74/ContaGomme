@@ -13,6 +13,12 @@ import android.provider.BaseColumns;
 import android.util.Log;
 import android.widget.Toast;
 
+import com.sed.willy.contagomme.DBContract.BikeDetailContract.BikeDetailEntry;
+import com.sed.willy.contagomme.DBContract.BrandContract.BrandEntry;
+import com.sed.willy.contagomme.DBContract.RaceContract.RaceEntry;
+import com.sed.willy.contagomme.DBContract.ViewsContract.StatsEntry;
+import com.sed.willy.contagomme.DBContract.ViewsContract.WhellListEntry;
+import com.sed.willy.contagomme.DBContract.WheelContract.WheelEntry;
 import com.sed.willy.contagomme.DBModel.BikeDetails;
 import com.sed.willy.contagomme.DBModel.Brand;
 import com.sed.willy.contagomme.DBModel.Race;
@@ -25,146 +31,15 @@ import java.util.List;
 
 public class DatabaseHelper extends SQLiteOpenHelper implements BaseColumns {
 
-    /*
-        SELECT count(1), Front_ID, rear_id FROM "amos"."aa" where Front_ID = rear_id group by front_id, rear_id
-                union
-        SELECT count(1), Front_ID, rear_id FROM "amos"."aa" where Front_ID <> rear_id group by front_id, rear_id;
-    */
-    // Table Names
-    public static final String TABLE_BRANDS = "brands";
-    public static final String TABLE_RACES = "races";
-    public static final String TABLE_WHEEL_LIST = "wheel_list";
-    public static final String TABLE_BIKE_DETAILS = "bike_details";
-    // BRANDS Table - column names
-    public static final String COLUMN_BRAND_NAME = "brand_name";
-    public static final String COLUMN_BRAND_ORDER = "brand_order";
-    // RACES Table - column names
-    public static final String COLUMN_RACE_NAME = "race_name";
-    public static final String COLUMN_RACE_PLACE = "race_place";
-    public static final String COLUMN_RACE_DATETIME = "race_datetime";
-    public static final String COLUMN_RACE_DESCRIPTION = "race_desc";
-    // WHEEL Table - column names
-    public static final String COLUMN_WHEEL_RACE_ID = "wheel_race_id";
-    public static final String COLUMN_WHEEL_BRAND_ID = "wheel_brand_id";
-    public static final String COLUMN_WHEEL_TOT_FRONT_WHEEL = "tot_front_wheel";
-    public static final String COLUMN_WHEEL_TOT_REAR_WHEEL = "tot_rear_wheel";
-    // BIKE_DETAIL - column names
-    public static final String COLUMN_BIKE_RACE_ID = "bike_race_id";
-    public static final String COLUMN_BIKE_FRONT_BRAND_ID = "bike_front_brand_id";
-    public static final String COLUMN_BIKE_REAR_BRAND_ID = "bike_rear_brand_id";
-    public static final String COLUMN_BIKE_INSERTED = "bike_inserted";
-    // STATISTIC VIEW
-    public static final String VIEW_STATISTIC = "statistics";
-    public static final String CREATE_VIEW_STATISTIC =
-            "CREATE VIEW " + VIEW_STATISTIC + " AS " +
-                    "SELECT count(1) as counter, " +
-                    "front_brand." + COLUMN_BRAND_NAME + " as front, " +
-                    "rear_brand." + COLUMN_BRAND_NAME + " as rear " +
-                    " FROM " + TABLE_BIKE_DETAILS + ", " + TABLE_BRANDS + " front_brand, " +
-                    TABLE_BRANDS + " rear_brand " +
-                    " WHERE " +
-                    "front_brand." + _ID + " = " + TABLE_BIKE_DETAILS + "." + COLUMN_BIKE_FRONT_BRAND_ID +
-                    " AND " +
-                    "rear_brand." + _ID + " = " + TABLE_BIKE_DETAILS + "." + COLUMN_BIKE_REAR_BRAND_ID +
-                    " AND " +
-                    COLUMN_BIKE_FRONT_BRAND_ID + " = " + COLUMN_BIKE_REAR_BRAND_ID +
-                    " GROUP BY " + "front_brand." + COLUMN_BRAND_NAME + ", rear_brand." + COLUMN_BRAND_NAME +
-                    " UNION " +
-                    "SELECT count(1), " +
-                    "front_brand." + COLUMN_BRAND_NAME + " as front, " +
-                    "rear_brand." + COLUMN_BRAND_NAME + " as rear " +
-                    " FROM " + TABLE_BIKE_DETAILS + ", " + TABLE_BRANDS + " front_brand, " +
-                    TABLE_BRANDS + " rear_brand " +
-                    " WHERE " +
-                    "front_brand." + _ID + " = " + TABLE_BIKE_DETAILS + "." + COLUMN_BIKE_FRONT_BRAND_ID +
-                    " AND " +
-                    "rear_brand." + _ID + " = " + TABLE_BIKE_DETAILS + "." + COLUMN_BIKE_REAR_BRAND_ID +
-                    " AND " +
-                    COLUMN_BIKE_FRONT_BRAND_ID + " <> " + COLUMN_BIKE_REAR_BRAND_ID +
-                    " GROUP BY " + "front_brand." + COLUMN_BRAND_NAME + ", rear_brand." + COLUMN_BRAND_NAME;
-    /*
-        SELECT count(1), Front_ID, rear_id FROM aa where Front_ID = rear_id group by front_id, rear_id
-                union
-        SELECT count(1), Front_ID, rear_id FROM aa where Front_ID <> rear_id group by front_id, rear_id;
-    */
-    // RACES_WHEEL_LIST VIEW
-    public static final String VIEW_RACES_WHEEL_LIST = "view_races_wheel_list";
-    public static final String COLUMN_VIEW_RACE_ID = "race_id";
-    public static final String COLUMN_VIEW_BRAND_ID = "brand_id";
-    // TEMP Table Name
-    private static final String TEMP_BIKE_DETAIL = "temp_bike_detail";
-    // Database Version
-    private static final int DATABASE_VERSION = 13;
     // Logcat tag
     private static final String TAG = DatabaseHelper.class.getName();
     // Database Name
     private static final String DATABASE_NAME = "contaGomme";
+    // Database Version
+    private static final int DATABASE_VERSION = 15;
+    // TEMP Table Name
+    private static final String TEMP_BIKE_DETAIL = "temp_bike_detail";
 
-    // Table Create Statements
-    // BRANDS table create statement
-    private static final String CREATE_TABLE_BRANDS =
-            "CREATE TABLE " + TABLE_BRANDS +
-                    "(" + _ID + " INTEGER PRIMARY KEY AUTOINCREMENT," +
-                    COLUMN_BRAND_ORDER + " INTEGER," +
-                    COLUMN_BRAND_NAME + " TEXT)";
-    //                    IS_FRONT_SELECTED + " INT, "+
-//                    IS_REAR_SELECTED + "INT)";
-    // RACES table create statement
-    private static final String CREATE_TABLE_RACES =
-            "CREATE TABLE " + TABLE_RACES +
-                    "(" + _ID + " INTEGER PRIMARY KEY AUTOINCREMENT," +
-                    COLUMN_RACE_NAME + " TEXT," +
-                    COLUMN_RACE_PLACE + " TEXT," +
-//                    COLUMN_RACE_DATE + " TEXT," +
-                    COLUMN_RACE_DATETIME + " INTEGER," +
-                    COLUMN_RACE_DESCRIPTION + " TEXT)";
-
-
-    // BIKE_DETAILS table create statement
-    private static final String CREATE_TABLE_BIKE_DETAILS =
-            "CREATE TABLE " + TABLE_BIKE_DETAILS +
-                    "(" + _ID + " INTEGER PRIMARY KEY AUTOINCREMENT," +
-                    COLUMN_BIKE_RACE_ID + " INTEGER," +
-                    COLUMN_BIKE_FRONT_BRAND_ID + " INTEGER," +
-                    COLUMN_BIKE_REAR_BRAND_ID + " INTEGER," +
-                    COLUMN_BIKE_INSERTED + " INTEGER," +
-                    " FOREIGN KEY (" + COLUMN_BIKE_RACE_ID + ") REFERENCES " +
-                    TABLE_RACES + "(" + _ID + ") ON DELETE CASCADE, " +
-                    " FOREIGN KEY (" + COLUMN_BIKE_FRONT_BRAND_ID + ") REFERENCES " +
-                    TABLE_BRANDS + "(" + _ID + ") ON DELETE CASCADE, " +
-                    " FOREIGN KEY (" + COLUMN_BIKE_REAR_BRAND_ID + ") REFERENCES " +
-                    TABLE_BRANDS + "(" + _ID + ") ON DELETE CASCADE)";
-
-
-    // WHEEL_LIST table create statement
-    private static final String CREATE_TABLE_WHEEL_LIST =
-            "CREATE TABLE " + TABLE_WHEEL_LIST +
-                    "(" + _ID + " INTEGER PRIMARY KEY AUTOINCREMENT," +
-                    COLUMN_WHEEL_RACE_ID + " INTEGER," +
-                    COLUMN_WHEEL_BRAND_ID + " INTEGER," +
-                    COLUMN_WHEEL_TOT_FRONT_WHEEL + " INTEGER," +
-                    COLUMN_WHEEL_TOT_REAR_WHEEL + " INTEGER," +
-                    " FOREIGN KEY (" + COLUMN_WHEEL_RACE_ID + ") REFERENCES " +
-                    TABLE_RACES + "(" + _ID + ") ON DELETE CASCADE, " +
-                    " FOREIGN KEY (" + COLUMN_WHEEL_BRAND_ID + ") REFERENCES " +
-                    TABLE_BRANDS + "(" + _ID + ") ON DELETE CASCADE)";
-    // RACES_WHEEL_LIST VIEW create statement
-    private static final String CREATE_RACES_WHEEL_LIST_VIEW =
-            "CREATE VIEW " + VIEW_RACES_WHEEL_LIST +
-                    " AS SELECT " + TABLE_WHEEL_LIST + "." + _ID + ", " +
-                    TABLE_RACES + "." + _ID + " " + COLUMN_VIEW_RACE_ID + ", " +
-                    TABLE_BRANDS + "." + _ID + " " + COLUMN_VIEW_BRAND_ID + ", " +
-                    TABLE_RACES + "." + COLUMN_RACE_NAME + ", " +
-                    TABLE_BRANDS + "." + COLUMN_BRAND_NAME + ", " +
-                    COLUMN_WHEEL_TOT_FRONT_WHEEL + ", " +
-                    COLUMN_WHEEL_TOT_REAR_WHEEL +
-                    " FROM " + TABLE_WHEEL_LIST + ", " +
-                    TABLE_BRANDS + ", " + TABLE_RACES +
-                    " WHERE " + TABLE_WHEEL_LIST + "." + COLUMN_WHEEL_BRAND_ID + " = " +
-                    TABLE_BRANDS + "." + _ID +
-                    " AND " + TABLE_WHEEL_LIST + "." + COLUMN_WHEEL_RACE_ID + " = " +
-                    TABLE_RACES + "." + _ID +
-                    " ORDER BY " + COLUMN_BRAND_ORDER;
     private Context mContext;
 
     public DatabaseHelper(Context context) {
@@ -177,12 +52,12 @@ public class DatabaseHelper extends SQLiteOpenHelper implements BaseColumns {
     public void onCreate(SQLiteDatabase db) {
 
         // creating required tables
-        db.execSQL(CREATE_TABLE_BRANDS);
-        db.execSQL(CREATE_TABLE_RACES);
-        db.execSQL(CREATE_TABLE_WHEEL_LIST);
-        db.execSQL(CREATE_TABLE_BIKE_DETAILS);
-        db.execSQL(CREATE_RACES_WHEEL_LIST_VIEW);
-        db.execSQL(CREATE_VIEW_STATISTIC);
+        db.execSQL(BrandEntry.CREATE_TABLE);
+        db.execSQL(RaceEntry.CREATE_TABLE);
+        db.execSQL(WheelEntry.CREATE_TABLE);
+        db.execSQL(BikeDetailEntry.CREATE_TABLE);
+        db.execSQL(WhellListEntry.CREATE_VIEW);
+        db.execSQL(StatsEntry.CREATE_VIEW);
 
         this.populateBrand(db);
     }
@@ -191,27 +66,33 @@ public class DatabaseHelper extends SQLiteOpenHelper implements BaseColumns {
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
         // on upgrade drop older tables
-        db.execSQL("DROP TABLE IF EXISTS " + TABLE_BRANDS);
-        db.execSQL("DROP TABLE IF EXISTS " + TABLE_RACES);
-        db.execSQL("DROP TABLE IF EXISTS " + TABLE_WHEEL_LIST);
-        db.execSQL("DROP TABLE IF EXISTS " + TABLE_BIKE_DETAILS);
-        db.execSQL("DROP VIEW  IF EXISTS " + VIEW_RACES_WHEEL_LIST);
-        db.execSQL("DROP VIEW  IF EXISTS " + VIEW_STATISTIC);
+        if (oldVersion >= 13) {
+            for (int i = oldVersion; i < newVersion; i++) {
+                DBUpgradeScripts.upgrade(db, i + 1);
+            }
+        } else {
+            db.execSQL("DROP TABLE IF EXISTS " + BrandEntry.TABLE);
+            db.execSQL("DROP TABLE IF EXISTS " + RaceEntry.TABLE);
+            db.execSQL("DROP TABLE IF EXISTS " + WheelEntry.TABLE);
+            db.execSQL("DROP TABLE IF EXISTS " + BikeDetailEntry.TABLE);
+            db.execSQL("DROP VIEW  IF EXISTS " + WhellListEntry.VIEW);
+            db.execSQL("DROP VIEW  IF EXISTS " + StatsEntry.VIEW);
 
-        // create new tables
-        onCreate(db);
+            // create new tables
+            onCreate(db);
+        }
     }
 
-    private void populateBrand(SQLiteDatabase db) {
+    public void populateBrand(SQLiteDatabase db) {
 
         String[] tyreBrands = mContext.getResources().getStringArray(R.array.tire_brands);
         ContentValues values = new ContentValues();
         int order = 10;
         for (String b : tyreBrands) {
-            values.put(COLUMN_BRAND_NAME, b);
-            values.put(COLUMN_BRAND_ORDER, order);
+            values.put(BrandEntry.BRAND_NAME, b);
+            values.put(BrandEntry.BRAND_ORDER, order);
             order += 10;
-            db.insert(TABLE_BRANDS, null, values);
+            db.insert(BrandEntry.TABLE, null, values);
         }
     }
 
@@ -222,11 +103,11 @@ public class DatabaseHelper extends SQLiteOpenHelper implements BaseColumns {
         SQLiteDatabase db = this.getWritableDatabase();
 
         ContentValues values = new ContentValues();
-        values.put(COLUMN_BRAND_NAME, brands.getName());
-        values.put(COLUMN_BRAND_ORDER, brands.getOrder());
+        values.put(BrandEntry.BRAND_NAME, brands.getName());
+        values.put(BrandEntry.BRAND_ORDER, brands.getOrder());
 
         // insert row
-        return db.insert(TABLE_BRANDS, null, values);
+        return db.insert(BrandEntry.TABLE, null, values);
     }
 
     public int getMax(String tableName, String columnName, int tableID) {
@@ -283,10 +164,10 @@ public class DatabaseHelper extends SQLiteOpenHelper implements BaseColumns {
             do {
 
                 int id = c.getInt((c.getColumnIndex(_ID)));
-                int brandId = c.getInt((c.getColumnIndex(COLUMN_VIEW_BRAND_ID)));
-                int raceid = c.getInt((c.getColumnIndex(COLUMN_VIEW_RACE_ID)));
-                int totFront = c.getInt((c.getColumnIndex(COLUMN_WHEEL_TOT_FRONT_WHEEL)));
-                int totRear = c.getInt((c.getColumnIndex(COLUMN_WHEEL_TOT_REAR_WHEEL)));
+                int brandId = c.getInt((c.getColumnIndex(WhellListEntry.BRAND_ID)));
+                int raceid = c.getInt((c.getColumnIndex(WhellListEntry.RACE_ID)));
+                int totFront = c.getInt((c.getColumnIndex(WheelEntry.TOT_FRONT_WHEEL)));
+                int totRear = c.getInt((c.getColumnIndex(WheelEntry.TOT_REAR_WHEEL)));
 
             } while (c.moveToNext());
         }
@@ -326,7 +207,7 @@ public class DatabaseHelper extends SQLiteOpenHelper implements BaseColumns {
     public Brand getBrand(long todo_id) {
         SQLiteDatabase db = this.getReadableDatabase();
 
-        String selectQuery = "SELECT  * FROM " + TABLE_BRANDS + " WHERE "
+        String selectQuery = "SELECT  * FROM " + BrandEntry.TABLE + " WHERE "
                 + _ID + " = " + todo_id;
 
         Log.e(TAG, selectQuery);
@@ -338,8 +219,8 @@ public class DatabaseHelper extends SQLiteOpenHelper implements BaseColumns {
 
         Brand brands = new Brand();
         brands.setId(c.getInt(c.getColumnIndex(_ID)));
-        brands.setName((c.getString(c.getColumnIndex(COLUMN_BRAND_NAME))));
-        brands.setOrder((c.getInt(c.getColumnIndex(COLUMN_BRAND_ORDER))));
+        brands.setName((c.getString(c.getColumnIndex(BrandEntry.BRAND_NAME))));
+        brands.setOrder((c.getInt(c.getColumnIndex(BrandEntry.BRAND_ORDER))));
 
         closeDB();
 
@@ -355,23 +236,24 @@ public class DatabaseHelper extends SQLiteOpenHelper implements BaseColumns {
 
     public List<Brand> getAllBrands(boolean ordered) {
         List<Brand> brands = new ArrayList<>();
-        String selectQuery = "SELECT * FROM " + TABLE_BRANDS;
+        String selectQuery = "SELECT * FROM " + BrandEntry.TABLE + " WHERE " + BrandEntry.BRAND_IS_DELETED +
+                "=?";
         if (ordered) {
-            selectQuery += " ORDER BY " + COLUMN_BRAND_ORDER;
+            selectQuery += " ORDER BY " + BrandEntry.BRAND_ORDER;
         }
 
         Log.e(TAG, selectQuery);
 
         SQLiteDatabase db = this.getReadableDatabase();
-        Cursor c = db.rawQuery(selectQuery, null);
+        Cursor c = db.rawQuery(selectQuery, new String[]{"0"});
 
         // looping through all rows and adding to list
         if (c.moveToFirst()) {
             do {
                 Brand brand = new Brand();
                 brand.setId(c.getInt((c.getColumnIndex(_ID))));
-                brand.setName((c.getString(c.getColumnIndex(COLUMN_BRAND_NAME))));
-                brand.setOrder((c.getInt(c.getColumnIndex(COLUMN_BRAND_ORDER))));
+                brand.setName((c.getString(c.getColumnIndex(BrandEntry.BRAND_NAME))));
+                brand.setOrder((c.getInt(c.getColumnIndex(BrandEntry.BRAND_ORDER))));
 
                 brands.add(brand);
             } while (c.moveToNext());
@@ -387,8 +269,8 @@ public class DatabaseHelper extends SQLiteOpenHelper implements BaseColumns {
     public ArrayList<WheelList> getAllWheelListByRaceId(int raceId) {
         ArrayList<WheelList> tires = new ArrayList<>();
 
-        String selectQuery = "SELECT * FROM " + VIEW_RACES_WHEEL_LIST + " WHERE " +
-                COLUMN_WHEEL_RACE_ID + " = " + String.valueOf(raceId);
+        String selectQuery = "SELECT * FROM " + WhellListEntry.VIEW + " WHERE " +
+                WheelEntry.RACE_ID + " = " + String.valueOf(raceId);
 
         Log.e(TAG, selectQuery);
 
@@ -400,10 +282,10 @@ public class DatabaseHelper extends SQLiteOpenHelper implements BaseColumns {
             do {
                 WheelList tire = new WheelList();
                 tire.setId(c.getInt((c.getColumnIndex(_ID))));
-                tire.setRaceId(c.getInt((c.getColumnIndex(COLUMN_WHEEL_RACE_ID))));
-                tire.setBrandId(c.getInt((c.getColumnIndex(COLUMN_WHEEL_BRAND_ID))));
-                tire.setTotFrontWheel(c.getInt((c.getColumnIndex(COLUMN_WHEEL_TOT_FRONT_WHEEL))));
-                tire.setTotRearWheel(c.getInt((c.getColumnIndex(COLUMN_WHEEL_TOT_FRONT_WHEEL))));
+                tire.setRaceId(c.getInt((c.getColumnIndex(WheelEntry.RACE_ID))));
+                tire.setBrandId(c.getInt((c.getColumnIndex(WheelEntry.BRAND_ID))));
+                tire.setTotFrontWheel(c.getInt((c.getColumnIndex(WheelEntry.TOT_FRONT_WHEEL))));
+                tire.setTotRearWheel(c.getInt((c.getColumnIndex(WheelEntry.TOT_FRONT_WHEEL))));
 
                 tires.add(tire);
             } while (c.moveToNext());
@@ -413,18 +295,18 @@ public class DatabaseHelper extends SQLiteOpenHelper implements BaseColumns {
         return tires;
     }
 
-    /*
+    /**
      * Updating a brand
      */
     public int updateBrand(Brand brands) {
         SQLiteDatabase db = this.getWritableDatabase();
 
         ContentValues values = new ContentValues();
-        values.put(COLUMN_BRAND_NAME, brands.getName());
-        values.put(COLUMN_BRAND_ORDER, brands.getOrder());
+        values.put(BrandEntry.BRAND_NAME, brands.getName());
+        values.put(BrandEntry.BRAND_ORDER, brands.getOrder());
 
         // updating row
-        return db.update(TABLE_BRANDS, values, _ID + " = ?",
+        return db.update(BrandEntry.TABLE, values, _ID + " = ?",
                 new String[]{String.valueOf(brands.getId())});
     }
 
@@ -450,25 +332,67 @@ public class DatabaseHelper extends SQLiteOpenHelper implements BaseColumns {
      */
     public void deleteBrand(long brandId) {
         SQLiteDatabase db = this.getWritableDatabase();
-        db.delete(TABLE_BRANDS, _ID + " = ?",
-                new String[]{String.valueOf(brandId)});
+        if (brandId >= 0) {
+            db.delete(BrandEntry.TABLE, _ID + " = ? AND " + BrandEntry.BRAND_IS_DELETED + " = ? ",
+                    new String[]{String.valueOf(brandId), String.valueOf(BrandEntry.ROW_DELETED)});
+        } else {
+            db.delete(BrandEntry.TABLE, BrandEntry.BRAND_IS_DELETED + " = ? ",
+                    new String[]{String.valueOf(BrandEntry.ROW_DELETED)});
+        }
+
     }
 
-    /*
+    /**
+     * Delete ALL brands with is_deleted = 1
+     */
+    public void purgeBrands() {
+        deleteBrand(-1);
+    }
+
+    /**
+     * Marking a brand as Deleted for undo purposes
+     */
+    public void deleteBrand(long brandId, boolean markAsDeleted) {
+        if (!markAsDeleted) {
+            deleteBrand(brandId);
+            return;
+        } else {
+            SQLiteDatabase db = this.getWritableDatabase();
+            ContentValues values = new ContentValues();
+            values.put(BrandEntry.BRAND_IS_DELETED, BrandEntry.ROW_DELETED);
+
+            db.update(BrandEntry.TABLE, values, _ID + "=?", new String[]{String.valueOf(brandId)});
+        }
+    }
+
+    /**
+     * Undo a brand deletion
+     *
+     * @param brandID
+     */
+    public void unDeleteBrand(int brandID) {
+        SQLiteDatabase db = this.getWritableDatabase();
+        ContentValues values = new ContentValues();
+        values.put(BrandEntry.BRAND_IS_DELETED, BrandEntry.ROW_NOT_DELETED);
+
+        db.update(BrandEntry.TABLE, values, _ID + "=?", new String[]{String.valueOf(brandID)});
+    }
+
+    /**
      * Creating a Race
      */
     public long createRace(Race race) {
         SQLiteDatabase db = this.getWritableDatabase();
 
         ContentValues values = new ContentValues();
-        values.put(COLUMN_RACE_NAME, race.getName());
+        values.put(RaceEntry.RACE_NAME, race.getName());
 //        values.put(COLUMN_RACE_PLACE, race.getPlace());
-        values.put(COLUMN_RACE_DESCRIPTION, race.getDesc());
+        values.put(RaceEntry.RACE_DESCRIPTION, race.getDesc());
 //        values.put(COLUMN_RACE_DATE, race.getDate());
-        values.put(COLUMN_RACE_DATETIME, race.getDateTime());
+        values.put(RaceEntry.RACE_DATETIME, race.getDateTime());
 
         // insert row
-        return db.insert(TABLE_RACES, null, values);
+        return db.insert(RaceEntry.TABLE, null, values);
     }
 
     /**
@@ -477,7 +401,7 @@ public class DatabaseHelper extends SQLiteOpenHelper implements BaseColumns {
     public Race getRace(long todo_id) {
         SQLiteDatabase db = this.getReadableDatabase();
 
-        String selectQuery = "SELECT  * FROM " + TABLE_RACES + " WHERE "
+        String selectQuery = "SELECT  * FROM " + RaceEntry.TABLE + " WHERE "
                 + _ID + " = " + todo_id;
 
         Log.e(TAG, selectQuery);
@@ -489,10 +413,10 @@ public class DatabaseHelper extends SQLiteOpenHelper implements BaseColumns {
 
         Race race = new Race();
         race.setId(c.getInt(c.getColumnIndex(_ID)));
-        race.setName((c.getString(c.getColumnIndex(COLUMN_RACE_NAME))));
-//        race.setDate((c.getString(c.getColumnIndex(COLUMN_RACE_DATE))));
-        race.setDesc((c.getString(c.getColumnIndex(COLUMN_RACE_DESCRIPTION))));
-        race.setDateTime((c.getInt(c.getColumnIndex(COLUMN_RACE_DATETIME))));
+        race.setName((c.getString(c.getColumnIndex(RaceEntry.RACE_NAME))));
+//        race.setDate((c.getString(c.getColumnIndex(RaceEntry.RACE_DATE))));
+        race.setDesc((c.getString(c.getColumnIndex(RaceEntry.RACE_DESCRIPTION))));
+        race.setDateTime((c.getInt(c.getColumnIndex(RaceEntry.RACE_DATETIME))));
 
         c.close();
         db.close();
@@ -504,7 +428,7 @@ public class DatabaseHelper extends SQLiteOpenHelper implements BaseColumns {
      */
     public void deleteRace(long raceId) {
         SQLiteDatabase db = this.getWritableDatabase();
-        db.delete(TABLE_RACES, _ID + " = ?",
+        db.delete(RaceEntry.TABLE, _ID + " = ?",
                 new String[]{String.valueOf(raceId)});
     }
 
@@ -514,7 +438,7 @@ public class DatabaseHelper extends SQLiteOpenHelper implements BaseColumns {
      */
     public List<Race> getAllRaces() {
         List<Race> tags = new ArrayList<>();
-        String selectQuery = "SELECT * FROM " + TABLE_RACES;
+        String selectQuery = "SELECT * FROM " + RaceEntry.TABLE;
 
         Log.e(TAG, selectQuery);
 
@@ -526,11 +450,11 @@ public class DatabaseHelper extends SQLiteOpenHelper implements BaseColumns {
             do {
                 Race r = new Race();
                 r.setId(c.getInt((c.getColumnIndex(_ID))));
-                r.setName(c.getString(c.getColumnIndex(COLUMN_RACE_NAME)));
-                r.setDesc(c.getString(c.getColumnIndex(COLUMN_RACE_DESCRIPTION)));
+                r.setName(c.getString(c.getColumnIndex(RaceEntry.RACE_NAME)));
+                r.setDesc(c.getString(c.getColumnIndex(RaceEntry.RACE_DESCRIPTION)));
 //                r.setPlace(c.getString(c.getColumnIndex(COLUMN_RACE_PLACE)));
 //                r.setDate(c.getString(c.getColumnIndex(COLUMN_RACE_DATE)));
-                r.setDateTime(c.getInt(c.getColumnIndex(COLUMN_RACE_DATETIME)));
+                r.setDateTime(c.getInt(c.getColumnIndex(RaceEntry.RACE_DATETIME)));
 
                 // adding to tags list
                 tags.add(r);
@@ -546,7 +470,7 @@ public class DatabaseHelper extends SQLiteOpenHelper implements BaseColumns {
      */
     public Object[] getRacesArray(boolean getIds) {
         Object[] retVal;
-        int rowCount = this.getRowCount(TABLE_RACES);
+        int rowCount = this.getRowCount(RaceEntry.TABLE);
         if (!getIds) {
             retVal = new String[rowCount];
         } else {
@@ -555,10 +479,10 @@ public class DatabaseHelper extends SQLiteOpenHelper implements BaseColumns {
 
         String selectQuery;
         if (getIds) {
-            selectQuery = "SELECT " + _ID + " FROM " + TABLE_RACES +
-                    " order by " + COLUMN_RACE_DATETIME;
+            selectQuery = "SELECT " + _ID + " FROM " + RaceEntry.TABLE +
+                    " order by " + RaceEntry.RACE_DATETIME;
         } else {
-            selectQuery = "SELECT * FROM " + TABLE_RACES + " order by " + COLUMN_RACE_DATETIME;
+            selectQuery = "SELECT * FROM " + RaceEntry.TABLE + " order by " + RaceEntry.RACE_DATETIME;
         }
         Log.e(TAG, selectQuery);
 
@@ -570,9 +494,9 @@ public class DatabaseHelper extends SQLiteOpenHelper implements BaseColumns {
         if (c.moveToFirst()) {
             do {
                 if (!getIds) {
-                    retVal[i] = c.getString(c.getColumnIndex(COLUMN_RACE_NAME)) + "\t(" +
+                    retVal[i] = c.getString(c.getColumnIndex(RaceEntry.RACE_NAME)) + "\t(" +
                             DateConverter.fromUnixToDate(
-                                    c.getInt(c.getColumnIndex(COLUMN_RACE_DATETIME)),
+                                    c.getInt(c.getColumnIndex(RaceEntry.RACE_DATETIME)),
                                     DateConverter.FORMAT_DATE) + ")";
                 } else {
                     retVal[i] = c.getInt(c.getColumnIndex(_ID));
@@ -600,14 +524,14 @@ public class DatabaseHelper extends SQLiteOpenHelper implements BaseColumns {
         SQLiteDatabase db = this.getWritableDatabase();
 
         ContentValues values = new ContentValues();
-        values.put(COLUMN_RACE_NAME, race.getName());
-        values.put(COLUMN_RACE_DESCRIPTION, race.getDesc());
+        values.put(RaceEntry.RACE_NAME, race.getName());
+        values.put(RaceEntry.RACE_DESCRIPTION, race.getDesc());
 //        values.put(COLUMN_RACE_PLACE, race.getPlace());
 //        values.put(COLUMN_RACE_DATE, race.getDate());
-        values.put(COLUMN_RACE_DATETIME, race.getDateTime());
+        values.put(RaceEntry.RACE_DATETIME, race.getDateTime());
 
         // updating row
-        return db.update(TABLE_RACES, values, _ID + " = ?",
+        return db.update(RaceEntry.TABLE, values, _ID + " = ?",
                 new String[]{String.valueOf(race.getId())});
     }
 
@@ -625,9 +549,9 @@ public class DatabaseHelper extends SQLiteOpenHelper implements BaseColumns {
     public List<WheelList> getAllWheelListByRace(String raceId) {
         List<WheelList> wheelLists = new ArrayList<>();
 
-        String selectQuery = "SELECT  * FROM " + TABLE_WHEEL_LIST + " wl, "
-                + TABLE_BRANDS + " b WHERE wl." + COLUMN_WHEEL_RACE_ID + " = " + raceId +
-                " AND wl." + COLUMN_WHEEL_BRAND_ID + " = " + "b." + _ID;
+        String selectQuery = "SELECT  * FROM " + WheelEntry.TABLE + " wl, "
+                + BrandEntry.TABLE + " b WHERE wl." + WheelEntry.RACE_ID + " = " + raceId +
+                " AND wl." + WheelEntry.BRAND_ID + " = " + "b." + _ID;
 
         Log.e(TAG, selectQuery);
 
@@ -656,13 +580,13 @@ public class DatabaseHelper extends SQLiteOpenHelper implements BaseColumns {
         SQLiteDatabase db = this.getWritableDatabase();
 
         ContentValues values = new ContentValues();
-        values.put(COLUMN_WHEEL_BRAND_ID, wheelList.getBrandId());
-        values.put(COLUMN_WHEEL_RACE_ID, wheelList.getRaceId());
-        values.put(COLUMN_WHEEL_TOT_FRONT_WHEEL, wheelList.getTotFrontWheel());
-        values.put(COLUMN_WHEEL_TOT_REAR_WHEEL, wheelList.getTotRearWheel());
+        values.put(WheelEntry.BRAND_ID, wheelList.getBrandId());
+        values.put(WheelEntry.RACE_ID, wheelList.getRaceId());
+        values.put(WheelEntry.TOT_FRONT_WHEEL, wheelList.getTotFrontWheel());
+        values.put(WheelEntry.TOT_REAR_WHEEL, wheelList.getTotRearWheel());
 
         // insert row
-        return db.insert(TABLE_WHEEL_LIST, null, values);
+        return db.insert(WheelEntry.TABLE, null, values);
     }
 
     /**
@@ -671,7 +595,7 @@ public class DatabaseHelper extends SQLiteOpenHelper implements BaseColumns {
     public WheelList getWheelList(long todo_id) {
         SQLiteDatabase db = this.getReadableDatabase();
 
-        String selectQuery = "SELECT  * FROM " + TABLE_WHEEL_LIST + " WHERE "
+        String selectQuery = "SELECT  * FROM " + WheelEntry.TABLE + " WHERE "
                 + _ID + " = " + todo_id;
 
         Log.e(TAG, selectQuery);
@@ -683,10 +607,10 @@ public class DatabaseHelper extends SQLiteOpenHelper implements BaseColumns {
 
         WheelList wheelList = new WheelList();
         wheelList.setId(c.getInt(c.getColumnIndex(_ID)));
-        wheelList.setBrandId((c.getInt(c.getColumnIndex(COLUMN_WHEEL_BRAND_ID))));
-        wheelList.setRaceId((c.getInt(c.getColumnIndex(COLUMN_WHEEL_RACE_ID))));
-        wheelList.setTotFrontWheel((c.getInt(c.getColumnIndex(COLUMN_WHEEL_TOT_FRONT_WHEEL))));
-        wheelList.setTotRearWheel((c.getInt(c.getColumnIndex(COLUMN_WHEEL_TOT_REAR_WHEEL))));
+        wheelList.setBrandId((c.getInt(c.getColumnIndex(WheelEntry.BRAND_ID))));
+        wheelList.setRaceId((c.getInt(c.getColumnIndex(WheelEntry.RACE_ID))));
+        wheelList.setTotFrontWheel((c.getInt(c.getColumnIndex(WheelEntry.TOT_FRONT_WHEEL))));
+        wheelList.setTotRearWheel((c.getInt(c.getColumnIndex(WheelEntry.TOT_REAR_WHEEL))));
 //        race.setDateTime((c.getFloat(c.getColumnIndex(COLUMN_RACE_DATETIME))));
         closeDB();
         return wheelList;
@@ -699,13 +623,13 @@ public class DatabaseHelper extends SQLiteOpenHelper implements BaseColumns {
         SQLiteDatabase db = this.getWritableDatabase();
 
         ContentValues values = new ContentValues();
-        values.put(COLUMN_WHEEL_BRAND_ID, wheelList.getBrandId());
-        values.put(COLUMN_WHEEL_RACE_ID, wheelList.getRaceId());
-        values.put(COLUMN_WHEEL_TOT_FRONT_WHEEL, wheelList.getTotFrontWheel());
-        values.put(COLUMN_WHEEL_TOT_REAR_WHEEL, wheelList.getTotRearWheel());
+        values.put(WheelEntry.BRAND_ID, wheelList.getBrandId());
+        values.put(WheelEntry.RACE_ID, wheelList.getRaceId());
+        values.put(WheelEntry.TOT_FRONT_WHEEL, wheelList.getTotFrontWheel());
+        values.put(WheelEntry.TOT_REAR_WHEEL, wheelList.getTotRearWheel());
 
         // updating row
-        return db.update(TABLE_WHEEL_LIST, values, _ID + " = ?",
+        return db.update(WheelEntry.TABLE, values, _ID + " = ?",
                 new String[]{String.valueOf(wheelList.getId())});
     }
 
@@ -714,7 +638,7 @@ public class DatabaseHelper extends SQLiteOpenHelper implements BaseColumns {
      */
     public void deleteWheelList(long wheelListId) {
         SQLiteDatabase db = this.getWritableDatabase();
-        db.delete(TABLE_WHEEL_LIST, _ID + " = ?",
+        db.delete(WheelEntry.TABLE, _ID + " = ?",
                 new String[]{String.valueOf(wheelListId)});
     }
 
@@ -725,11 +649,11 @@ public class DatabaseHelper extends SQLiteOpenHelper implements BaseColumns {
         SQLiteDatabase db = this.getWritableDatabase();
 
         if (onlyMissingBrands) {
-            db.delete(TABLE_WHEEL_LIST, COLUMN_WHEEL_RACE_ID + " = ?" + " AND " +
-                    COLUMN_WHEEL_BRAND_ID + " NOT IN (SELECT " + _ID + " FROM " +
-                    TABLE_BRANDS + ")", new String[]{String.valueOf(raceId)});
+            db.delete(WheelEntry.TABLE, WheelEntry.RACE_ID + " = ?" + " AND " +
+                    WheelEntry.BRAND_ID + " NOT IN (SELECT " + _ID + " FROM " +
+                    BrandEntry.TABLE + ")", new String[]{String.valueOf(raceId)});
         } else {
-            db.delete(TABLE_WHEEL_LIST, COLUMN_WHEEL_RACE_ID + " = ?",
+            db.delete(WheelEntry.TABLE, WheelEntry.RACE_ID + " = ?",
                     new String[]{String.valueOf(raceId)});
         }
         closeDB();
@@ -743,13 +667,13 @@ public class DatabaseHelper extends SQLiteOpenHelper implements BaseColumns {
         SQLiteDatabase db = this.getWritableDatabase();
 
         ContentValues values = new ContentValues();
-        values.put(COLUMN_BIKE_RACE_ID, bikeDetails.getRaceId());
-        values.put(COLUMN_BIKE_FRONT_BRAND_ID, bikeDetails.getFrontBrandId());
-        values.put(COLUMN_BIKE_REAR_BRAND_ID, bikeDetails.getRearBrandId());
-        values.put(COLUMN_BIKE_INSERTED, bikeDetails.getInserted());
+        values.put(BikeDetailEntry.RACE_ID, bikeDetails.getRaceId());
+        values.put(BikeDetailEntry.FRONT_BRAND_ID, bikeDetails.getFrontBrandId());
+        values.put(BikeDetailEntry.REAR_BRAND_ID, bikeDetails.getRearBrandId());
+        values.put(BikeDetailEntry.INSERTED, bikeDetails.getInserted());
 
         // insert row
-        return db.insert(TABLE_BIKE_DETAILS, null, values);
+        return db.insert(BikeDetailEntry.TABLE, null, values);
     }
 
     /**
@@ -757,7 +681,7 @@ public class DatabaseHelper extends SQLiteOpenHelper implements BaseColumns {
      */
     public void deleteBikeDetailByRace(long raceId) {
         SQLiteDatabase db = this.getWritableDatabase();
-        db.delete(TABLE_BIKE_DETAILS, COLUMN_BIKE_RACE_ID + " = ?",
+        db.delete(BikeDetailEntry.TABLE, BikeDetailEntry.RACE_ID + " = ?",
                 new String[]{String.valueOf(raceId)});
 
     }
@@ -773,12 +697,12 @@ public class DatabaseHelper extends SQLiteOpenHelper implements BaseColumns {
         sqlSelect = "CREATE TEMP TABLE IF NOT EXISTS " + TEMP_BIKE_DETAIL;
         sqlSelect += " AS SELECT ";
         sqlSelect += _ID + ",";
-        sqlSelect += COLUMN_BIKE_RACE_ID + ",";
-        sqlSelect += COLUMN_BIKE_FRONT_BRAND_ID + ",";
-        sqlSelect += COLUMN_BIKE_REAR_BRAND_ID + ",";
-        sqlSelect += COLUMN_BIKE_INSERTED + " ";
-        sqlSelect += " FROM " + TABLE_BIKE_DETAILS;
-        sqlSelect += " WHERE " + COLUMN_BIKE_RACE_ID + " = " + raceId;
+        sqlSelect += BikeDetailEntry.RACE_ID + ",";
+        sqlSelect += BikeDetailEntry.FRONT_BRAND_ID + ",";
+        sqlSelect += BikeDetailEntry.REAR_BRAND_ID + ",";
+        sqlSelect += BikeDetailEntry.INSERTED + " ";
+        sqlSelect += " FROM " + BikeDetailEntry.TABLE;
+        sqlSelect += " WHERE " + BikeDetailEntry.RACE_ID + " = " + raceId;
 
         db.execSQL(sqlSelect);
     }
@@ -786,21 +710,21 @@ public class DatabaseHelper extends SQLiteOpenHelper implements BaseColumns {
     public void restoreBikeDetailFromTemp(int raceId) {
         String sqlSelect;
 
-        sqlSelect = "INSERT INTO " + TABLE_BIKE_DETAILS;
+        sqlSelect = "INSERT INTO " + BikeDetailEntry.TABLE;
         sqlSelect += "(";
         sqlSelect += _ID + ",";
-        sqlSelect += COLUMN_BIKE_RACE_ID + ",";
-        sqlSelect += COLUMN_BIKE_FRONT_BRAND_ID + ",";
-        sqlSelect += COLUMN_BIKE_REAR_BRAND_ID + ",";
-        sqlSelect += COLUMN_BIKE_INSERTED + ") ";
+        sqlSelect += BikeDetailEntry.RACE_ID + ",";
+        sqlSelect += BikeDetailEntry.FRONT_BRAND_ID + ",";
+        sqlSelect += BikeDetailEntry.REAR_BRAND_ID + ",";
+        sqlSelect += BikeDetailEntry.INSERTED + ") ";
         sqlSelect += " SELECT ";
         sqlSelect += _ID + ",";
-        sqlSelect += COLUMN_BIKE_RACE_ID + ",";
-        sqlSelect += COLUMN_BIKE_FRONT_BRAND_ID + ",";
-        sqlSelect += COLUMN_BIKE_REAR_BRAND_ID + ",";
-        sqlSelect += COLUMN_BIKE_INSERTED + " ";
+        sqlSelect += BikeDetailEntry.RACE_ID + ",";
+        sqlSelect += BikeDetailEntry.FRONT_BRAND_ID + ",";
+        sqlSelect += BikeDetailEntry.REAR_BRAND_ID + ",";
+        sqlSelect += BikeDetailEntry.INSERTED + " ";
         sqlSelect += " FROM " + TEMP_BIKE_DETAIL;
-        sqlSelect += " WHERE " + COLUMN_BIKE_RACE_ID + " = " + raceId;
+        sqlSelect += " WHERE " + BikeDetailEntry.RACE_ID + " = " + raceId;
 
         SQLiteDatabase db = this.getWritableDatabase();
 
@@ -817,7 +741,7 @@ public class DatabaseHelper extends SQLiteOpenHelper implements BaseColumns {
      */
     public ArrayList<BikeDetails> getAllBikeDetail(String whereClause) {
         ArrayList<BikeDetails> bikeDetails = new ArrayList<>();
-        String selectQuery = "SELECT * FROM " + TABLE_BIKE_DETAILS;
+        String selectQuery = "SELECT * FROM " + BikeDetailEntry.TABLE;
         if (!whereClause.isEmpty() || whereClause == null) {
             selectQuery += " " + whereClause;
         }
@@ -832,10 +756,10 @@ public class DatabaseHelper extends SQLiteOpenHelper implements BaseColumns {
             do {
                 BikeDetails bikeDetail = new BikeDetails();
                 bikeDetail.setId(c.getInt((c.getColumnIndex(_ID))));
-                bikeDetail.setRaceId((c.getInt(c.getColumnIndex(COLUMN_BIKE_RACE_ID))));
-                bikeDetail.setFrontBrandId((c.getInt(c.getColumnIndex(COLUMN_BIKE_FRONT_BRAND_ID))));
-                bikeDetail.setRearBrandId((c.getInt(c.getColumnIndex(COLUMN_BIKE_REAR_BRAND_ID))));
-                bikeDetail.setInserted((c.getInt(c.getColumnIndex(COLUMN_BIKE_INSERTED))));
+                bikeDetail.setRaceId((c.getInt(c.getColumnIndex(BikeDetailEntry.RACE_ID))));
+                bikeDetail.setFrontBrandId((c.getInt(c.getColumnIndex(BikeDetailEntry.FRONT_BRAND_ID))));
+                bikeDetail.setRearBrandId((c.getInt(c.getColumnIndex(BikeDetailEntry.REAR_BRAND_ID))));
+                bikeDetail.setInserted((c.getInt(c.getColumnIndex(BikeDetailEntry.INSERTED))));
 
                 bikeDetails.add(bikeDetail);
             } while (c.moveToNext());
@@ -896,12 +820,12 @@ public class DatabaseHelper extends SQLiteOpenHelper implements BaseColumns {
     public void populateWheelListTableFromRaceId(Integer raceID) {
         deleteWheelListByRace(raceID, true);
 
-        String insertStatement = "INSERT INTO " + TABLE_WHEEL_LIST + " (" +
-                COLUMN_WHEEL_BRAND_ID + "," + COLUMN_WHEEL_RACE_ID + ")" +
-                " SELECT " + TABLE_BRANDS + "." + _ID + ", " + String.valueOf(raceID) +
-                " FROM " + TABLE_BRANDS + " WHERE " + _ID + " NOT IN (SELECT " +
-                COLUMN_WHEEL_BRAND_ID + " FROM " + TABLE_WHEEL_LIST + " WHERE " +
-                COLUMN_WHEEL_RACE_ID + " = " + String.valueOf(raceID) + ")";
+        String insertStatement = "INSERT INTO " + WheelEntry.TABLE + " (" +
+                WheelEntry.BRAND_ID + "," + WheelEntry.RACE_ID + ")" +
+                " SELECT " + BrandEntry.TABLE + "." + _ID + ", " + String.valueOf(raceID) +
+                " FROM " + BrandEntry.TABLE + " WHERE " + _ID + " NOT IN (SELECT " +
+                WheelEntry.BRAND_ID + " FROM " + WheelEntry.TABLE + " WHERE " +
+                WheelEntry.RACE_ID + " = " + String.valueOf(raceID) + ")";
         Log.e(TAG, insertStatement);
 
         executeScript(insertStatement);
@@ -927,19 +851,19 @@ public class DatabaseHelper extends SQLiteOpenHelper implements BaseColumns {
         SQLiteDatabase db = this.getWritableDatabase();
 
         ContentValues values = new ContentValues();
-        values.put(COLUMN_WHEEL_TOT_FRONT_WHEEL, 0);
-        values.put(COLUMN_WHEEL_TOT_REAR_WHEEL, 0);
+        values.put(WheelEntry.TOT_FRONT_WHEEL, 0);
+        values.put(WheelEntry.TOT_REAR_WHEEL, 0);
 
         // updating row
-        int retVal = db.update(TABLE_WHEEL_LIST, values, COLUMN_WHEEL_RACE_ID + " = ?",
+        int retVal = db.update(WheelEntry.TABLE, values, WheelEntry.RACE_ID + " = ?",
                 new String[]{String.valueOf(raceID)});
         closeDB();
         return retVal;
     }
 
     public int getBikeCount(int raceID) {
-        String sqlQuery = "SELECT Sum(" + COLUMN_WHEEL_TOT_FRONT_WHEEL + ") as count FROM " +
-                TABLE_WHEEL_LIST + " WHERE " + COLUMN_WHEEL_RACE_ID + " = " + raceID;
+        String sqlQuery = "SELECT Sum(" + WheelEntry.TOT_FRONT_WHEEL + ") as count FROM " +
+                WheelEntry.TABLE + " WHERE " + WheelEntry.RACE_ID + " = " + raceID;
         SQLiteDatabase db = this.getReadableDatabase();
         Cursor c = db.rawQuery(sqlQuery, null);
         int bikeCount = 0;
@@ -956,21 +880,35 @@ public class DatabaseHelper extends SQLiteOpenHelper implements BaseColumns {
         String moveOtherBrandSQL;
         String moveCurrentBrandSQL;
         if (!moveUp) {
-            moveOtherBrandSQL = "UPDATE " + TABLE_BRANDS + " set " + COLUMN_BRAND_ORDER + " = (" +
-                    COLUMN_BRAND_ORDER + " - 10) WHERE " + COLUMN_BRAND_ORDER + " = " +
+            moveOtherBrandSQL = "UPDATE " + BrandEntry.TABLE + " set " + BrandEntry.BRAND_ORDER + " = (" +
+                    BrandEntry.BRAND_ORDER + " - 10) WHERE " + BrandEntry.BRAND_ORDER + " = " +
                     String.valueOf(currentOrder + 10);
-            moveCurrentBrandSQL = "UPDATE " + TABLE_BRANDS + " set " + COLUMN_BRAND_ORDER + " = (" +
-                    COLUMN_BRAND_ORDER + " + 10) WHERE " + _ID + " = " + brandId;
+            moveCurrentBrandSQL = "UPDATE " + BrandEntry.TABLE + " set " + BrandEntry.BRAND_ORDER + " = (" +
+                    BrandEntry.BRAND_ORDER + " + 10) WHERE " + _ID + " = " + brandId;
         } else {
-            moveOtherBrandSQL = "UPDATE " + TABLE_BRANDS + " set " + COLUMN_BRAND_ORDER + " = (" +
-                    COLUMN_BRAND_ORDER + " + 10) WHERE " + COLUMN_BRAND_ORDER + " = " +
+            moveOtherBrandSQL = "UPDATE " + BrandEntry.TABLE + " set " + BrandEntry.BRAND_ORDER + " = (" +
+                    BrandEntry.BRAND_ORDER + " + 10) WHERE " + BrandEntry.BRAND_ORDER + " = " +
                     String.valueOf(currentOrder - 10);
-            moveCurrentBrandSQL = "UPDATE " + TABLE_BRANDS + " set " + COLUMN_BRAND_ORDER + " = (" +
-                    COLUMN_BRAND_ORDER + " - 10) WHERE " + _ID + " = " + brandId;
+            moveCurrentBrandSQL = "UPDATE " + BrandEntry.TABLE + " set " + BrandEntry.BRAND_ORDER + " = (" +
+                    BrandEntry.BRAND_ORDER + " - 10) WHERE " + _ID + " = " + brandId;
         }
 
         executeScript(moveOtherBrandSQL);
         executeScript(moveCurrentBrandSQL);
 
     }
+
+    public void checkBrandTable() {
+
+        long rowCount = getRowCount(BrandEntry.TABLE);
+        if (rowCount == 0) {
+            SQLiteDatabase db = this.getWritableDatabase();
+            this.populateBrand(db);
+            db.close();
+            Toast.makeText(mContext, mContext.getResources().getString(R.string.tire_table_populated),
+                    Toast.LENGTH_LONG).show();
+        }
+
+    }
+
 }

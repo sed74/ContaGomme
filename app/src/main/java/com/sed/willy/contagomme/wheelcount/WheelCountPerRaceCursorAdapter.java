@@ -12,6 +12,8 @@ import android.widget.CursorAdapter;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.sed.willy.contagomme.DBContract.BrandContract.BrandEntry;
+import com.sed.willy.contagomme.DBContract.ViewsContract.WhellListEntry;
 import com.sed.willy.contagomme.DBHelper.DatabaseHelper;
 import com.sed.willy.contagomme.DBModel.WheelList;
 import com.sed.willy.contagomme.R;
@@ -55,17 +57,17 @@ public class WheelCountPerRaceCursorAdapter extends CursorAdapter {
             do {
                 wheelLists.add(new WheelList(
                         cursor.getInt(
-                                cursor.getColumnIndex(DatabaseHelper._ID)),
+                                cursor.getColumnIndex(WhellListEntry._ID)),
                         cursor.getString(
-                                cursor.getColumnIndex(DatabaseHelper.COLUMN_BRAND_NAME)),
+                                cursor.getColumnIndex(WhellListEntry.BRAND_NAME)),
                         cursor.getInt(
-                                cursor.getColumnIndex(DatabaseHelper.COLUMN_VIEW_RACE_ID)),
+                                cursor.getColumnIndex(WhellListEntry.RACE_ID)),
                         cursor.getInt(
-                                cursor.getColumnIndex(DatabaseHelper.COLUMN_VIEW_BRAND_ID)),
+                                cursor.getColumnIndex(WhellListEntry.BRAND_ID)),
                         cursor.getInt(
-                                cursor.getColumnIndex(DatabaseHelper.COLUMN_WHEEL_TOT_FRONT_WHEEL)),
+                                cursor.getColumnIndex(WhellListEntry.TOT_FRONT_WHEEL)),
                         cursor.getInt(
-                                cursor.getColumnIndex(DatabaseHelper.COLUMN_WHEEL_TOT_REAR_WHEEL))));
+                                cursor.getColumnIndex(WhellListEntry.TOT_REAR_WHEEL))));
             } while (cursor.moveToNext());
         }
         return wheelLists;
@@ -88,7 +90,7 @@ public class WheelCountPerRaceCursorAdapter extends CursorAdapter {
         // Find fields to populate in inflated template
         // Extract properties from cursor
         final String race = cursor.getString(
-                cursor.getColumnIndex(DatabaseHelper.COLUMN_BRAND_NAME));
+                cursor.getColumnIndex(BrandEntry.BRAND_NAME));
         int id = cursor.getInt(cursor.getColumnIndex(DatabaseHelper._ID));
 
         final WheelList currentWheelList = getObjectFromId(id);
@@ -110,11 +112,11 @@ public class WheelCountPerRaceCursorAdapter extends CursorAdapter {
 
         frontCount = (TextView) view.findViewById(R.id.front_tire_count);
         frontCount.setText(String.valueOf(cursor.getInt(
-                cursor.getColumnIndex(DatabaseHelper.COLUMN_WHEEL_TOT_FRONT_WHEEL))));
+                cursor.getColumnIndex(WhellListEntry.TOT_FRONT_WHEEL))));
 
         rearCount = (TextView) view.findViewById(R.id.rear_tire_count);
         rearCount.setText(String.valueOf(cursor.getInt(
-                cursor.getColumnIndex(DatabaseHelper.COLUMN_WHEEL_TOT_REAR_WHEEL))));
+                cursor.getColumnIndex(WhellListEntry.TOT_REAR_WHEEL))));
 
 
         TextView.OnClickListener mOnClickListener = (new View.OnClickListener() {

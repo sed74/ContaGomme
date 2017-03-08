@@ -9,6 +9,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.ListView;
 
+import com.sed.willy.contagomme.DBContract.RaceContract.RaceEntry;
 import com.sed.willy.contagomme.DBHelper.DatabaseHelper;
 import com.sed.willy.contagomme.DBModel.Race;
 import com.sed.willy.contagomme.Dialog.InputDialogRace;
@@ -35,8 +36,8 @@ public class RaceListActivity extends AppCompatActivity {
             @Override
             public void run() {
                 dbHelper = new DatabaseHelper(getBaseContext());
-                Cursor c = dbHelper.getCursor(DatabaseHelper.TABLE_RACES,
-                        DatabaseHelper.COLUMN_RACE_DATETIME);
+                Cursor c = dbHelper.getCursor(RaceEntry.TABLE,
+                        RaceEntry.RACE_DATETIME);
 //                        DatabaseHelper.COLUMN_RACE_ORDER_BY);
                 raceAdapter = new RaceCursorAdapter(RaceListActivity.this, c);
                 listView.setAdapter(raceAdapter);
@@ -106,8 +107,8 @@ public class RaceListActivity extends AppCompatActivity {
                 Race race = new Race(raceName, raceDescr, raceDate);
                 //Cursor cur = raceAdapter.getCursor();
                 dbHelper.createRace(race);
-                Cursor d = dbHelper.getCursor(DatabaseHelper.TABLE_RACES,
-                        DatabaseHelper.COLUMN_RACE_DATETIME);
+                Cursor d = dbHelper.getCursor(RaceEntry.TABLE,
+                        RaceEntry.RACE_DATETIME);
                 raceAdapter.swapCursor(d);
 
             }

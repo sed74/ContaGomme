@@ -12,6 +12,7 @@ import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.sed.willy.contagomme.DBContract.RaceContract.RaceEntry;
 import com.sed.willy.contagomme.DBHelper.DatabaseHelper;
 import com.sed.willy.contagomme.DBModel.Race;
 import com.sed.willy.contagomme.Dialog.InputDialogRace;
@@ -49,12 +50,12 @@ public class RaceCursorAdapter extends CursorAdapter {
         //TextView tvPriority = (TextView) view.findViewById(R.id.tvPriority);
         // Extract properties from cursor
         final String race = cursor.getString(
-                cursor.getColumnIndex(DatabaseHelper.COLUMN_RACE_NAME));
+                cursor.getColumnIndex(RaceEntry.RACE_NAME));
         int id = cursor.getInt(cursor.getColumnIndex(DatabaseHelper._ID));
 
         TextView raceDate = (TextView) view.findViewById(R.id.race_date);
         String stringDate = DateConverter.fromUnixToDate(
-                cursor.getInt(cursor.getColumnIndex(DatabaseHelper.COLUMN_RACE_DATETIME)),
+                cursor.getInt(cursor.getColumnIndex(RaceEntry.RACE_DATETIME)),
                 DateConverter.FORMAT_DATE);
         raceDate.setText(stringDate);
 
@@ -102,7 +103,7 @@ public class RaceCursorAdapter extends CursorAdapter {
 
                                 ImageView delete = (ImageView) view.findViewById(R.id.delete_button);
                                 dbHelper.deleteRace((int) delete.getTag());
-                                Cursor d = dbHelper.getCursor(DatabaseHelper.TABLE_RACES, DatabaseHelper.COLUMN_RACE_DATETIME);
+                                Cursor d = dbHelper.getCursor(RaceEntry.TABLE, RaceEntry.RACE_DATETIME);
                                 swapCursor(d);
                                 dialog.dismiss();
                             }
@@ -155,7 +156,7 @@ public class RaceCursorAdapter extends CursorAdapter {
                     race[0].setDate(raceDate);
 
                 dbHelper.updateRace(race[0]);
-                Cursor c = dbHelper.getCursor(DatabaseHelper.TABLE_RACES, DatabaseHelper.COLUMN_RACE_DATETIME);
+                Cursor c = dbHelper.getCursor(RaceEntry.TABLE, RaceEntry.RACE_DATETIME);
                 Cursor old = swapCursor(c);
                 old.close();
 

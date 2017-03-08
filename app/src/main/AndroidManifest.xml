@@ -41,11 +41,17 @@
         <activity android:name=".EntryActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
-
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".TyreListRecyclerActivity"></activity>
+        <activity
+            android:name=".TyreListRecyclerActivity"
+            android:label="@string/brand_list_activity_name">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="com.sed.willy.contagomme.EntryActivity" />
+
+        </activity>
     </application>
 
 </manifest>

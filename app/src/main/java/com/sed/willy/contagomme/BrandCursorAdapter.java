@@ -11,6 +11,7 @@ import android.widget.CursorAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.sed.willy.contagomme.DBContract.BrandContract.BrandEntry;
 import com.sed.willy.contagomme.DBHelper.DatabaseHelper;
 import com.sed.willy.contagomme.DBModel.Brand;
 import com.sed.willy.contagomme.Dialog.InputDialogBrand;
@@ -57,7 +58,7 @@ public class BrandCursorAdapter extends CursorAdapter {
         //TextView tvPriority = (TextView) view.findViewById(R.id.tvPriority);
         // Extract properties from cursor
         final String brand = cursor.getString(
-                cursor.getColumnIndex(DatabaseHelper.COLUMN_BRAND_NAME));
+                cursor.getColumnIndex(BrandEntry.BRAND_NAME));
         final int id = cursor.getInt(cursor.getColumnIndex(DatabaseHelper._ID));
 
         brandTV.setTag(id);
@@ -66,7 +67,7 @@ public class BrandCursorAdapter extends CursorAdapter {
 
         // get reference to the MoveUp and Move Down objects
         ImageView upArrow = (ImageView) view.findViewById(R.id.up_arrow);
-        upArrow.setTag(cursor.getInt(cursor.getColumnIndex(DatabaseHelper.COLUMN_BRAND_ORDER)));
+        upArrow.setTag(cursor.getInt(cursor.getColumnIndex(BrandEntry.BRAND_ORDER)));
 
         upArrow.setVisibility(cursor.getPosition() == 0 ? View.GONE : View.VISIBLE);
 //        if (cursor.getPosition() == 0) {
@@ -76,7 +77,7 @@ public class BrandCursorAdapter extends CursorAdapter {
 //        }
 
         ImageView downArrow = (ImageView) view.findViewById(R.id.down_arrow);
-        downArrow.setTag(cursor.getInt(cursor.getColumnIndex(DatabaseHelper.COLUMN_BRAND_ORDER)));
+        downArrow.setTag(cursor.getInt(cursor.getColumnIndex(BrandEntry.BRAND_ORDER)));
 
         downArrow.setVisibility(cursor.getPosition() == cursor.getCount() - 1 ?
                 View.GONE : View.VISIBLE);
@@ -100,8 +101,8 @@ public class BrandCursorAdapter extends CursorAdapter {
                         dbHelper.moveBrand(id, (Integer) objClicked.getTag(), false);
                         break;
                 }
-                swapCursor(dbHelper.getCursor(DatabaseHelper.TABLE_BRANDS,
-                        DatabaseHelper.COLUMN_BRAND_ORDER));
+                swapCursor(dbHelper.getCursor(BrandEntry.TABLE,
+                        BrandEntry.BRAND_ORDER));
             }
         };
 
@@ -120,7 +121,7 @@ public class BrandCursorAdapter extends CursorAdapter {
 
         TextView orderTV = (TextView) view.findViewById(R.id.brand_order);
         orderTV.setText(cursor.getString(
-                cursor.getColumnIndex(DatabaseHelper.COLUMN_BRAND_ORDER)));
+                cursor.getColumnIndex(BrandEntry.BRAND_ORDER)));
 
         deleteImage.setTag(id);
 
@@ -142,7 +143,7 @@ public class BrandCursorAdapter extends CursorAdapter {
 
                                 ImageView delete = (ImageView) view.findViewById(R.id.delete_button);
                                 dbHelper.deleteBrand((int) delete.getTag());
-                                Cursor d = dbHelper.getCursor(DatabaseHelper.TABLE_BRANDS, DatabaseHelper.COLUMN_BRAND_ORDER);
+                                Cursor d = dbHelper.getCursor(BrandEntry.TABLE, BrandEntry.BRAND_ORDER);
                                 swapCursor(d);
                                 dialog.dismiss();
                             }
@@ -189,7 +190,7 @@ public class BrandCursorAdapter extends CursorAdapter {
                 brand[0].setName(brandName);
 //                brand[0].setOrder(order);
                 dbHelper.updateBrand(brand[0]);
-                Cursor c = dbHelper.getCursor(DatabaseHelper.TABLE_BRANDS, DatabaseHelper.COLUMN_BRAND_ORDER);
+                Cursor c = dbHelper.getCursor(BrandEntry.TABLE, BrandEntry.BRAND_ORDER);
                 Cursor old = swapCursor(c);
                 old.close();
 

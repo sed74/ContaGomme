@@ -17,6 +17,8 @@
 package com.sed.willy.contagomme;
 
 import android.content.Context;
+import android.content.res.Resources;
+import android.support.design.widget.Snackbar;
 import android.support.v4.view.MotionEventCompat;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.helper.ItemTouchHelper;
@@ -27,6 +29,7 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.sed.willy.contagomme.DBContract.BrandContract.BrandEntry;
 import com.sed.willy.contagomme.DBHelper.DatabaseHelper;
 import com.sed.willy.contagomme.DBModel.Brand;
 import com.sed.willy.contagomme.Helper.ItemTouchHelperAdapter;
@@ -47,6 +50,7 @@ public class RecyclerListAdapter extends RecyclerView.Adapter<RecyclerListAdapte
 
     private final OnStartDragListener mDragStartListener;
     private ArrayList<Brand> mBrandItems = new ArrayList<>();
+    private ArrayList<Brand> mBrandItemsToDelete = new ArrayList<>();
     private Context mContext;
 
     public RecyclerListAdapter(Context context, OnStartDragListener dragStartListener) {
@@ -68,8 +72,8 @@ public class RecyclerListAdapter extends RecyclerView.Adapter<RecyclerListAdapte
 
     @Override
     public void onBindViewHolder(final ItemViewHolder holder, int position) {
-//        holder.textView.setText(mItems.get(position));
-        holder.textView.setText(mBrandItems.get(position).getName());
+//        holder.mTireBrandName.setText(mItems.get(position));
+        holder.mTireBrandName.setText(mBrandItems.get(position).getName());
 
         // Start a drag whenever the handle view it touched
         holder.handleView.setOnTouchListener(new View.OnTouchListener() {
@@ -86,11 +90,54 @@ public class RecyclerListAdapter extends RecyclerView.Adapter<RecyclerListAdapte
 
     @Override
     public void onItemDismiss(int position) {
-        DatabaseHelper dbHelper = new DatabaseHelper(mContext);
-        dbHelper.deleteBrand(mBrandItems.get(position).getId());
-        dbHelper.close();
-        mBrandItems.remove(position);
-        notifyItemRemoved(position);
+//        DatabaseHelper dbHelper = new DatabaseHelper(mContext);
+//        dbHelper.deleteBrand(mBrandItems.get(position).getId());
+//        dbHelper.close();
+//        mBrandItems.remove(position);
+//        notifyItemRemoved(position);
+    }
+
+    @Override
+    public void onItemRemoved(final RecyclerView.ViewHolder viewHolder,
+                              final RecyclerView recyclerView) {
+        final DatabaseHelper dbHelper = new DatabaseHelper(mContext);
+        final int adapterPosition = viewHolder.getAdapterPosition();
+        final Brand brand = mBrandItems.get(adapterPosition);
+        final int brandID = brand.getId();
+
+
+        final Resources res = mContext.getResources();
+        Snackbar snackbar = Snackbar
+                .make(recyclerView, res.getString(R.string.removed_message,
+                        brand.getName().toUpperCase()), Snackbar.LENGTH_LONG)
+                .setAction(res.getString(R.string.button_undo), new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+//                        int mAdapterPosition = viewHolder.getAdapterPosition();
+
+                        mBrandItems.add(adapterPosition, brand);
+                        notifyItemInserted(adapterPosition);
+                        recyclerView.scrollToPosition(adapterPosition);
+                        mBrandItemsToDelete.remove(brand);
+                        dbHelper.unDeleteBrand(brandID);
+                        Snackbar.make(view, res.getString(R.string.remove_undone,
+                                brand.getName().toUpperCase()), Snackbar.LENGTH_SHORT).show();
+                    }
+                })
+                .setDuration(5000)
+                .addCallback(new Snackbar.Callback() {
+                    @Override
+                    public void onDismissed(Snackbar snackbar, int event) {
+
+                        dbHelper.deleteBrand(brandID, false);
+                    }
+                });
+
+        snackbar.show();
+        dbHelper.deleteBrand(brandID, true);
+        mBrandItems.remove(adapterPosition);
+        notifyItemRemoved(adapterPosition);
+        mBrandItemsToDelete.add(brand);
     }
 
     @Override
@@ -112,8 +159,7 @@ public class RecyclerListAdapter extends RecyclerView.Adapter<RecyclerListAdapte
     public void addBrand(String brandName) {
         DatabaseHelper dbHelper = new DatabaseHelper(mContext);
 
-        int order = dbHelper.getMax(DatabaseHelper.TABLE_BRANDS,
-                DatabaseHelper.COLUMN_BRAND_ORDER, 0);
+        int order = dbHelper.getMax(BrandEntry.TABLE, BrandEntry.BRAND_ORDER, 0);
         Brand brand = new Brand(brandName, order + 10);
         mBrandItems.add(brand);
         dbHelper.createBrand(brand);
@@ -127,12 +173,12 @@ public class RecyclerListAdapter extends RecyclerView.Adapter<RecyclerListAdapte
     public static class ItemViewHolder extends RecyclerView.ViewHolder implements
             ItemTouchHelperViewHolder {
 
-        public final TextView textView;
+        public final TextView mTireBrandName;
         public final ImageView handleView;
 
         public ItemViewHolder(View itemView) {
             super(itemView);
-            textView = (TextView) itemView.findViewById(R.id.brand_name);
+            mTireBrandName = (TextView) itemView.findViewById(R.id.brand_name);
             handleView = (ImageView) itemView.findViewById(R.id.handle);
         }
 
@@ -150,7 +196,7 @@ public class RecyclerListAdapter extends RecyclerView.Adapter<RecyclerListAdapte
 
         @Override
         public void onItemClear() {
-//            itemView.setBackgroundColor(0);
+
             TextView text = (TextView) itemView.findViewById(R.id.brand_name);
             text.setBackground(itemView.getResources().getDrawable(R.drawable.tire_rectangle_shadow));
         }

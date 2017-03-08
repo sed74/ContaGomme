@@ -2,6 +2,7 @@ package com.sed.willy.contagomme.DBModel;
 
 import android.content.Context;
 
+import com.sed.willy.contagomme.DBContract.BrandContract.BrandEntry;
 import com.sed.willy.contagomme.DBHelper.DatabaseHelper;
 
 /**
@@ -29,7 +30,7 @@ public class WheelList implements Cloneable {
         mWheelListId = wheelListId;
         mRaceId = raceId;
         mBrandId = brandId;
-//        mBrandName = new DatabaseHelper(mContext).getStringField(DatabaseHelper.TABLE_BRANDS,
+//        mBrandName = new DatabaseHelper(mContext).getStringField(DatabaseHelper.TABLE,
 //                DatabaseHelper._ID, brandId, DatabaseHelper.COLUMN_BRAND_NAME);
     }
 
@@ -59,8 +60,8 @@ public class WheelList implements Cloneable {
         mTotFrontWheel = totFront;
         mTotRearWheel = totRear;
 
-        mBrandName = new DatabaseHelper(context).getStringField(DatabaseHelper.TABLE_BRANDS,
-                DatabaseHelper._ID, brandId, DatabaseHelper.COLUMN_BRAND_NAME);
+        mBrandName = new DatabaseHelper(context).getStringField(BrandEntry.TABLE,
+                DatabaseHelper._ID, brandId, BrandEntry.BRAND_NAME);
     }
 
     // getters

@@ -70,7 +70,11 @@
     <string name="no_race_found">Non esistono gare da aprire. Inserire almeno una gara prima di procedere.</string>
     <string name="screen_on_title">Tenere schermo acceso</string>
     <string name="screen_on_summary">Tenere schermo acceso durante il conteggio delle gomme. Attenzione: diminuisce la durata della batteria.</string>
-    <string name="button_undo">Undo</string>
+    <string name="button_undo">Annulla</string>
+    <string name="tire_table_populated">Tabella delle Marche popolata automaticamente con valori di default.</string>
+    <string name="record_removed_message">Record eliminato con successo.</string>
+    <string name="remove_undone">Elemento \"%1$s\" ripristinato correttamente.</string>
+    <string name="removed_message">Elemento \"%1$s\" eliminato correttamente.</string>
 
     <array name="dummy_items">
         <item>One</item>

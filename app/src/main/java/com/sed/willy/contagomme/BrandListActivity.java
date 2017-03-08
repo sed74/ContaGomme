@@ -9,6 +9,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.ListView;
 
+import com.sed.willy.contagomme.DBContract.BrandContract.BrandEntry;
 import com.sed.willy.contagomme.DBHelper.DatabaseHelper;
 import com.sed.willy.contagomme.DBModel.Brand;
 import com.sed.willy.contagomme.Dialog.InputDialogBrand;
@@ -32,7 +33,7 @@ public class BrandListActivity extends AppCompatActivity {
             @Override
             public void run() {
                 dbHelper = new DatabaseHelper(getBaseContext());
-                Cursor c = dbHelper.getCursor(DatabaseHelper.TABLE_BRANDS, DatabaseHelper.COLUMN_BRAND_ORDER);
+                Cursor c = dbHelper.getCursor(BrandEntry.TABLE, BrandEntry.BRAND_ORDER);
                 brandAdapter = new BrandCursorAdapter(BrandListActivity.this, c);
 
                 listView.setAdapter(brandAdapter);
@@ -86,12 +87,12 @@ public class BrandListActivity extends AppCompatActivity {
 
             @Override
             public void onConfirm(String brandName, int order) {
-                order = dbHelper.getMax(DatabaseHelper.TABLE_BRANDS,
-                        DatabaseHelper.COLUMN_BRAND_ORDER, 0);
+                order = dbHelper.getMax(BrandEntry.TABLE,
+                        BrandEntry.BRAND_ORDER, 0);
                 Brand brand = new Brand(brandName, order + 10);
                 Cursor cur = brandAdapter.getCursor();
                 dbHelper.createBrand(brand);
-                Cursor d = dbHelper.getCursor(DatabaseHelper.TABLE_BRANDS, DatabaseHelper.COLUMN_BRAND_ORDER);
+                Cursor d = dbHelper.getCursor(BrandEntry.TABLE, BrandEntry.BRAND_ORDER);
                 brandAdapter.swapCursor(d);
 
             }
