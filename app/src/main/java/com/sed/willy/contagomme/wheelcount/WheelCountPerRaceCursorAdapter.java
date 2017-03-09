@@ -2,9 +2,9 @@ package com.sed.willy.contagomme.wheelcount;
 
 import android.content.Context;
 import android.database.Cursor;
-import android.graphics.Color;
 import android.graphics.Typeface;
 import android.graphics.drawable.GradientDrawable;
+import android.support.v4.content.ContextCompat;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -211,7 +211,8 @@ public class WheelCountPerRaceCursorAdapter extends CursorAdapter {
         if (!isSelected) {
             view.setTypeface(null, Typeface.NORMAL);
 //        view.setAllCaps(false);
-            view.setBackgroundColor(Color.TRANSPARENT);
+//            view.setBackgroundColor(Color.TRANSPARENT);
+            view.setBackgroundColor(ContextCompat.getColor(mContext, R.color.colorPrimary));
 
         } else {
             view.setTypeface(null, Typeface.BOLD);

@@ -2,8 +2,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/activity_main"
     android:layout_width="match_parent"
-    android:layout_height="@dimen/tire_button_height"
-    android:background="@drawable/tire_rectangle_shadow">
+    android:layout_height="@dimen/tire_button_height">
 
     <View
         android:id="@+id/fakeView"
@@ -18,8 +17,9 @@
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true"
         android:layout_alignRight="@id/fakeView"
-        android:layout_margin="@dimen/margin_small"
-        android:background="?android:selectableItemBackground"
+        android:layout_marginBottom="@dimen/margin_small"
+        android:layout_marginLeft="@dimen/margin_small"
+        android:background="@color/colorPrimary"
         android:gravity="center_vertical"
         android:paddingLeft="@dimen/tire_button_external_padding"
         android:paddingRight="@dimen/tire_button_internal_padding"
@@ -48,7 +48,9 @@
         android:layout_height="match_parent"
         android:layout_alignLeft="@id/fakeView"
         android:layout_alignParentRight="true"
-        android:layout_margin="@dimen/margin_small"
+        android:layout_marginBottom="@dimen/margin_small"
+        android:layout_marginRight="@dimen/margin_small"
+        android:background="@color/colorPrimary"
         android:gravity="center_vertical"
         android:paddingLeft="@dimen/tire_button_internal_padding"
         android:paddingRight="@dimen/tire_button_external_padding"

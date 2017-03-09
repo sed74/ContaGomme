@@ -80,8 +80,9 @@ public class RecyclerListAdapter extends RecyclerView.Adapter<RecyclerListAdapte
                 parent, false);
         TextView brandName = (TextView) view.findViewById(R.id.brand_name);
         if (useColors)
-            brandName.setBackground(ContextCompat.getDrawable(mContext,
-                    R.drawable.tire_rectangle_shadow));
+//            brandName.setBackground(ContextCompat.getDrawable(mContext,
+//                    R.drawable.tire_rectangle_shadow));
+            brandName.setBackgroundColor(ContextCompat.getColor(mContext, R.color.colorPrimary));
 
         ItemViewHolder itemViewHolder = new ItemViewHolder(view);
         return itemViewHolder;

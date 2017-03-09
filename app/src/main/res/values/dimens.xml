@@ -11,7 +11,7 @@
     <dimen name="margin_default_half">8dp</dimen>
     <dimen name="margin_default">16dp</dimen>
     <dimen name="margin_small">2dp</dimen>
-    <dimen name="list_divider_height">3dp</dimen>
+    <dimen name="list_divider_height">1dp</dimen>
     <dimen name="listview_side_padding">4dp</dimen>
     <dimen name="entry_icon_width">60dp</dimen>
     <dimen name="entry_icon_height">60dp</dimen>
