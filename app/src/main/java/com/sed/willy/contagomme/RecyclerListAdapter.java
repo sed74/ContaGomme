@@ -18,7 +18,10 @@ package com.sed.willy.contagomme;
 
 import android.content.Context;
 import android.content.res.Resources;
+import android.graphics.Color;
+import android.preference.PreferenceManager;
 import android.support.design.widget.Snackbar;
+import android.support.v4.content.ContextCompat;
 import android.support.v4.view.MotionEventCompat;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.helper.ItemTouchHelper;
@@ -35,6 +38,7 @@ import com.sed.willy.contagomme.DBModel.Brand;
 import com.sed.willy.contagomme.Helper.ItemTouchHelperAdapter;
 import com.sed.willy.contagomme.Helper.ItemTouchHelperViewHolder;
 import com.sed.willy.contagomme.Helper.OnStartDragListener;
+import com.sed.willy.contagomme.Utils.Global;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -48,6 +52,7 @@ import java.util.Collections;
 public class RecyclerListAdapter extends RecyclerView.Adapter<RecyclerListAdapter.ItemViewHolder>
         implements ItemTouchHelperAdapter {
 
+    static boolean useColors = true;
     private final OnStartDragListener mDragStartListener;
     private ArrayList<Brand> mBrandItems = new ArrayList<>();
     private ArrayList<Brand> mBrandItemsToDelete = new ArrayList<>();
@@ -61,11 +66,23 @@ public class RecyclerListAdapter extends RecyclerView.Adapter<RecyclerListAdapte
         DatabaseHelper dbHelper = new DatabaseHelper(context);
         mBrandItems = (ArrayList<Brand>) dbHelper.getAllBrands(true);
         dbHelper.close();
+        useColors = PreferenceManager.getDefaultSharedPreferences(mContext).
+                getBoolean(Global.KEY_PREF_COLOURED_UI, true);
+    }
+
+    public static boolean isUseColors() {
+        return useColors;
     }
 
     @Override
     public ItemViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.brand_item_dragdrop, parent, false);
+        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.brand_item_dragdrop,
+                parent, false);
+        TextView brandName = (TextView) view.findViewById(R.id.brand_name);
+        if (useColors)
+            brandName.setBackground(ContextCompat.getDrawable(mContext,
+                    R.drawable.tire_rectangle_shadow));
+
         ItemViewHolder itemViewHolder = new ItemViewHolder(view);
         return itemViewHolder;
     }
@@ -86,7 +103,6 @@ public class RecyclerListAdapter extends RecyclerView.Adapter<RecyclerListAdapte
             }
         });
     }
-
 
     @Override
     public void onItemDismiss(int position) {
@@ -150,7 +166,6 @@ public class RecyclerListAdapter extends RecyclerView.Adapter<RecyclerListAdapte
         return true;
     }
 
-
     @Override
     public int getItemCount() {
         return mBrandItems.size();
@@ -188,9 +203,15 @@ public class RecyclerListAdapter extends RecyclerView.Adapter<RecyclerListAdapte
 
 //            itemView.setBackgroundColor(Color.LTGRAY);
             if (actionState == ItemTouchHelper.ACTION_STATE_DRAG) {
-                text.setBackground(itemView.getResources().getDrawable(R.drawable.tire_rectangle_gray));
+                if (useColors)
+                    text.setBackground(itemView.getResources().getDrawable(R.drawable.tire_rectangle_gray));
+                else
+                    text.setBackgroundColor(Color.LTGRAY);
             } else if (actionState == ItemTouchHelper.ACTION_STATE_SWIPE) {
-                text.setBackground(itemView.getResources().getDrawable(R.drawable.tire_rectangle_red));
+                if (useColors)
+                    text.setBackground(itemView.getResources().getDrawable(R.drawable.tire_rectangle_red));
+                else
+                    text.setBackgroundColor(Color.RED);
             }
         }
 
@@ -198,7 +219,10 @@ public class RecyclerListAdapter extends RecyclerView.Adapter<RecyclerListAdapte
         public void onItemClear() {
 
             TextView text = (TextView) itemView.findViewById(R.id.brand_name);
-            text.setBackground(itemView.getResources().getDrawable(R.drawable.tire_rectangle_shadow));
+            if (useColors)
+                text.setBackground(itemView.getResources().getDrawable(R.drawable.tire_rectangle_shadow));
+            else
+                text.setBackgroundColor(0);
         }
     }
 }

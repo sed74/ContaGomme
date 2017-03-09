@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/container"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="?android:selectableItemBackground"
+    android:clickable="true"
+    android:orientation="horizontal"
+    android:padding="@dimen/listview_padding_race">
+
+    <TextView
+        android:id="@+id/race_name"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="@dimen/margin_small"
+        android:layout_marginLeft="8dp"
+        android:layout_marginRight="8dp"
+        android:clickable="true"
+        android:fontFamily="sans-serif"
+        android:textColor="@android:color/black"
+        android:textSize="20sp"
+        tools:text="Cairo Montenotte" />
+
+    <TextView
+        android:id="@+id/race_date"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/race_name"
+        android:layout_marginBottom="@dimen/margin_small"
+        android:layout_marginLeft="8dp"
+        android:layout_marginRight="8dp"
+        android:paddingBottom="4dp"
+        android:textColor="@android:color/black"
+        android:textSize="12sp"
+        tools:text="20/20/2016" />
+
+    <ImageView
+        android:id="@+id/delete_button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentRight="true"
+        android:layout_centerInParent="true"
+        android:layout_marginRight="@dimen/margin_default"
+        android:padding="@dimen/listview_padding"
+        android:src="@drawable/ic_delete_black_24dp" />
+
+    <ImageView
+        android:id="@+id/down_arrow"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_toLeftOf="@id/delete_button"
+        android:padding="@dimen/tire_button_padding"
+        android:src="@android:drawable/arrow_down_float"
+        android:visibility="gone" />
+
+    <ImageView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_toLeftOf="@id/down_arrow"
+        android:padding="@dimen/tire_button_padding"
+        android:src="@android:drawable/arrow_up_float"
+        android:visibility="gone" />
+</RelativeLayout>

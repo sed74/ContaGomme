@@ -26,9 +26,9 @@ import com.sed.willy.contagomme.DBHelper.DatabaseHelper;
 import com.sed.willy.contagomme.DBModel.BikeDetails;
 import com.sed.willy.contagomme.DBModel.WheelList;
 import com.sed.willy.contagomme.R;
-import com.sed.willy.contagomme.SettingsActivity;
 import com.sed.willy.contagomme.Utils.DateConverter;
 import com.sed.willy.contagomme.Utils.FileClass;
+import com.sed.willy.contagomme.Utils.Global;
 
 import java.util.ArrayList;
 
@@ -63,6 +63,7 @@ public class WheelCountPerRaceActivity extends AppCompatActivity {
     private boolean mKeepScreenOn;
     private int mAttachType;
     private TextView headerTextView;
+    private boolean mColouredUI;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -293,13 +294,14 @@ public class WheelCountPerRaceActivity extends AppCompatActivity {
     public void loadPrefs(Context mContext) {
         SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(mContext);
 
-        mAutoNext = sp.getBoolean(SettingsActivity.KEY_PREF_AUTO_CONTINUE, true);
-        mEmailRecipient = sp.getString(SettingsActivity.KEY_PREF_EMAIL_RECIPIENT, "");
-        mAttachFile = sp.getBoolean(SettingsActivity.KEY_PREF_ATTACH_FILE, true);
-        mAttachFileStats = sp.getBoolean(SettingsActivity.KEY_PREF_ATTACH_FILE_STATS, true);
-        mKeepScreenOn = sp.getBoolean(SettingsActivity.KEY_PREF_KEEP_SCREEN_ON, false);
+        mAutoNext = sp.getBoolean(Global.KEY_PREF_AUTO_CONTINUE, true);
+        mEmailRecipient = sp.getString(Global.KEY_PREF_EMAIL_RECIPIENT, "");
+        mAttachFile = sp.getBoolean(Global.KEY_PREF_ATTACH_FILE, true);
+        mAttachFileStats = sp.getBoolean(Global.KEY_PREF_ATTACH_FILE_STATS, true);
+        mKeepScreenOn = sp.getBoolean(Global.KEY_PREF_KEEP_SCREEN_ON, false);
         mAttachType = Integer.parseInt(sp.getString(
-                SettingsActivity.KEY_PREF_ATTACHMENT_TYPE, "1"));
+                Global.KEY_PREF_ATTACHMENT_TYPE, "1"));
+        mColouredUI = sp.getBoolean(Global.KEY_PREF_COLOURED_UI, true);
     }
 
     public void sendEmail() {

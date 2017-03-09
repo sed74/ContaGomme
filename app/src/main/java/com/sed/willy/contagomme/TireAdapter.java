@@ -24,11 +24,13 @@ public class TireAdapter extends ArrayAdapter<TireBrands> {
     private TextView rearCount;
     private OnValueChangeListener changeListener;
     private ArrayList<TireBrands> mArrayTire;
+    private Context mContext;
 
     public TireAdapter(Context context, ArrayList<TireBrands> tireBrands) {
         super(context, 0, tireBrands);
         changeListener = null;
         mArrayTire = tireBrands;
+        mContext = context;
     }
 
     @NonNull
@@ -128,6 +130,7 @@ public class TireAdapter extends ArrayAdapter<TireBrands> {
             view.setTypeface(null, Typeface.NORMAL);
 //        view.setAllCaps(false);
             view.setBackgroundColor(Color.TRANSPARENT);
+
 
         } else {
             view.setTypeface(null, Typeface.BOLD);

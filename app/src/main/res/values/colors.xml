@@ -1,10 +1,19 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="colorPrimary">#3F51B5</color>
-    <color name="colorPrimaryDark">#303F9F</color>
-    <color name="colorAccent">#F48FB1</color>
-    <color name="wheel_selected">#FF3F80</color>
-    <color name="rectangle_solid_brand">#7986CB</color>
+
+
+    <color name="colorPrimary">#8BC34A</color>
+    <color name="colorPrimaryDark">#689F38</color>
+    <color name="primary_light">#DCEDC8</color>
+    <color name="colorAccent">#FF5722</color>
+    <color name="colorPrimaryText">#212121</color>
+    <color name="secondary_text">#757575</color>
+    <color name="icons">#212121</color>
+    <color name="divider">#BDBDBD</color>
+
+
+    <color name="wheel_selected">#ffff00</color>
+    <color name="rectangle_solid_brand">@color/colorPrimary</color>
     <color name="rectangle_solid_race">#ff525d</color>
     <color name="counter_color">#eaff00</color>
 

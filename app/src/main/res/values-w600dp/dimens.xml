@@ -8,4 +8,5 @@
     <dimen name="entry_title_label_top_margin">20dp</dimen>
     <dimen name="listview_padding">20dp</dimen>
     <dimen name="listview_padding_race">10dp</dimen>
+    <dimen name="tire_button_radius">0dp</dimen>
 </resources>

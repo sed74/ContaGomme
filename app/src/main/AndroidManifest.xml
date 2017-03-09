@@ -45,7 +45,7 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".TyreListRecyclerActivity"
+            android:name=".TireListRecyclerActivity"
             android:label="@string/brand_list_activity_name">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"

@@ -3,6 +3,7 @@ package com.sed.willy.contagomme;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.database.Cursor;
+import android.preference.PreferenceManager;
 import android.support.v7.app.AlertDialog;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -17,6 +18,7 @@ import com.sed.willy.contagomme.DBHelper.DatabaseHelper;
 import com.sed.willy.contagomme.DBModel.Race;
 import com.sed.willy.contagomme.Dialog.InputDialogRace;
 import com.sed.willy.contagomme.Utils.DateConverter;
+import com.sed.willy.contagomme.Utils.Global;
 
 /**
  * Created by federico.marchesi on 26/01/2017.
@@ -25,20 +27,30 @@ import com.sed.willy.contagomme.Utils.DateConverter;
 public class RaceCursorAdapter extends CursorAdapter {
     private static final String TAG = RaceCursorAdapter.class.getName();
     private LayoutInflater cursorInflater;
+    private boolean useColors;
+    private Context mContext;
 
 
     public RaceCursorAdapter(Context context, Cursor cursor) {
         super(context, cursor, 0);
+        mContext = context;
         cursorInflater = (LayoutInflater) context.getSystemService(
                 Context.LAYOUT_INFLATER_SERVICE);
+        useColors = PreferenceManager.getDefaultSharedPreferences(context).
+                getBoolean(Global.KEY_PREF_COLOURED_UI, true);
     }
 
     // The newView method is used to inflate a new view and return it,
     // you don't bind any data to the view at this point.
     @Override
     public View newView(Context context, Cursor cursor, ViewGroup parent) {
+        int layout;
+        if (useColors)
+            layout = R.layout.race_item;
+        else
+            layout = R.layout.race_item_simple;
         //return LayoutInflater.from(context).inflate(R.layout.activity_brand_list, parent, false);
-        return cursorInflater.inflate(R.layout.race_item, parent, false);
+        return cursorInflater.inflate(layout, parent, false);
     }
 
     // The bindView method is used to bind all data to a given view
@@ -48,6 +60,12 @@ public class RaceCursorAdapter extends CursorAdapter {
 
         // Find fields to populate in inflated template
         TextView raceTV = (TextView) view.findViewById(R.id.race_name);
+
+//        if(useColors){
+//            RelativeLayout layout = (RelativeLayout) view.findViewById(R.id.container);
+//            layout.setBackground(mContext.getResources().getDrawable(R.attr.selectableItemBackground))
+////
+//        }
         //TextView tvPriority = (TextView) view.findViewById(R.id.tvPriority);
         // Extract properties from cursor
         final String race = cursor.getString(
@@ -90,7 +108,7 @@ public class RaceCursorAdapter extends CursorAdapter {
             @Override
             public void onClick(View v) {
 
-                AlertDialog myQuittingDialogBox = new AlertDialog.Builder(context)
+                new AlertDialog.Builder(context)
                         //set message, title, and icon
                         .setTitle(context.getResources().getString(R.string.dialog_delete_title))
                         .setMessage(String.format(context.getResources().getString(R.string.dialog_delete_message), race))
@@ -99,7 +117,6 @@ public class RaceCursorAdapter extends CursorAdapter {
                         .setPositiveButton(context.getResources().getString(R.string.dialog_delete_button), new DialogInterface.OnClickListener() {
 
                             public void onClick(DialogInterface dialog, int whichButton) {
-                                Cursor cur = cursor;
                                 DatabaseHelper dbHelper = new DatabaseHelper(context);
 
                                 ImageView delete = (ImageView) view.findViewById(R.id.delete_button);
@@ -170,4 +187,7 @@ public class RaceCursorAdapter extends CursorAdapter {
 
     }
 
+    public boolean isUseColors() {
+        return useColors;
+    }
 }

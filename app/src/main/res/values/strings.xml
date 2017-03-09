@@ -75,6 +75,7 @@
     <string name="record_removed_message">Record eliminato con successo.</string>
     <string name="remove_undone">Elemento \"%1$s\" ripristinato correttamente.</string>
     <string name="removed_message">Elemento \"%1$s\" eliminato correttamente.</string>
+    <string name="simple_layout_title">Interfaccia colorata</string>
 
     <array name="dummy_items">
         <item>One</item>

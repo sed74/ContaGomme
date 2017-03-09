@@ -3,17 +3,19 @@ package com.sed.willy.contagomme;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.helper.ItemTouchHelper;
 import android.view.View;
+import android.view.animation.LinearInterpolator;
 
 import com.sed.willy.contagomme.DBHelper.DatabaseHelper;
 import com.sed.willy.contagomme.Dialog.InputDialogBrand;
 import com.sed.willy.contagomme.Helper.OnStartDragListener;
 import com.sed.willy.contagomme.Helper.SimpleItemTouchHelperCallback;
 
-public class TyreListRecyclerActivity extends AppCompatActivity implements OnStartDragListener {
+public class TireListRecyclerActivity extends AppCompatActivity implements OnStartDragListener {
 
     private ItemTouchHelper mItemTouchHelper;
 
@@ -31,8 +33,14 @@ public class TyreListRecyclerActivity extends AppCompatActivity implements OnSta
         RecyclerView recyclerView = view;
         recyclerView.setHasFixedSize(true);
         recyclerView.setAdapter(adapter);
-        recyclerView.setLayoutManager(new LinearLayoutManager(getBaseContext()));
+        LinearLayoutManager layoutManager = new LinearLayoutManager(getBaseContext());
+        recyclerView.setLayoutManager(layoutManager);
 
+        if (!adapter.isUseColors()) {
+            DividerItemDecoration mDividerItemDecoration = new DividerItemDecoration(recyclerView.getContext(),
+                    layoutManager.getOrientation());
+            recyclerView.addItemDecoration(mDividerItemDecoration);
+        }
         ItemTouchHelper.Callback callback = new SimpleItemTouchHelperCallback(adapter, view);
         mItemTouchHelper = new ItemTouchHelper(callback);
         mItemTouchHelper.attachToRecyclerView(recyclerView);
@@ -50,9 +58,11 @@ public class TyreListRecyclerActivity extends AppCompatActivity implements OnSta
             @Override
             public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
                 if (dy > 0)
-                    addTire.hide();
+                    addTire.animate().translationY(addTire.getHeight()).setInterpolator(new LinearInterpolator()).start();
+//                    addTire.hide();
                 else if (dy < 0)
-                    addTire.show();
+                    addTire.animate().translationY(0).setInterpolator(new LinearInterpolator()).start();
+//                    addTire.show();
             }
         });
 

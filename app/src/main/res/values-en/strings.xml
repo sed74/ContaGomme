@@ -65,4 +65,5 @@
     <string name="button_undo">Undo</string>
     <string name="remove_undone">Item \"%1$s\" restored succesfully.</string>
     <string name="removed_message">Item \"%1$s\" removed succesfully.</string>
+    <string name="simple_layout_title">Coloured UI</string>
 </resources>
