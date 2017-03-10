@@ -86,8 +86,8 @@ public class BrandListActivity extends AppCompatActivity {
             }
 
             @Override
-            public void onConfirm(String brandName, int order) {
-                order = dbHelper.getMax(BrandEntry.TABLE,
+            public void onConfirm(String brandName) {
+                int order = dbHelper.getMax(BrandEntry.TABLE,
                         BrandEntry.BRAND_ORDER, 0);
                 Brand brand = new Brand(brandName, order + 10);
                 Cursor cur = brandAdapter.getCursor();

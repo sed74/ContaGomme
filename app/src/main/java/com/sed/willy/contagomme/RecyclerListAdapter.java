@@ -35,6 +35,7 @@ import android.widget.TextView;
 import com.sed.willy.contagomme.DBContract.ContaGommeContract.BrandEntry;
 import com.sed.willy.contagomme.DBHelper.DatabaseHelper;
 import com.sed.willy.contagomme.DBModel.Brand;
+import com.sed.willy.contagomme.Dialog.InputDialogBrand;
 import com.sed.willy.contagomme.Helper.ItemTouchHelperAdapter;
 import com.sed.willy.contagomme.Helper.ItemTouchHelperViewHolder;
 import com.sed.willy.contagomme.Helper.OnStartDragListener;
@@ -116,7 +117,12 @@ public class RecyclerListAdapter extends RecyclerView.Adapter<RecyclerListAdapte
 
     @Override
     public void onItemRemoved(final RecyclerView.ViewHolder viewHolder,
-                              final RecyclerView recyclerView) {
+                              final RecyclerView recyclerView, final int position) {
+        if (position == ItemTouchHelper.START) {
+            showEditBrandDialog(this, recyclerView, viewHolder.getAdapterPosition());
+            notifyItemChanged(viewHolder.getAdapterPosition());
+            return;
+        }
         final DatabaseHelper dbHelper = new DatabaseHelper(mContext);
         final int adapterPosition = viewHolder.getAdapterPosition();
         final Brand brand = mBrandItems.get(adapterPosition);
@@ -180,6 +186,40 @@ public class RecyclerListAdapter extends RecyclerView.Adapter<RecyclerListAdapte
         mBrandItems.add(brand);
         dbHelper.createBrand(brand);
         notifyDataSetChanged();
+    }
+
+    public void editBrand(String brandName, int position) {
+        DatabaseHelper dbHelper = new DatabaseHelper(mContext);
+
+        Brand brand = mBrandItems.get(position);
+        brand.setName(brandName);
+        dbHelper.updateBrand(brand);
+        notifyDataSetChanged();
+    }
+
+    private void showEditBrandDialog(final RecyclerListAdapter adapter, View v, final int position) {
+
+
+        InputDialogBrand inputDialog = new InputDialogBrand(mContext,
+                R.string.edit_brand_dialog_title, R.string.add_brand_dialog_hint);
+
+        inputDialog.setInitialInput(mBrandItems.get(position).getName());
+        inputDialog.setInputListener(new InputDialogBrand.InputListener() {
+            @Override
+            public InputDialogBrand.ValidationResult isInputValid(String newCoffeeType) {
+                if (newCoffeeType.isEmpty()) {
+//                    return new InputDialog.ValidationResult(false, R.string.error_empty_name);
+                }
+                return new InputDialogBrand.ValidationResult(true, 0);
+            }
+
+            @Override
+            public void onConfirm(String brandName) {
+                editBrand(brandName, position);
+
+            }
+        });
+        inputDialog.show();
     }
 
     /**

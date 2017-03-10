@@ -64,5 +64,6 @@ public interface ItemTouchHelperAdapter {
      * @see RecyclerView#getAdapterPositionFor(RecyclerView.ViewHolder)
      * @see RecyclerView.ViewHolder#getAdapterPosition()
      */
-    void onItemRemoved(final RecyclerView.ViewHolder viewHolder, final RecyclerView recyclerView);
+    void onItemRemoved(final RecyclerView.ViewHolder viewHolder, final RecyclerView recyclerView,
+                       final int direction);
 }

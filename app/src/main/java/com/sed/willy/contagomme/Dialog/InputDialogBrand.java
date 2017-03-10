@@ -78,7 +78,7 @@ public class InputDialogBrand {
             @Override
             public void onClick(View v) {
                 if (inputListener != null)
-                    inputListener.onConfirm(editName.getText().toString(), 0);
+                    inputListener.onConfirm(editName.getText().toString());
 //                Integer.parseInt(numberPicker.getText().toString()));
                 inputMethodManager.hideSoftInputFromWindow(editName.getWindowToken(), 0);
                 dialog.dismiss();
@@ -98,7 +98,7 @@ public class InputDialogBrand {
 
         ValidationResult isInputValid(String input);
 
-        void onConfirm(String input, int order);
+        void onConfirm(String input);
     }
 
     public static class ValidationResult {

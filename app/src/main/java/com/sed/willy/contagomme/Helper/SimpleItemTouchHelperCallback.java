@@ -63,8 +63,8 @@ public class SimpleItemTouchHelperCallback extends ItemTouchHelper.Callback {
             return makeMovementFlags(dragFlags, swipeFlags);
         } else {
             final int dragFlags = ItemTouchHelper.UP | ItemTouchHelper.DOWN;
-//            final int swipeFlags = ItemTouchHelper.START | ItemTouchHelper.END;
-            final int swipeFlags = ItemTouchHelper.END;
+            final int swipeFlags = ItemTouchHelper.START | ItemTouchHelper.END;
+//            final int swipeFlags = ItemTouchHelper.END;
 //            final int swipeFlags = ItemTouchHelper.START ;
             return makeMovementFlags(dragFlags, swipeFlags);
         }
@@ -85,8 +85,14 @@ public class SimpleItemTouchHelperCallback extends ItemTouchHelper.Callback {
     @Override
     public void onSwiped(RecyclerView.ViewHolder viewHolder, int i) {
         // Notify the adapter of the dismissal
-        mAdapter.onItemRemoved(viewHolder, mRecyclerView);
-        mAdapter.onItemDismiss(viewHolder.getAdapterPosition());
+        switch (i) {
+            case ItemTouchHelper.RIGHT:
+                mAdapter.onItemRemoved(viewHolder, mRecyclerView, i);
+                mAdapter.onItemDismiss(viewHolder.getAdapterPosition());
+                break;
+            case ItemTouchHelper.START:
+                mAdapter.onItemRemoved(viewHolder, mRecyclerView, i);
+        }
     }
 
     @Override
@@ -128,4 +134,5 @@ public class SimpleItemTouchHelperCallback extends ItemTouchHelper.Callback {
             itemViewHolder.onItemClear();
         }
     }
+
 }

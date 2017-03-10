@@ -163,11 +163,8 @@ public class BrandCursorAdapter extends CursorAdapter {
             }
 
             @Override
-            public void onConfirm(String brandName, int order) {
+            public void onConfirm(String brandName) {
 
-                if (oldOrder != order) {
-
-                }
                 brand[0].setName(brandName);
 //                brand[0].setOrder(order);
                 dbHelper.updateBrand(brand[0]);

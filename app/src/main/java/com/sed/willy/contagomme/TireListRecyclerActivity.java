@@ -15,7 +15,8 @@ import com.sed.willy.contagomme.Dialog.InputDialogBrand;
 import com.sed.willy.contagomme.Helper.OnStartDragListener;
 import com.sed.willy.contagomme.Helper.SimpleItemTouchHelperCallback;
 
-public class TireListRecyclerActivity extends AppCompatActivity implements OnStartDragListener {
+public class TireListRecyclerActivity extends AppCompatActivity
+        implements OnStartDragListener {
 
     private ItemTouchHelper mItemTouchHelper;
 
@@ -28,7 +29,7 @@ public class TireListRecyclerActivity extends AppCompatActivity implements OnSta
 
         RecyclerView view = (RecyclerView) findViewById(R.id.list);
 
-        final RecyclerListAdapter adapter = new RecyclerListAdapter(getBaseContext(), this);
+        final RecyclerListAdapter adapter = new RecyclerListAdapter(TireListRecyclerActivity.this, this);
 
         RecyclerView recyclerView = view;
         recyclerView.setHasFixedSize(true);
@@ -93,7 +94,7 @@ public class TireListRecyclerActivity extends AppCompatActivity implements OnSta
             }
 
             @Override
-            public void onConfirm(String brandName, int order) {
+            public void onConfirm(String brandName) {
                 adapter.addBrand(brandName);
 
             }
