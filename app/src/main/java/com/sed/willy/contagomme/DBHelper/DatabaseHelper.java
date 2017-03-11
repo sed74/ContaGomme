@@ -34,9 +34,9 @@ public class DatabaseHelper extends SQLiteOpenHelper implements BaseColumns {
     // Logcat tag
     private static final String TAG = DatabaseHelper.class.getName();
     // Database Name
-    private static final String DATABASE_NAME = "contaGomme";
+    private static final String DATABASE_NAME = "contaGomme.db";
     // Database Version
-    private static final int DATABASE_VERSION = 15;
+    private static final int DATABASE_VERSION = 16;
     // TEMP Table Name
     private static final String TEMP_BIKE_DETAIL = "temp_bike_detail";
 

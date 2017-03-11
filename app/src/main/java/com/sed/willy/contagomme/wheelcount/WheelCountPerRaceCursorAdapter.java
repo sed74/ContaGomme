@@ -4,7 +4,9 @@ import android.content.Context;
 import android.database.Cursor;
 import android.graphics.Typeface;
 import android.graphics.drawable.GradientDrawable;
+import android.preference.PreferenceManager;
 import android.support.v4.content.ContextCompat;
+import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -17,6 +19,7 @@ import com.sed.willy.contagomme.DBContract.ContaGommeContract.WheelListEntry;
 import com.sed.willy.contagomme.DBHelper.DatabaseHelper;
 import com.sed.willy.contagomme.DBModel.WheelList;
 import com.sed.willy.contagomme.R;
+import com.sed.willy.contagomme.Utils.Global;
 
 import java.util.ArrayList;
 
@@ -34,7 +37,7 @@ public class WheelCountPerRaceCursorAdapter extends CursorAdapter {
     private TextView rearCount;
     private ArrayList<WheelList> wheelLists = new ArrayList<>();
     private OnChange onChangeListener;
-
+    private boolean mUSeColors;
     private int frontBrandSelected;
     private int rearBrandSelected;
 
@@ -44,7 +47,9 @@ public class WheelCountPerRaceCursorAdapter extends CursorAdapter {
         mContext = context;
         cursorInflater = (LayoutInflater) context.getSystemService(
                 Context.LAYOUT_INFLATER_SERVICE);
-
+        mUSeColors = true;
+//        PreferenceManager.getDefaultSharedPreferences(context).
+//                getBoolean(Global.KEY_PREF_COLOURED_UI, true);
     }
 
     public ArrayList<WheelList> populateArray(Cursor cursor) {
@@ -79,7 +84,18 @@ public class WheelCountPerRaceCursorAdapter extends CursorAdapter {
     public View newView(Context context, Cursor cursor, ViewGroup parent) {
         //return LayoutInflater.from(context).inflate(R.layout.activity_brand_list, parent, false);
 //        populateArray(cursor);
-        return cursorInflater.inflate(R.layout.tire_button, parent, false);
+        View view = cursorInflater.inflate(R.layout.tire_button, parent, false);
+        if (!PreferenceManager.getDefaultSharedPreferences(context).
+                getBoolean(Global.KEY_PREF_COLOURED_UI, true)) {
+            TextView front = (TextView) view.findViewById(R.id.front_tire);
+            TextView rear = (TextView) view.findViewById(R.id.rear_tire);
+            TypedValue outValue = new TypedValue();
+            context.getTheme().resolveAttribute(android.R.attr.selectableItemBackground, outValue, true);
+            front.setBackgroundResource(outValue.resourceId);
+            rear.setBackgroundResource(outValue.resourceId);
+        }
+        return view;
+
     }
 
     // The bindView method is used to bind all data to a given view
@@ -212,6 +228,12 @@ public class WheelCountPerRaceCursorAdapter extends CursorAdapter {
             view.setTypeface(null, Typeface.NORMAL);
 //        view.setAllCaps(false);
 //            view.setBackgroundColor(Color.TRANSPARENT);
+            if (!mUSeColors) {
+                TypedValue outValue = new TypedValue();
+                mContext.getTheme().resolveAttribute(android.R.attr.selectableItemBackground, outValue, true);
+                view.setBackgroundResource(outValue.resourceId);
+
+            } else
             view.setBackgroundColor(ContextCompat.getColor(mContext, R.color.colorPrimary));
 
         } else {

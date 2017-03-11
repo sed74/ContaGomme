@@ -21,6 +21,8 @@ import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.helper.ItemTouchHelper;
 
+import com.sed.willy.contagomme.RecyclerListAdapter;
+
 /**
  * An implementation of {@link ItemTouchHelper.Callback} that enables basic drag & drop and
  * swipe-to-dismiss. Drag events are automatically started by an item long-press.<br/>
@@ -63,8 +65,8 @@ public class SimpleItemTouchHelperCallback extends ItemTouchHelper.Callback {
             return makeMovementFlags(dragFlags, swipeFlags);
         } else {
             final int dragFlags = ItemTouchHelper.UP | ItemTouchHelper.DOWN;
-            final int swipeFlags = ItemTouchHelper.START | ItemTouchHelper.END;
-//            final int swipeFlags = ItemTouchHelper.END;
+//            final int swipeFlags = ItemTouchHelper.START | ItemTouchHelper.END;
+            final int swipeFlags = ItemTouchHelper.END;
 //            final int swipeFlags = ItemTouchHelper.START ;
             return makeMovementFlags(dragFlags, swipeFlags);
         }
@@ -85,14 +87,14 @@ public class SimpleItemTouchHelperCallback extends ItemTouchHelper.Callback {
     @Override
     public void onSwiped(RecyclerView.ViewHolder viewHolder, int i) {
         // Notify the adapter of the dismissal
-        switch (i) {
-            case ItemTouchHelper.RIGHT:
+//        switch (i) {
+//            case ItemTouchHelper.RIGHT:
                 mAdapter.onItemRemoved(viewHolder, mRecyclerView, i);
                 mAdapter.onItemDismiss(viewHolder.getAdapterPosition());
-                break;
-            case ItemTouchHelper.START:
-                mAdapter.onItemRemoved(viewHolder, mRecyclerView, i);
-        }
+//                break;
+//            case ItemTouchHelper.START:
+//                mAdapter.onItemRemoved(viewHolder, mRecyclerView, i);
+//        }
     }
 
     @Override
@@ -103,6 +105,11 @@ public class SimpleItemTouchHelperCallback extends ItemTouchHelper.Callback {
             final float alpha = ALPHA_FULL - Math.abs(dX) / (float) viewHolder.itemView.getWidth();
             viewHolder.itemView.setAlpha(alpha);
             viewHolder.itemView.setTranslationX(dX);
+//            if (viewHolder instanceof RecyclerListAdapter.ItemViewHolder) {
+//                RecyclerListAdapter.ItemViewHolder view =
+//                        (RecyclerListAdapter.ItemViewHolder) viewHolder;
+//                view.mTireBrandName.setText(Float.toString(Math.abs(dX) / (float) viewHolder.itemView.getWidth()));
+//            }
         } else {
             super.onChildDraw(c, recyclerView, viewHolder, dX, dY, actionState, isCurrentlyActive);
         }

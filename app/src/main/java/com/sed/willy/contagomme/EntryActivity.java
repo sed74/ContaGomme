@@ -19,6 +19,7 @@ import android.widget.Toast;
 import com.sed.willy.contagomme.DBContract.ContaGommeContract.BrandEntry;
 import com.sed.willy.contagomme.DBContract.ContaGommeContract.WheelEntry;
 import com.sed.willy.contagomme.DBHelper.DatabaseHelper;
+import com.sed.willy.contagomme.Utils.FileClass;
 import com.sed.willy.contagomme.wheelcount.WheelCountPerRaceActivity;
 
 public class EntryActivity extends AppCompatActivity {
@@ -93,7 +94,7 @@ public class EntryActivity extends AppCompatActivity {
         openRaceLayout.setOnClickListener(buttonListener);
         openTireListLayout.setOnClickListener(buttonListener);
         openRaceListLayout.setOnClickListener(buttonListener);
-
+        FileClass.checkForArchiveAccess(this);
 
     }
 
