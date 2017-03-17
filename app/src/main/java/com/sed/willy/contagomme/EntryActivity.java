@@ -1,5 +1,6 @@
 package com.sed.willy.contagomme;
 
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -121,9 +122,71 @@ public class EntryActivity extends AppCompatActivity {
                 Intent i = new Intent(this, SettingsActivity.class);
                 startActivity(i);
                 break;
+            case R.id.backup_db:
+                backDB();
+
+                break;
+            case R.id.restore_db:
+                restoreDB();
+                break;
         }
 
         return super.onOptionsItemSelected(item);
+    }
+
+    private void restoreDB() {
+        final Context context = EntryActivity.this;
+        new AlertDialog.Builder(context)
+                //set message, title, and icon
+                .setTitle(context.getResources().getString(R.string.restore_db_title))
+                .setMessage(context.getResources().getString(R.string.restore_db_text))
+                .setIcon(R.drawable.ic_database_plus_black_18dp)
+
+                .setPositiveButton(context.getResources().getString(R.string.restore_button), new DialogInterface.OnClickListener() {
+
+                    public void onClick(DialogInterface dialog, int whichButton) {
+                        if (FileClass.restoreDataBase(getBaseContext()) == 1) {
+                            Toast.makeText(context,
+                                    getResources().getString(R.string.restore_successfull),
+                                    Toast.LENGTH_LONG)
+                                    .show();
+                        }
+                        dialog.dismiss();
+                    }
+                })
+                .setNegativeButton(context.getResources().getString(R.string.dialog_cancel_button), new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.dismiss();
+                    }
+                })
+                .show();
+    }
+
+    private void backDB() {
+        final Context context = EntryActivity.this;
+        new AlertDialog.Builder(context)
+                //set message, title, and icon
+                .setTitle(context.getResources().getString(R.string.backup_db_title))
+                .setMessage(context.getResources().getString(R.string.backup_db_text))
+                .setIcon(R.drawable.ic_database_black_18dp)
+
+                .setPositiveButton(context.getResources().getString(R.string.backup_button), new DialogInterface.OnClickListener() {
+
+                    public void onClick(DialogInterface dialog, int whichButton) {
+                        if (FileClass.backUpDataBase(getBaseContext()) == 1) {
+                            Toast.makeText(context, getResources().getString(R.string.backup_successfull),
+                                    Toast.LENGTH_LONG)
+                                    .show();
+                        }
+                        dialog.dismiss();
+                    }
+                })
+                .setNegativeButton(context.getResources().getString(R.string.dialog_cancel_button), new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.dismiss();
+                    }
+                })
+                .show();
     }
 
     private void openRaceActivity(Integer raceID, String raceName) {

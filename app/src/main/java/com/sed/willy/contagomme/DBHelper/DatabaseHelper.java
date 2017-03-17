@@ -47,7 +47,9 @@ public class DatabaseHelper extends SQLiteOpenHelper implements BaseColumns {
         mContext = context;
     }
 
-
+    public static final String getDataBaseName() {
+        return DATABASE_NAME;
+    }
     @Override
     public void onCreate(SQLiteDatabase db) {
 

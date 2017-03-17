@@ -10,10 +10,17 @@ import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
+import android.widget.Toast;
+
+import com.sed.willy.contagomme.DBHelper.DatabaseHelper;
+import com.sed.willy.contagomme.R;
 
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.nio.channels.FileChannel;
 
 /**
  * Created by federico.marchesi on 06/02/2017.
@@ -83,6 +90,65 @@ public class FileClass {
                 // app-defined int constant. The callback method gets the
                 // result of the request.
             }
+        }
+    }
+
+    public static int backUpDataBase(Context context) {
+
+        File sd = Environment.getExternalStorageDirectory();
+        File data = Environment.getDataDirectory();
+
+        String sourceDBPath = "//data//" + context.getPackageName() + "//databases//";
+
+        File destinationPath = new File(sd, context.getResources().
+                getString(R.string.app_name).replaceAll(" ", ""));
+        File sourcePath = new File(data, sourceDBPath);
+
+        return copyDb(context, sourcePath, destinationPath, DatabaseHelper.getDataBaseName());
+
+    }
+
+    public static int restoreDataBase(Context context) {
+
+        File sd = Environment.getExternalStorageDirectory();
+        File data = Environment.getDataDirectory();
+
+        String dbFolder = "//data//" + context.getPackageName() + "//databases//";
+
+        File sourcePath = new File(sd, context.getResources().
+                getString(R.string.app_name).replaceAll(" ", ""));
+        File destinationPath = new File(data, dbFolder);
+
+        return copyDb(context, sourcePath, destinationPath, DatabaseHelper.getDataBaseName());
+
+    }
+
+    public static int copyDb(Context context, File sourcePath, File destinationPath, String dbName) {
+        int retVal;
+        retVal = 1;
+        try {
+            File sd = Environment.getExternalStorageDirectory();
+
+            if (sd.canWrite()) {
+                if (!destinationPath.exists()) {
+                    destinationPath.mkdirs(); // this will create folder.
+                }
+                File sourceDB = new File(sourcePath, dbName);
+                File destinationDB = new File(destinationPath, dbName);
+
+                if (sourceDB.exists()) {
+                    FileChannel src = new FileInputStream(sourceDB).getChannel();
+                    FileChannel dst = new FileOutputStream(destinationDB).getChannel();
+                    dst.transferFrom(src, 0, src.size());
+                    src.close();
+                    dst.close();
+                }
+            }
+        } catch (Exception e) {
+            Toast.makeText(context, e.toString(), Toast.LENGTH_LONG).show();
+            retVal = -1;
+        } finally {
+            return retVal;
         }
     }
 

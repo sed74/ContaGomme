@@ -32,7 +32,6 @@ public interface ItemTouchHelperViewHolder {
      */
     void onItemSelected(int actionState);
 
-
     /**
      * Called when the {@link ItemTouchHelper} has completed the move or swipe, and the active item
      * state should be cleared.

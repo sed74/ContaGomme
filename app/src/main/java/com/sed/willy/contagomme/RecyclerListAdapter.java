@@ -254,9 +254,9 @@ public class RecyclerListAdapter extends RecyclerView.Adapter<RecyclerListAdapte
 
 //            itemView.setBackgroundColor(Color.LTGRAY);
             if (actionState == ItemTouchHelper.ACTION_STATE_DRAG) {
-                if (useColors)
-                    text.setBackground(itemView.getResources().getDrawable(R.drawable.tire_rectangle_gray));
-                else
+                if (useColors) {
+                    text.setBackground(itemView.getResources().getDrawable(R.drawable.tire_rectangle_primary_dark));
+                } else
                     text.setBackgroundColor(Color.LTGRAY);
             } else if (actionState == ItemTouchHelper.ACTION_STATE_SWIPE) {
                 if (useColors)

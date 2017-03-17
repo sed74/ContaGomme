@@ -7,4 +7,16 @@
         android:orderInCategory="30"
         android:title="@string/settings_menu"
         app:showAsAction="always" />
+    <item
+        android:id="@+id/backup_db"
+        android:icon="@drawable/ic_database_white_24dp"
+        android:orderInCategory="50"
+        android:title="@string/backup_db"
+        app:showAsAction="never" />
+    <item
+        android:id="@+id/restore_db"
+        android:icon="@drawable/ic_database_plus_white_24dp"
+        android:orderInCategory="70"
+        android:title="@string/restore_db"
+        app:showAsAction="never" />
 </menu>

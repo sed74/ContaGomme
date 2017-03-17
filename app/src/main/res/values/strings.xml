@@ -76,6 +76,16 @@
     <string name="remove_undone">Elemento \"%1$s\" ripristinato correttamente.</string>
     <string name="removed_message">Elemento \"%1$s\" eliminato correttamente.</string>
     <string name="simple_layout_title">Interfaccia colorata</string>
+    <string name="backup_db">Backup Database</string>
+    <string name="restore_db">Ripristina Database</string>
+    <string name="restore_db_title">Ripristino il database</string>
+    <string name="restore_db_text">Ripristinare il database dal backup?\nI dati saranno sovrascritti?</string>
+    <string name="restore_button">Ripristina</string>
+    <string name="backup_db_title">Backup Database</string>
+    <string name="backup_db_text">Eseguire backup del Database sulla scheda SD?</string>
+    <string name="backup_button">Esegui</string>
+    <string name="backup_successfull">Backup creato correttamente.</string>
+    <string name="restore_successfull">Ripristino avvenuto con successo.</string>
 
     <array name="dummy_items">
         <item>One</item>
