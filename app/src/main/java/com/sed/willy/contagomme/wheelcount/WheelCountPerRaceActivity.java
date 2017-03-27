@@ -9,6 +9,7 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.preference.PreferenceManager;
 import android.support.design.widget.Snackbar;
+import android.support.v4.content.FileProvider;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.view.Menu;
@@ -30,6 +31,7 @@ import com.sed.willy.contagomme.Utils.DateConverter;
 import com.sed.willy.contagomme.Utils.FileClass;
 import com.sed.willy.contagomme.Utils.Global;
 
+import java.io.File;
 import java.util.ArrayList;
 
 /**
@@ -335,6 +337,7 @@ public class WheelCountPerRaceActivity extends AppCompatActivity {
 
             String[] mTestArray = getResources().getStringArray(R.array.pref_file_type);
 
+            File file;
             if (mAttachFile) {
                 switch (mAttachType) {
                     case 0: // TXT
@@ -351,7 +354,11 @@ public class WheelCountPerRaceActivity extends AppCompatActivity {
                 String fileName = FileClass.createFile(createFileName, emailAttach,
                         mTestArray[mAttachType]);
                 if (!fileName.isEmpty()) {
-                    uris.add(Uri.parse("file://" + fileName));
+                    file = new File(fileName);
+
+                    uris.add(FileProvider.getUriForFile(getBaseContext(),
+                            getBaseContext().getApplicationContext().getPackageName()
+                                    + ".provider", file));
                 }
             }
             if (mAttachFileStats) {
@@ -359,7 +366,12 @@ public class WheelCountPerRaceActivity extends AppCompatActivity {
                 createFileName += "_stats";
                 String fileStats = FileClass.createFile(createFileName, emailStats, "csv");
                 if (!fileStats.isEmpty()) {
-                    uris.add(Uri.parse("file://" + fileStats));
+
+                    file = new File(fileStats);
+
+                    uris.add(FileProvider.getUriForFile(getBaseContext(),
+                            getBaseContext().getApplicationContext().getPackageName()
+                                    + ".provider", file));
                 }
 
             }
